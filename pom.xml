@@ -10,8 +10,8 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <organization>
-        <name>Example Company</name>
-        <url>http://www.example.com/</url>
+        <name>Ambientia</name>
+        <url>http://www.ambientia.fi/</url>
     </organization>
 
     <name>abtesting</name>
@@ -61,6 +61,31 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
+
+
+        <!-- Confluence specific dependencies -->
+        <dependency>
+            <groupId>com.atlassian.confluence</groupId>
+            <artifactId>confluence</artifactId>
+            <version>${confluence.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.activeobjects</groupId>
+            <artifactId>activeobjects-test</artifactId>
+            <version>${ao.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+        </dependency>
+
 
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
         <dependency>
@@ -136,6 +161,102 @@
             </plugin>
 
             <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-confluence-plugin</artifactId>
+                <version>${amps.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>${confluence.version}</productVersion>
+                    <productDataVersion>${confluence.data.version}</productDataVersion>
+                    <enableQuickReload>true</enableQuickReload>
+                    <enableFastdev>false</enableFastdev>
+
+                    <!-- See here for an explanation of default instructions: -->
+                    <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
+                    <instructions>
+                        <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+
+                        <!-- Add package to export here -->
+                        <Export-Package>
+                        </Export-Package>
+
+                        <!-- Add package import here -->
+                        <!-- All of these imports might not be necessary -->
+                        <!-- Works around https://jira.atlassian.com/browse/CONF-40148 -->
+                        <Import-Package>
+                        </Import-Package>
+
+                        <!-- Ensure plugin is spring powered -->
+                        <Spring-Context>*</Spring-Context>
+                    </instructions>
+
+                    <pluginArtifacts>
+                        <pluginArtifact>
+                            <groupId>com.atlassian.activeobjects</groupId>
+                            <artifactId>activeobjects-plugin</artifactId>
+                            <version>${ao.version}</version>
+                        </pluginArtifact>
+                        <pluginArtifact>
+                            <groupId>com.atlassian.activeobjects</groupId>
+                            <artifactId>activeobjects-confluence-spi</artifactId>
+                            <version>${ao.version}</version>
+                        </pluginArtifact>
+                    </pluginArtifacts>
+                    <products>
+                        <product>
+                            <id>confluence</id>
+                            <instanceId>confluence</instanceId>
+                            <version>${confluence.version}</version>
+                            <dataPath>${project.build.path}</dataPath>
+                            <jvmArgs>-Xmx512m -XX:MaxPermSize=512m -Xms128m</jvmArgs>
+                            <systemPropertyVariables>
+                                <atlassian.dev.mode>${atlassian.dev.mode}</atlassian.dev.mode>
+                            </systemPropertyVariables>
+                            <dataSources>
+                                <dataSource>
+                                    <jndi>jdbc/DefaultDS</jndi>
+                                    <url>jdbc:mysql://localhost:3306/abtesting</url>
+                                    <driver>com.mysql.jdbc.Driver</driver>
+                                    <libArtifacts>
+                                        <libArtifact>
+                                            <groupId>mysql</groupId>
+                                            <artifactId>mysql-connector-java</artifactId>
+                                            <version>5.1.37</version>
+                                        </libArtifact>
+                                    </libArtifacts>
+                                </dataSource>
+                            </dataSources>
+                        </product>
+                    </products>
+                    <testGroups>
+                        <testGroup>
+                            <id>wired-integration</id>
+                            <productIds>
+                                <productId>confluence</productId>
+                            </productIds>
+                            <includes>
+                                <include>it/**/*WiredTest.java</include>
+                            </includes>
+                        </testGroup>
+                        <testGroup>
+                            <id>traditional-integration</id>
+                            <productIds>
+                                <productId>confluence</productId>
+                            </productIds>
+                            <includes>
+                                <include>it/**/*Test.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>it/**/*WiredTest.java</exclude>
+                            </excludes>
+                        </testGroup>
+                    </testGroups>
+
+                </configuration>
+            </plugin>
+
+
+            <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
                 <version>${atlassian.spring.scanner.version}</version>
@@ -159,11 +280,17 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <properties>
         <platform.version>3.0.0</platform.version>
         <refapp.version>4.0.0</refapp.version>
+
+        <confluence.version>5.9.9</confluence.version>
+        <confluence.data.version>5.9.9</confluence.data.version>
+
         <amps.version>6.2.6</amps.version>
+        <ao.version>1.1.5</ao.version>
+
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
 
