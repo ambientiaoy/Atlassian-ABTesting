@@ -2,7 +2,7 @@ package ut.fi.ambientia.atlassian.resource;
 
 import fi.ambientia.atlassian.action.CreateHypothesis;
 import fi.ambientia.atlassian.model.ABTestInstance;
-import fi.ambientia.atlassian.resource.ABTest;
+import fi.ambientia.atlassian.resource.ABTestRoute;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,27 +15,24 @@ import static org.mockito.Mockito.verify;
 
 public class ABTestTest {
 
-
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
     private CreateHypothesis createNewHypothesis;
-    private ABTest abTest;
+    private ABTestRoute abTestRoute;
     private ABTestInstance newAbTest;
 
     @Before
     public void setUp() throws Exception {
 
         createNewHypothesis = mock(CreateHypothesis.class);
-        abTest = new ABTest(createNewHypothesis);
+        abTestRoute = new ABTestRoute(createNewHypothesis);
         newAbTest = new ABTestInstance(AB_INSTANCE_UNIQUE_KEY);
 
     }
 
     @Test
     public void shouldStoreNewAb() throws Exception {
-        // arrange
-
         // act
-        Response response = abTest.createNew(newAbTest);
+        Response response = abTestRoute.createNew(newAbTest);
         // assert
         verify(createNewHypothesis).createNew(newAbTest);
         assertThat(response.getStatus(), equalTo(201));
@@ -43,13 +40,11 @@ public class ABTestTest {
 
     @Test
     public void shouldHaveLocation() throws Exception {
-        // arrange
-
         // act
-        Response response = abTest.createNew(newAbTest);
+        Response response = abTestRoute.createNew(newAbTest);
 
         // assert
         verify( createNewHypothesis ).createNew( newAbTest );
-        assertThat(response.getMetadata().getFirst("location").toString(), equalTo(ABTest.ROUTE_ROOT  + AB_INSTANCE_UNIQUE_KEY));
+        assertThat(response.getMetadata().getFirst("location").toString(), equalTo(ABTestRoute.ROUTE_ROOT  + AB_INSTANCE_UNIQUE_KEY));
     }
 }

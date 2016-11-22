@@ -10,12 +10,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-public class ABTest {
+public class ABTestRoute {
 
     public static final String ROUTE_ROOT = "/ABTest/";
     private CreateHypothesis createNewHypothesis;
 
-    public ABTest(CreateHypothesis createNewHypothesis) {
+    public ABTestRoute(CreateHypothesis createNewHypothesis) {
 
         this.createNewHypothesis = createNewHypothesis;
     }
