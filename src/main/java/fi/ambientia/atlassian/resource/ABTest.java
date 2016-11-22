@@ -7,6 +7,7 @@ import fi.ambientia.atlassian.model.ABTestInstance;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class ABTest {
 
@@ -20,7 +21,8 @@ public class ABTest {
     @PublicApi
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
-    public void createNew(ABTestInstance newAbTest) {
+    public Response createNew(ABTestInstance newAbTest) {
         createNewHypothesis.createNew(newAbTest);
+        return Response.created(null).build();
     }
 }
