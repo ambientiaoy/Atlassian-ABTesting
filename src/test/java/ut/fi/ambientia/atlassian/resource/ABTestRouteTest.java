@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ABTestTest {
+public class ABTestRouteTest {
 
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
     private CreateHypothesis createNewHypothesis;
