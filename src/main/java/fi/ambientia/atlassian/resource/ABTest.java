@@ -8,9 +8,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 public class ABTest {
 
+    public static final String ROUTE_ROOT = "/ABTest/";
     private CreateHypothesis createNewHypothesis;
 
     public ABTest(CreateHypothesis createNewHypothesis) {
@@ -23,6 +25,7 @@ public class ABTest {
     @Consumes({ MediaType.APPLICATION_JSON })
     public Response createNew(ABTestInstance newAbTest) {
         createNewHypothesis.createNew(newAbTest);
-        return Response.created(null).build();
+        URI location = URI.create(ROUTE_ROOT + newAbTest.getUniqueKey());
+        return Response.created(location).build();
     }
 }
