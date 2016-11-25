@@ -1,8 +1,8 @@
-package ut.fi.ambientia.atlassian.resource;
+package ut.fi.ambientia.atlassian.routes.experiments;
 
 import fi.ambientia.atlassian.action.CreateHypothesis;
 import fi.ambientia.abtesting.model.ABTestInstance;
-import fi.ambientia.atlassian.routes.ABTestRoute;
+import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import fi.ambientia.atlassian.routes.GetABTestRoute;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +18,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ABTestRouteTest {
+public class FeatureBattlesTest {
 
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
     private CreateHypothesis createNewHypothesis;
-    private ABTestRoute abTestRoute;
+    private FeatureBattles featureBattles;
     private ABTestInstance newAbTest;
     private GetABTestRoute getAbTestRoute;
     private HttpServletRequest context = mock(HttpServletRequest.class);
@@ -31,7 +31,7 @@ public class ABTestRouteTest {
     public void setUp() throws Exception {
         createNewHypothesis = mock(CreateHypothesis.class);
         getAbTestRoute = mock(GetABTestRoute.class);
-        abTestRoute = new ABTestRoute(createNewHypothesis, getAbTestRoute);
+        featureBattles = new FeatureBattles(createNewHypothesis, getAbTestRoute);
         newAbTest = new ABTestInstance(AB_INSTANCE_UNIQUE_KEY);
 
         Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();
@@ -41,7 +41,7 @@ public class ABTestRouteTest {
     @Test
     public void shouldStoreNewAb() throws Exception {
         // act
-        Response response = abTestRoute.createNew(context, newAbTest);
+        Response response = featureBattles.createNew(context, newAbTest);
         // assert
         verify(createNewHypothesis).createNew(newAbTest);
         assertThat(response.getStatus(), equalTo(201));
@@ -50,11 +50,11 @@ public class ABTestRouteTest {
     @Test
     public void shouldHaveLocation() throws Exception {
         // act
-        Response response = abTestRoute.createNew(context, newAbTest);
+        Response response = featureBattles.createNew(context, newAbTest);
 
         // assert
         verify( createNewHypothesis ).createNew( newAbTest );
-        assertThat(response.getMetadata().getFirst("location").toString(), equalTo(ABTestRoute.ROUTE_ROOT  + AB_INSTANCE_UNIQUE_KEY));
+        assertThat(response.getMetadata().getFirst("location").toString(), equalTo(FeatureBattles.ROUTE_ROOT  + AB_INSTANCE_UNIQUE_KEY));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ABTestRouteTest {
         Response response_ok = Response.status(Response.Status.OK ).build();
         when(getAbTestRoute.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_ok );
 
-        Response response = abTestRoute.createNew(context,  newAbTest );
+        Response response = featureBattles.createNew(context,  newAbTest );
 
         assertThat( response.getStatus(), equalTo(400));
     }

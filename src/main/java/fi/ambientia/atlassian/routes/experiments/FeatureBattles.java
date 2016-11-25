@@ -1,8 +1,9 @@
-package fi.ambientia.atlassian.routes;
+package fi.ambientia.atlassian.routes.experiments;
 
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.atlassian.action.CreateHypothesis;
 import fi.ambientia.abtesting.model.ABTestInstance;
+import fi.ambientia.atlassian.routes.GetABTestRoute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -12,13 +13,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-public class ABTestRoute {
+public class FeatureBattles {
+
+    // FeatureBattle
 
     public static final String ROUTE_ROOT = "/ABTest/";
     private CreateHypothesis createNewHypothesis;
     private GetABTestRoute getAbTestRoute;
 
-    public ABTestRoute(CreateHypothesis createNewHypothesis, GetABTestRoute getAbTestRoute) {
+    public FeatureBattles(CreateHypothesis createNewHypothesis, GetABTestRoute getAbTestRoute) {
 
         this.createNewHypothesis = createNewHypothesis;
         this.getAbTestRoute = getAbTestRoute;
