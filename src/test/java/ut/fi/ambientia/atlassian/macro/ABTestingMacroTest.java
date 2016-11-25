@@ -37,7 +37,7 @@ public class ABTestingMacroTest {
 
     @Test
     public void testName() throws Exception {
-        when(mapCurrentUserToUserkey.getCurrentUserKey()).thenReturn( USER_KEY );
+        when(mapCurrentUserToUserkey.getCurrentUserIdentifier()).thenReturn( USER_KEY );
         when(something.chooseOption(AB_TEST_KEY, USER_KEY)).thenReturn("viewToBeRendered");
 
         String viewToBeRendered = abTestingMacro.execute(params, "", null);

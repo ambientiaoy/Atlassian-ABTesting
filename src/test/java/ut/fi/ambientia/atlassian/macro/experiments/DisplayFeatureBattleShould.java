@@ -1,14 +1,20 @@
 package ut.fi.ambientia.atlassian.macro.experiments;
 
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
+import com.atlassian.soy.renderer.SoyException;
+import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.DisplayFeatureBattleExperiment;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DisplayFeatureBattleShould {
 
@@ -17,21 +23,51 @@ public class DisplayFeatureBattleShould {
     private Map<String, String> map;
     private String string;
     private ConversionContext conversionContext;
+    private MapCurrentUserToUserkey mapCurrentUserToUserkey;
+    private SoyTemplateRenderer renderer;
+    private DisplayFeatureBattleExperiment displayFeatureBattleExperiment;
+    private DisplayFeatureBattle displayFeatureBattle;
+
+    @Before
+    public void setUp() throws Exception {
+        mapCurrentUserToUserkey = mock(MapCurrentUserToUserkey.class);
+        displayFeatureBattleExperiment = mock(DisplayFeatureBattleExperiment.class);
+        renderer = new SoyTemplateRendererStub();
+
+        displayFeatureBattle = new DisplayFeatureBattle(renderer, mapCurrentUserToUserkey, displayFeatureBattleExperiment);
+    }
 
     @Test
     public void map_to_user() throws Exception {
-
-        MapCurrentUserToUserkey mapCurrentUserToUserkey = mock(MapCurrentUserToUserkey.class);
         when(mapCurrentUserToUserkey.getCurrentUserIdentifier()).thenReturn(USER_KEY);
-        DisplayFeatureBattleExperiment displayFeatureBattleExperiment = mock(DisplayFeatureBattleExperiment.class);
+        when(displayFeatureBattleExperiment.displayContent( USER_KEY )).thenReturn( "STRING" );
 
-        DisplayFeatureBattle displayFeatureBattle = new DisplayFeatureBattle(mapCurrentUserToUserkey, displayFeatureBattleExperiment);
+        String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
-
-        displayFeatureBattle.execute(map, string, conversionContext);
-
-        verify( displayFeatureBattleExperiment).displayContent( USER_KEY );
+        assertThat(execute, equalTo("RENDERING STRING"));
+    }
 
 
+
+    private class SoyTemplateRendererStub implements SoyTemplateRenderer {
+        public void clearAllCaches() {
+
+        }
+
+        public void clearCache(String completeModuleKey) {
+
+        }
+
+        public String render(String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
+            return "RENDERING " + data.get("macroDef");
+        }
+
+        public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
+
+        }
+
+        public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data, Map<String, Object> injectedData) throws SoyException {
+
+        }
     }
 }
