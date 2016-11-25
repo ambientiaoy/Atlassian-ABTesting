@@ -1,13 +1,12 @@
-package ut.fi.ambientia.atlassian.action;
+package ut.fi.ambientia.abtesting.action;
 
-import fi.ambientia.abtesting.repository.AbTestInstanceRepository;
+import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
 import fi.ambientia.atlassian.action.AbTestHypothesis;
 import fi.ambientia.atlassian.action.CreateHypothesis;
-import fi.ambientia.atlassian.model.ABTestInstance;
+import fi.ambientia.abtesting.model.ABTestInstance;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

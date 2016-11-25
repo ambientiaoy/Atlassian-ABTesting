@@ -1,8 +1,8 @@
-package fi.ambientia.atlassian.resource;
+package fi.ambientia.atlassian.routes;
 
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.atlassian.action.CreateHypothesis;
-import fi.ambientia.atlassian.model.ABTestInstance;
+import fi.ambientia.abtesting.model.ABTestInstance;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;

@@ -7,7 +7,7 @@
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
 
-    <!-- add our i18n resource -->
+    <!-- add our i18n routes -->
     <resource type="i18n" name="i18n" location="abtesting"/>
     
     <!-- add our web resources -->
@@ -20,5 +20,12 @@
 
         <context>abtesting</context>
     </web-resource>
-    
+
+    <ao key="ao-module" namespace="Hyper-AO-module">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo</entity>
+    </ao>
+
+
+
 </atlassian-plugin>

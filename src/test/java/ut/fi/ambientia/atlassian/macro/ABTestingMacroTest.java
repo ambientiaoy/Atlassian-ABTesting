@@ -1,6 +1,5 @@
 package ut.fi.ambientia.atlassian.macro;
 
-import com.atlassian.confluence.cache.option.Some;
 import fi.ambientia.abtesting.routes.Something;
 import fi.ambientia.atlassian.macro.ABTestingMacro;
 import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
@@ -10,11 +9,9 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ABTestingMacroTest {

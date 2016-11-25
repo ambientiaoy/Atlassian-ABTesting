@@ -1,4 +1,4 @@
-package fi.ambientia.atlassian.model;
+package fi.ambientia.abtesting.model;
 
 public class ABTestInstance {
     private String uniqueKey;

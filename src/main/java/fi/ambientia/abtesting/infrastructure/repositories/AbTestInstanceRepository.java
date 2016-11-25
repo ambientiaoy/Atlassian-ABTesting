@@ -1,7 +1,7 @@
-package fi.ambientia.abtesting.repository;
+package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
-import fi.ambientia.atlassian.model.ABTestInstance;
+import fi.ambientia.abtesting.model.ABTestInstance;
 
 public class AbTestInstanceRepository {
 

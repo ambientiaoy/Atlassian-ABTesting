@@ -77,6 +77,17 @@
             <version>${ao.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.activeobjects</groupId>
+            <artifactId>activeobjects-plugin</artifactId>
+            <version>${ao.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.activeobjects</groupId>
+            <artifactId>activeobjects-core</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+
 
 
         <!-- test dependencies -->
@@ -84,6 +95,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -106,24 +118,14 @@
             <version>2.2.2-atlassian-1</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.activeobjects</groupId>
-            <artifactId>activeobjects-plugin</artifactId>
-            <version>${ao.version}</version>
         </dependency>
 
     </dependencies>
@@ -310,7 +312,7 @@
         <confluence.data.version>5.9.9</confluence.data.version>
 
         <amps.version>6.2.6</amps.version>
-        <ao.version>1.2.0</ao.version>
+        <ao.version>1.1.5</ao.version>
 
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>

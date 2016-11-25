@@ -1,9 +1,9 @@
 package ut.fi.ambientia.atlassian.resource;
 
 import fi.ambientia.atlassian.action.CreateHypothesis;
-import fi.ambientia.atlassian.model.ABTestInstance;
-import fi.ambientia.atlassian.resource.ABTestRoute;
-import fi.ambientia.atlassian.resource.GetABTestRoute;
+import fi.ambientia.abtesting.model.ABTestInstance;
+import fi.ambientia.atlassian.routes.ABTestRoute;
+import fi.ambientia.atlassian.routes.GetABTestRoute;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package fi.ambientia.atlassian.action;
 
-import fi.ambientia.abtesting.repository.AbTestInstanceRepository;
-import fi.ambientia.atlassian.model.ABTestInstance;
+import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
+import fi.ambientia.abtesting.model.ABTestInstance;
 
 public class AbTestHypothesis implements CreateHypothesis {
     private AbTestInstanceRepository abTestInstanceRepository;

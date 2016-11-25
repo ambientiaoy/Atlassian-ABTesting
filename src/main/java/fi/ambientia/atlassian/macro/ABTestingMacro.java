@@ -14,7 +14,7 @@ public class ABTestingMacro implements Macro {
     }
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
-        return null;
+        return "viewToBeRendered";
     }
 
     public BodyType getBodyType() {
