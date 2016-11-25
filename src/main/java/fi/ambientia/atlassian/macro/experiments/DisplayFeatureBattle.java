@@ -6,6 +6,7 @@ import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.DisplayFeatureBattleExperiment;
+import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class DisplayFeatureBattle implements Macro {
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         Serializable currentUserIdentifier = mapCurrentUserToUserkey.getCurrentUserIdentifier();
 
-        String macroDef = displayFeatureBattleExperiment.displayContent(currentUserIdentifier);
+        Experiment macroDef = displayFeatureBattleExperiment.displayContent(currentUserIdentifier);
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("macroDef", macroDef);

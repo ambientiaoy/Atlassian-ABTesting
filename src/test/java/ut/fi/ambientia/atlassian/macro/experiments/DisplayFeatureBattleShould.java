@@ -4,6 +4,8 @@ import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.soy.renderer.SoyException;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.DisplayFeatureBattleExperiment;
+import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
 import org.junit.Before;
@@ -27,12 +29,14 @@ public class DisplayFeatureBattleShould {
     private SoyTemplateRenderer renderer;
     private DisplayFeatureBattleExperiment displayFeatureBattleExperiment;
     private DisplayFeatureBattle displayFeatureBattle;
+    private Experiment experiment;
 
     @Before
     public void setUp() throws Exception {
         mapCurrentUserToUserkey = mock(MapCurrentUserToUserkey.class);
         displayFeatureBattleExperiment = mock(DisplayFeatureBattleExperiment.class);
         renderer = new SoyTemplateRendererStub();
+        experiment = new GoodOldWay();
 
         displayFeatureBattle = new DisplayFeatureBattle(renderer, mapCurrentUserToUserkey, displayFeatureBattleExperiment);
     }
@@ -40,11 +44,11 @@ public class DisplayFeatureBattleShould {
     @Test
     public void map_to_user() throws Exception {
         when(mapCurrentUserToUserkey.getCurrentUserIdentifier()).thenReturn(USER_KEY);
-        when(displayFeatureBattleExperiment.displayContent( USER_KEY )).thenReturn( "STRING" );
+        when(displayFeatureBattleExperiment.displayContent( USER_KEY )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
-        assertThat(execute, equalTo("RENDERING STRING"));
+        assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
     }
 
 
@@ -59,7 +63,7 @@ public class DisplayFeatureBattleShould {
         }
 
         public String render(String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
-            return "RENDERING " + data.get("macroDef");
+            return "RENDERING " + data.get("macroDef").getClass().getName();
         }
 
         public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
