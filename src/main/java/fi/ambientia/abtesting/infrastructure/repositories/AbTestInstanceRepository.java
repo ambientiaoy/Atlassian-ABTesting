@@ -1,7 +1,7 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
-import fi.ambientia.abtesting.model.ABTestInstance;
+import fi.ambientia.abtesting.model.write.FeatureBattle;
 
 public class AbTestInstanceRepository {
 
@@ -9,7 +9,7 @@ public class AbTestInstanceRepository {
 
     }
 
-    public void createNew(ABTestInstance abTestInstance) {
+    public void createNew(FeatureBattle abTestInstance) {
 
     }
 }

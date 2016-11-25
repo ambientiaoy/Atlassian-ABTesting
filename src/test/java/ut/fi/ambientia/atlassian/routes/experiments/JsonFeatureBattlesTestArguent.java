@@ -1,9 +1,8 @@
 package ut.fi.ambientia.atlassian.routes.experiments;
 
-import fi.ambientia.atlassian.action.CreateHypothesis;
-import fi.ambientia.abtesting.model.ABTestInstance;
+import fi.ambientia.abtesting.action.experiments.CreateExperiment;
+import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
-import fi.ambientia.atlassian.routes.GetABTestRoute;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,24 +17,24 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class FeatureBattlesTest {
+public class JsonFeatureBattlesTestArguent {
 
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
-    private CreateHypothesis createNewHypothesis;
+    private CreateExperiment createNewHypothesis;
     private FeatureBattles featureBattles;
-    private ABTestInstance newAbTest;
-    private GetABTestRoute getAbTestRoute;
+    private JsonFeatureBattleArgument newAbTest;
+    private fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle;
     private HttpServletRequest context = mock(HttpServletRequest.class);
 
     @Before
     public void setUp() throws Exception {
-        createNewHypothesis = mock(CreateHypothesis.class);
-        getAbTestRoute = mock(GetABTestRoute.class);
-        featureBattles = new FeatureBattles(createNewHypothesis, getAbTestRoute);
-        newAbTest = new ABTestInstance(AB_INSTANCE_UNIQUE_KEY);
+        createNewHypothesis = mock(CreateExperiment.class);
+        featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattle.class);
+        featureBattles = new FeatureBattles(createNewHypothesis, featureBattle);
+        newAbTest = new JsonFeatureBattleArgument(AB_INSTANCE_UNIQUE_KEY);
 
         Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();
-        when(getAbTestRoute.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_not_found );
+        when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_not_found );
     }
 
     @Test
@@ -61,7 +60,7 @@ public class FeatureBattlesTest {
     public void shouldFailWhenResourceAlreadyExists() throws Exception {
         // arrange
         Response response_ok = Response.status(Response.Status.OK ).build();
-        when(getAbTestRoute.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_ok );
+        when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_ok );
 
         Response response = featureBattles.createNew(context,  newAbTest );
 

@@ -1,7 +1,7 @@
-package fi.ambientia.atlassian.routes;
+package fi.ambientia.atlassian.routes.experiments;
 
 import com.atlassian.annotations.PublicApi;
-import fi.ambientia.atlassian.action.CreateHypothesis;
+import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HEAD;
@@ -12,13 +12,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/abtest/{abTestId}/")
-public class GetABTestRoute {
+@Path("/experiments/feature_battle/{featureBattleId}")
+public class FeatureBattle {
 
     public static final String ROUTE_ROOT = "/ABTest/";
-    private CreateHypothesis createNewHypothesis;
+    private CreateExperiment createNewHypothesis;
 
-    public GetABTestRoute(CreateHypothesis createNewHypothesis) {
+    public FeatureBattle(CreateExperiment createNewHypothesis) {
 
         this.createNewHypothesis = createNewHypothesis;
     }
@@ -26,7 +26,7 @@ public class GetABTestRoute {
     @PublicApi
     @HEAD
     @Produces({MediaType.APPLICATION_JSON})
-    public Response head(@Context HttpServletRequest request, @PathParam("abTestId") String abTestUniqueKey){
+    public Response head(@Context HttpServletRequest request, @PathParam("featureBattleId") String featureBattleId){
         throw new UnsupportedOperationException();
     }
 }
