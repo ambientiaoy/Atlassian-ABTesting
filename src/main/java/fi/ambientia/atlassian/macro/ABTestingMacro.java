@@ -4,12 +4,12 @@ import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import fi.ambientia.abtesting.routes.Something;
-import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
+import fi.ambientia.atlassian.users.CurrentUser;
 
 import java.util.Map;
 
 public class ABTestingMacro implements Macro {
-    public ABTestingMacro(Something something, MapCurrentUserToUserkey mapCurrentUserToUserkey) {
+    public ABTestingMacro(Something something, CurrentUser currentUser) {
 
     }
 
@@ -18,10 +18,10 @@ public class ABTestingMacro implements Macro {
     }
 
     public BodyType getBodyType() {
-        return null;
+        return BodyType.NONE;
     }
 
     public OutputType getOutputType() {
-        return null;
+        return OutputType.BLOCK;
     }
 }

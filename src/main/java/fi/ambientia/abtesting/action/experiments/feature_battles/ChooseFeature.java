@@ -5,12 +5,12 @@ import fi.ambientia.abtesting.model.experiments.FeatureBattleService;
 
 import java.io.Serializable;
 
-public class DisplayFeatureBattleExperiment<T extends Serializable> {
-    public DisplayFeatureBattleExperiment(FeatureBattleService featureBattleService) {
+public class ChooseFeature<T extends Serializable> {
+    public ChooseFeature(FeatureBattleService featureBattleService) {
 
     }
 
-    public Experiment displayContent(T userKey) {
+    public Experiment forUser(T userKey) {
         return null;
     }
 }

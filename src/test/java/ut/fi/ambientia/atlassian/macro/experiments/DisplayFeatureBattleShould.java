@@ -3,11 +3,11 @@ package ut.fi.ambientia.atlassian.macro.experiments;
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.soy.renderer.SoyException;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
-import fi.ambientia.abtesting.action.experiments.feature_battles.DisplayFeatureBattleExperiment;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
-import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
+import fi.ambientia.atlassian.users.CurrentUser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,26 +25,26 @@ public class DisplayFeatureBattleShould {
     private Map<String, String> map;
     private String string;
     private ConversionContext conversionContext;
-    private MapCurrentUserToUserkey mapCurrentUserToUserkey;
+    private CurrentUser currentUser;
     private SoyTemplateRenderer renderer;
-    private DisplayFeatureBattleExperiment displayFeatureBattleExperiment;
+    private ChooseFeature chooseFeature;
     private DisplayFeatureBattle displayFeatureBattle;
     private Experiment experiment;
 
     @Before
     public void setUp() throws Exception {
-        mapCurrentUserToUserkey = mock(MapCurrentUserToUserkey.class);
-        displayFeatureBattleExperiment = mock(DisplayFeatureBattleExperiment.class);
+        currentUser = mock(CurrentUser.class);
+        chooseFeature = mock(ChooseFeature.class);
         renderer = new SoyTemplateRendererStub();
         experiment = new GoodOldWay();
 
-        displayFeatureBattle = new DisplayFeatureBattle(renderer, mapCurrentUserToUserkey, displayFeatureBattleExperiment);
+        displayFeatureBattle = new DisplayFeatureBattle(renderer, currentUser, chooseFeature);
     }
 
     @Test
-    public void map_to_user() throws Exception {
-        when(mapCurrentUserToUserkey.getCurrentUserIdentifier()).thenReturn(USER_KEY);
-        when(displayFeatureBattleExperiment.displayContent( USER_KEY )).thenReturn( experiment );
+    public void should_render_a_feature_battle_specific_for_a_user() throws Exception {
+        when(currentUser.getIdentifier()).thenReturn(USER_KEY);
+        when(chooseFeature.forUser( USER_KEY )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 

@@ -5,10 +5,10 @@ import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
-import fi.ambientia.abtesting.action.experiments.feature_battles.DisplayFeatureBattleExperiment;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.PluginConstants;
-import fi.ambientia.atlassian.users.MapCurrentUserToUserkey;
+import fi.ambientia.atlassian.users.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -18,20 +18,20 @@ import java.util.Map;
 public class DisplayFeatureBattle implements Macro {
 
     private final SoyTemplateRenderer renderer;
-    private final MapCurrentUserToUserkey mapCurrentUserToUserkey;
-    private final DisplayFeatureBattleExperiment displayFeatureBattleExperiment;
+    private final CurrentUser currentUser;
+    private final ChooseFeature chooseFeature;
 
     @Autowired
-    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer,  MapCurrentUserToUserkey mapCurrentUserToUserkey, DisplayFeatureBattleExperiment displayFeatureBattleExperiment) {
+    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer, CurrentUser currentUser, ChooseFeature chooseFeature) {
         this.renderer = renderer;
-        this.mapCurrentUserToUserkey = mapCurrentUserToUserkey;
-        this.displayFeatureBattleExperiment = displayFeatureBattleExperiment;
+        this.currentUser = currentUser;
+        this.chooseFeature = chooseFeature;
     }
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
-        Serializable currentUserIdentifier = mapCurrentUserToUserkey.getCurrentUserIdentifier();
+        Serializable currentUserIdentifier = currentUser.getIdentifier();
 
-        Experiment macroDef = displayFeatureBattleExperiment.displayContent(currentUserIdentifier);
+        Experiment macroDef = chooseFeature.forUser(currentUserIdentifier);
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("macroDef", macroDef);
