@@ -4,12 +4,11 @@ import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import fi.ambientia.abtesting.routes.Something;
-import fi.ambientia.atlassian.users.CurrentUser;
 
 import java.util.Map;
 
 public class ABTestingMacro implements Macro {
-    public ABTestingMacro(Something something, CurrentUser currentUser) {
+    public ABTestingMacro(Something something) {
 
     }
 

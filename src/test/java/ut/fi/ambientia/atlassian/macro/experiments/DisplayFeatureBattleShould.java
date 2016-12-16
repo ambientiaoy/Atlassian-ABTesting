@@ -9,7 +9,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
-import fi.ambientia.atlassian.users.CurrentUser;
+import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,7 +56,7 @@ public class DisplayFeatureBattleShould {
     @Test
     public void render_default_feature_battle_for_anonymous_user() throws Exception {
         when(currentUser.getRemoteUserKey()).thenReturn(null);
-        when(chooseFeature.forUser( DisplayFeatureBattle.ANONYMOUS_USER )).thenReturn( experiment );
+        when(chooseFeature.forUser( Users.ANONYMOUS_USER )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 

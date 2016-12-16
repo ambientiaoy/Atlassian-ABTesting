@@ -2,7 +2,7 @@ package ut.fi.ambientia.atlassian.macro;
 
 import fi.ambientia.abtesting.routes.Something;
 import fi.ambientia.atlassian.macro.ABTestingMacro;
-import fi.ambientia.atlassian.users.CurrentUser;
+import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class ABTestingMacroTest {
     public static final String USER_KEY = "USERKEY";
     private Map<String, String> params;
     private ABTestingMacro abTestingMacro;
-    private CurrentUser currentUser;
+    private Users currentUser;
 
     @Before
     public void setUp() throws Exception {
@@ -30,14 +30,13 @@ public class ABTestingMacroTest {
         params.put("AB_TESTING_KEY", AB_TEST_KEY);
 
         something = mock(Something.class);
-        currentUser = mock(CurrentUser.class);
+        currentUser = mock(Users.class);
 
-        abTestingMacro = new ABTestingMacro(something, currentUser);
+        abTestingMacro = new ABTestingMacro(something);
     }
 
     @Test
     public void testName() throws Exception {
-        when(currentUser.getIdentifier()).thenReturn( USER_KEY );
         when(something.chooseOption(AB_TEST_KEY, USER_KEY)).thenReturn("viewToBeRendered");
 
         String viewToBeRendered = abTestingMacro.execute(params, "", null);
