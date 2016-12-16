@@ -17,12 +17,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class DisplayFeatureBattle implements Macro {
 
     public static final String ANONYMOUS_USER = "ANONYMOUS_USER";
     private final SoyTemplateRenderer renderer;
-    private final CurrentUser currentUser;
+    private final Supplier<String> currentUser;
     private final ChooseFeature chooseFeature;
 
     @Autowired
@@ -33,7 +34,7 @@ public class DisplayFeatureBattle implements Macro {
     }
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
-        Serializable currentUserIdentifier = currentUser.getIdentifier();
+        Serializable currentUserIdentifier = currentUser.get();
 
         Experiment macroDef = chooseFeature.forUser(currentUserIdentifier);
 
