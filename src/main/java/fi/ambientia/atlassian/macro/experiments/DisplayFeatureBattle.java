@@ -4,6 +4,8 @@ import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.atlassian.sal.api.user.UserKey;
+import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
@@ -14,17 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class DisplayFeatureBattle implements Macro {
 
+    public static final String ANONYMOUS_USER = "ANONYMOUS_USER";
     private final SoyTemplateRenderer renderer;
     private final CurrentUser currentUser;
     private final ChooseFeature chooseFeature;
 
     @Autowired
-    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer, CurrentUser currentUser, ChooseFeature chooseFeature) {
+    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer, @ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
         this.renderer = renderer;
-        this.currentUser = currentUser;
+        this.currentUser = () -> Optional.ofNullable(userManager.getRemoteUserKey()).orElse( new UserKey(ANONYMOUS_USER)).getStringValue() ;
         this.chooseFeature = chooseFeature;
     }
 

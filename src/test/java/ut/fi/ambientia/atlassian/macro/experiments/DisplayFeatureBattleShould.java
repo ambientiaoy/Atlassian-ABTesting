@@ -1,6 +1,8 @@
 package ut.fi.ambientia.atlassian.macro.experiments;
 
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
+import com.atlassian.sal.api.user.UserKey;
+import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.soy.renderer.SoyException;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
@@ -25,7 +27,7 @@ public class DisplayFeatureBattleShould {
     private Map<String, String> map;
     private String string;
     private ConversionContext conversionContext;
-    private CurrentUser currentUser;
+    private UserManager currentUser;
     private SoyTemplateRenderer renderer;
     private ChooseFeature chooseFeature;
     private DisplayFeatureBattle displayFeatureBattle;
@@ -33,7 +35,7 @@ public class DisplayFeatureBattleShould {
 
     @Before
     public void setUp() throws Exception {
-        currentUser = mock(CurrentUser.class);
+        currentUser = mock(UserManager.class);
         chooseFeature = mock(ChooseFeature.class);
         renderer = new SoyTemplateRendererStub();
         experiment = new GoodOldWay();
@@ -43,7 +45,7 @@ public class DisplayFeatureBattleShould {
 
     @Test
     public void should_render_a_feature_battle_specific_for_a_user() throws Exception {
-        when(currentUser.getIdentifier()).thenReturn(USER_KEY);
+        when(currentUser.getRemoteUserKey()).thenReturn(new UserKey(USER_KEY));
         when(chooseFeature.forUser( USER_KEY )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
@@ -51,7 +53,17 @@ public class DisplayFeatureBattleShould {
         assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
     }
 
+    @Test
+    public void render_default_feature_battle_for_anonymous_user() throws Exception {
+        when(currentUser.getRemoteUserKey()).thenReturn(null);
+        when(chooseFeature.forUser( DisplayFeatureBattle.ANONYMOUS_USER )).thenReturn( experiment );
 
+        String execute = displayFeatureBattle.execute(map, string, conversionContext);
+
+        assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
+
+
+    }
 
     private class SoyTemplateRendererStub implements SoyTemplateRenderer {
         public void clearAllCaches() {
