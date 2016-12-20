@@ -31,7 +31,7 @@ public class DisplayFeatureBattle implements Macro {
     }
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
-        Serializable currentUserIdentifier = currentUser.get();
+        String currentUserIdentifier = currentUser.get();
 
         Experiment macroDef = chooseFeature.forUser(currentUserIdentifier);
 
