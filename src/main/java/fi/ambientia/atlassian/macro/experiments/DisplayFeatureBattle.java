@@ -37,7 +37,7 @@ public class DisplayFeatureBattle implements Macro {
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("macroDef", macroDef);
-        return renderer.render(PluginConstants.SOY_TEMPLATES, "Confluence.Templates.ABTesting.featurebattle.display", data);
+        return renderer.render(PluginConstants.SOY_TEMPLATES , "Confluence.Templates.ABTesting.featurebattle.display", data);
     }
 
     public BodyType getBodyType() {

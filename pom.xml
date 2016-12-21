@@ -20,19 +20,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.sal</groupId>
             <artifactId>sal-api</artifactId>
+            <version>3.0.7</version>
             <scope>provided</scope>
         </dependency>
 
@@ -60,6 +57,15 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
+            <version>1.7.21</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.1.7.RELEASE</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -81,11 +87,13 @@
             <groupId>com.atlassian.activeobjects</groupId>
             <artifactId>activeobjects-plugin</artifactId>
             <version>${ao.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.activeobjects</groupId>
             <artifactId>activeobjects-core</artifactId>
             <version>1.1.5</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -126,62 +134,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+            <version>4.12</version>
         </dependency>
 
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.atlassian.platform</groupId>
-                <artifactId>platform</artifactId>
-                <version>${platform.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.platform</groupId>
-                <artifactId>third-party</artifactId>
-                <version>${platform.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-refapp-plugin</artifactId>
-                <version>${amps.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <productVersion>${refapp.version}</productVersion>
-                    <enableQuickReload>true</enableQuickReload>
-                    <enableFastdev>false</enableFastdev>
-
-                    <!-- See here for an explanation of default instructions: -->
-                    <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
-                    <instructions>
-                        <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
-
-                        <!-- Add package to export here -->
-                        <Export-Package>
-                            fi.ambientia.atlassian.api,
-                        </Export-Package>
-
-                        <!-- Add package import here -->
-                        <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
-                            *
-                        </Import-Package>
-
-                        <!-- Ensure plugin is spring powered -->
-                        <Spring-Context>*</Spring-Context>
-                    </instructions>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
@@ -207,6 +166,9 @@
                         <!-- All of these imports might not be necessary -->
                         <!-- Works around https://jira.atlassian.com/browse/CONF-40148 -->
                         <Import-Package>
+                            org.springframework.osgi.*;resolution:="optional",
+                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            *;resolution:=optional
                         </Import-Package>
 
                         <!-- Ensure plugin is spring powered -->

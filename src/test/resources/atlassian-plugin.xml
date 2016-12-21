@@ -6,7 +6,6 @@
     </plugin-info>
 
     <!-- from our base plugin -->
-    <component-import key="myComponent" interface="fi.ambientia.atlassian.api.MyPluginComponent"/>
     <component-import key="ao" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
 
     <!-- from the product container -->

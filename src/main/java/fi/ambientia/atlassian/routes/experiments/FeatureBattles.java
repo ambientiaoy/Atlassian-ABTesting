@@ -3,6 +3,8 @@ package fi.ambientia.atlassian.routes.experiments;
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
+@Controller
 @Path("/experiments/feature_battles")
 public class FeatureBattles {
 
@@ -22,6 +25,7 @@ public class FeatureBattles {
     private CreateExperiment createNewHypothesis;
     private fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle;
 
+    @Autowired
     public FeatureBattles(CreateExperiment createNewHypothesis, fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle) {
         this.createNewHypothesis = createNewHypothesis;
         this.featureBattle = featureBattle;

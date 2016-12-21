@@ -13,11 +13,19 @@
     <!-- add our web resources -->
     <web-resource key="abtesting-resources" name="abtesting Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
+        <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer">
+                <functions>com.atlassian.confluence.plugins.soy:soy-core-functions</functions>
+            </transformer>
+        </transformation>
+
         <resource type="download" name="abtesting.css" location="/css/abtesting.css"/>
         <resource type="download" name="abtesting.js" location="/js/abtesting.js"/>
         <resource type="download" name="images/" location="/images"/>
 
+        <resource type="soy" name="featurebattle.soy" location="/templates/featurebattle.soy"/>
         <context>abtesting</context>
     </web-resource>
 
@@ -27,5 +35,20 @@
     </ao>
 
 
+    <xhtml-macro name="display-feature-battle"
+                 class="fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle" key="display-feature-battle-xhtml-macro">
+        <description>
+            Displays list of user links
+        </description>
+        <parameters>
+            <parameter name="Name" type="string" />
+        </parameters>
+    </xhtml-macro>
+
+
+    <web-item key="myLink" section="index.links" weight="40" application="refapp">
+        <label key="My Link Name or I18n Key"/>
+        <link linkId="myLinkId">/relative/or/absolute/path/to/my/link</link>
+    </web-item>
 
 </atlassian-plugin>

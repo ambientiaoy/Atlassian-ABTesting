@@ -3,7 +3,7 @@ package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.AlreadyDecidedBattles;
+import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import org.junit.Before;
