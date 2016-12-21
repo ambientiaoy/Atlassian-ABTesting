@@ -11,12 +11,13 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+@Component("DisplayFeatureBattle")
 public class DisplayFeatureBattle implements Macro {
 
     private final SoyTemplateRenderer renderer;
@@ -37,7 +38,7 @@ public class DisplayFeatureBattle implements Macro {
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("macroDef", macroDef);
-        return renderer.render(PluginConstants.SOY_TEMPLATES , "Confluence.Templates.ABTesting.featurebattle.display", data);
+        return renderer.render(PluginConstants.SOY_TEMPLATES, "Confluence.Templates.ABTesting.featurebattle.display", data);
     }
 
     public BodyType getBodyType() {

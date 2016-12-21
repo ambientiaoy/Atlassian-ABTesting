@@ -7,9 +7,9 @@
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
 
-    <!-- add our i18n routes -->
+    <!-- add our i18n resource -->
     <resource type="i18n" name="i18n" location="abtesting"/>
-    
+
     <!-- add our web resources -->
     <web-resource key="abtesting-resources" name="abtesting Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -21,19 +21,14 @@
             </transformer>
         </transformation>
 
+        <resource type="soy" name="featurebattle.soy" location="/templates/featurebattle.soy"/>
+
         <resource type="download" name="abtesting.css" location="/css/abtesting.css"/>
         <resource type="download" name="abtesting.js" location="/js/abtesting.js"/>
         <resource type="download" name="images/" location="/images"/>
 
-        <resource type="soy" name="featurebattle.soy" location="/templates/featurebattle.soy"/>
         <context>abtesting</context>
     </web-resource>
-
-    <ao key="ao-module" namespace="Hyper-AO-module">
-        <description>The module configuring the Active Objects service used by this plugin</description>
-        <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo</entity>
-    </ao>
-
 
     <xhtml-macro name="display-feature-battle"
                  class="fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle" key="display-feature-battle-xhtml-macro">
@@ -44,11 +39,5 @@
             <parameter name="Name" type="string" />
         </parameters>
     </xhtml-macro>
-
-
-    <web-item key="myLink" section="index.links" weight="40" application="refapp">
-        <label key="My Link Name or I18n Key"/>
-        <link linkId="myLinkId">/relative/or/absolute/path/to/my/link</link>
-    </web-item>
 
 </atlassian-plugin>
