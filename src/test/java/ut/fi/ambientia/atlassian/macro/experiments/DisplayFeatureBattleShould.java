@@ -8,7 +8,7 @@ import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
-import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
+import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattleVm;
 import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,20 +32,24 @@ public class DisplayFeatureBattleShould {
     private UserManager userManager;
     private SoyTemplateRenderer renderer;
     private ChooseFeature chooseFeature;
-    private DisplayFeatureBattle displayFeatureBattle;
+    private DisplayFeatureBattleVm displayFeatureBattle;
     private Experiment experiment;
 
     @Before
     public void setUp() throws Exception {
         userManager = mock(UserManager.class);
         chooseFeature = mock(ChooseFeature.class);
-        renderer = new SoyTemplateRendererStub();
         experiment = new GoodOldWay();
 
-        displayFeatureBattle = new DisplayFeatureBattle(renderer, userManager, chooseFeature){
+        displayFeatureBattle = new DisplayFeatureBattleVm(renderer, userManager, chooseFeature){
             @Override
             protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
                 return () -> new HashMap<>();
+            }
+
+            @Override
+            protected Supplier<String> getRenderedTemplate(Map<String, Object> contextMap) {
+                return () -> contextMap.get("experiment").getClass().getName();
             }
         };
     }
@@ -57,7 +61,7 @@ public class DisplayFeatureBattleShould {
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
-        assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
+        assertThat(execute, equalTo("fi.ambientia.abtesting.model.experiments.GoodOldWay"));
     }
 
     @Test
@@ -67,28 +71,6 @@ public class DisplayFeatureBattleShould {
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
-        assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
-    }
-
-    private class SoyTemplateRendererStub implements SoyTemplateRenderer {
-        public void clearAllCaches() {
-
-        }
-
-        public void clearCache(String completeModuleKey) {
-
-        }
-
-        public String render(String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
-            return "RENDERING " + data.get("experiment").getClass().getName();
-        }
-
-        public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
-
-        }
-
-        public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data, Map<String, Object> injectedData) throws SoyException {
-
-        }
+        assertThat(execute, equalTo("fi.ambientia.abtesting.model.experiments.GoodOldWay"));
     }
 }

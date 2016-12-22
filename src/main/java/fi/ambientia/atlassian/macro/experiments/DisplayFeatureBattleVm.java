@@ -11,11 +11,9 @@ import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.users.Users;
-import org.apache.velocity.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -42,10 +40,18 @@ public class DisplayFeatureBattleVm implements Macro {
 
         Experiment experiment =  chooseFeature.forUser(currentUserIdentifier);
 
-        Map<String, Object> contextMap = MacroUtils.defaultVelocityContext();
+        Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
-        return VelocityUtils.getRenderedTemplate(TEMPLATES_FEATUREBATTLE_VM, contextMap);
+        return getRenderedTemplate(contextMap).get();
 
+    }
+
+    protected Supplier<String> getRenderedTemplate(Map<String, Object> contextMap) {
+        return () -> VelocityUtils.getRenderedTemplate(TEMPLATES_FEATUREBATTLE_VM, contextMap);
+    }
+
+    protected  Supplier<Map<String, Object >> getVelocityContextSupplier() {
+        return () -> MacroUtils.defaultVelocityContext();
     }
 
     public String getPageToBeRendered(){
