@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FeatureBattleExperimentAction implements CreateExperiment {
+public class CreateNewFeatureBattle implements CreateExperiment {
     private AbTestInstanceRepository abTestInstanceRepository;
 
     @Autowired
-    public FeatureBattleExperimentAction(AbTestInstanceRepository abTestInstanceRepository) {
+    public CreateNewFeatureBattle(AbTestInstanceRepository abTestInstanceRepository) {
 
         this.abTestInstanceRepository = abTestInstanceRepository;
     }

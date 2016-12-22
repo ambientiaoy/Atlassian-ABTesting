@@ -1,7 +1,7 @@
 package ut.fi.ambientia.abtesting.action;
 
 import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
-import fi.ambientia.abtesting.action.experiments.feature_battles.FeatureBattleExperimentAction;
+import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class AbTestHypothesisTest {
     @Before
     public void setUp() throws Exception {
         abTestInstanceRepository = mock(AbTestInstanceRepository.class);
-        hypothesis = new FeatureBattleExperimentAction(abTestInstanceRepository);
+        hypothesis = new CreateNewFeatureBattle(abTestInstanceRepository);
         abTestInstance = new JsonFeatureBattleArgument("UNIQUE_KEY");
 
     }

@@ -1,24 +1,23 @@
 package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 
-import fi.ambientia.abtesting.action.experiments.feature_battles.FeatureBattleExperimentAction;
+import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
 import fi.ambientia.abtesting.model.write.FeatureBattle;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class FeatureBattleExperimentActionShould {
 
     private AbTestInstanceRepository abTestInstanceRepository;
-    private FeatureBattleExperimentAction featureBattleExperimentAction;
+    private CreateNewFeatureBattle featureBattleExperimentAction;
     private FeatureBattle featureBattle;
 
     @Before
     public void setUp() throws Exception {
         abTestInstanceRepository = mock(AbTestInstanceRepository.class);
-        featureBattleExperimentAction = new FeatureBattleExperimentAction(abTestInstanceRepository);
+        featureBattleExperimentAction = new CreateNewFeatureBattle(abTestInstanceRepository);
         featureBattle = newFeatureBattle();
     }
 
