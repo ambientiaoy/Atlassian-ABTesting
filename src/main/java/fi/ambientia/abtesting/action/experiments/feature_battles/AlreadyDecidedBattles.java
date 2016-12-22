@@ -4,8 +4,10 @@ import fi.ambientia.abtesting.model.Identifier;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -23,6 +25,12 @@ public class AlreadyDecidedBattles {
     }
 
     public ExperimentSupplier experimentOf(ExperimentIdentifier experiment) {
-        return (user) -> Optional.empty();
+        List<FeatureBattleResult> featureBattleResults = featureBattleRepository.experimentsFor(experiment);
+
+        return (user) -> featureBattleResults.
+                stream().
+                filter( (it) -> it.forUser( user )).
+                map( (it) -> it.getExperiment() ).
+                findFirst();
     }
 }

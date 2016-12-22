@@ -20,15 +20,15 @@ public class ChooseFeature {
     }
 
     public Experiment forUser(UserIdentifier user, ExperimentIdentifier experiment) {
-        Optional<Experiment> experimentOptional = alreadyDecide.forIdentifier(user);
-//        Optional<Experiment> experimentOptional = alreadyDecide.experimentOf(experiment).targetedFor(user);
+//        Optional<Experiment> experimentOptional = alreadyDecide.forIdentifier(user);
+        Optional<Experiment> experimentOptional = alreadyDecide.experimentOf(experiment).targetedFor(user);
 
-        return experimentOptional.orElse( executeFeatureBattleAndGetResult( user ) );
+        return experimentOptional.orElse( executeFeatureBattleAndGetResult( user , experiment) );
     }
 
-    private Experiment executeFeatureBattleAndGetResult(UserIdentifier userKey) {
-        executeFeatureBattle.forIdentifier(userKey );
+    private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, ExperimentIdentifier experiment) {
+        executeFeatureBattle.forIdentifier(user );
         // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
-        return alreadyDecide.forIdentifier( userKey ).get();
+        return alreadyDecide.experimentOf(experiment).targetedFor(user).get();
     }
 }
