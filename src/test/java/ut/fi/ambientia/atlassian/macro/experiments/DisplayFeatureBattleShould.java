@@ -3,8 +3,7 @@ package ut.fi.ambientia.atlassian.macro.experiments;
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.soy.renderer.SoyTemplateRenderer;
-import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
@@ -36,14 +35,14 @@ public class DisplayFeatureBattleShould {
     private String string;
     private ConversionContext conversionContext;
     private UserManager userManager;
-    private ChooseFeature chooseFeature;
+    private ChooseExperiment chooseFeature;
     private DisplayFeatureBattle displayFeatureBattle;
     private Experiment experiment;
 
     @Before
     public void setUp() throws Exception {
         userManager = mock(UserManager.class);
-        chooseFeature = mock(ChooseFeature.class);
+        chooseFeature = mock(ChooseExperiment.class);
         experiment = new GoodOldWay();
         map.put("feature_battle", EXPERIMENT_ID);
 

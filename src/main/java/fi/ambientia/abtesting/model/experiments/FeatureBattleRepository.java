@@ -10,4 +10,5 @@ public interface FeatureBattleRepository {
     Optional<Experiment> randomBattleResultFor(Identifier identifier);
 
     List<FeatureBattleResult> experimentsFor(ExperimentIdentifier experiment);
+
 }

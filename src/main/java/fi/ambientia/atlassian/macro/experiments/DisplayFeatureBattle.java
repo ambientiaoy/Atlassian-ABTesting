@@ -7,8 +7,7 @@ import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
 import com.atlassian.confluence.util.velocity.VelocityUtils;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.soy.renderer.SoyTemplateRenderer;
-import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -26,11 +25,11 @@ public class DisplayFeatureBattle implements Macro {
     public static final String SPACE_KEY = "ABTEST";
 
     private final Supplier<String> currentUser;
-    private final ChooseFeature chooseFeature;
+    private final ChooseExperiment chooseFeature;
 
 
     @Autowired
-    public DisplayFeatureBattle(@ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
+    public DisplayFeatureBattle(@ComponentImport final UserManager userManager, ChooseExperiment chooseFeature) {
         this.currentUser = Users.getCurrentUserKey(userManager);
         this.chooseFeature = chooseFeature;
     }

@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ChooseFeature {
+public class ChooseExperiment {
     private final AlreadyDecidedBattles alreadyDecided;
     private final ExecuteFeatureBattle executeFeatureBattle;
 
     @Autowired
-    public ChooseFeature(AlreadyDecidedBattles alreadyDecided, ExecuteFeatureBattle executeFeatureBattle) {
+    public ChooseExperiment(AlreadyDecidedBattles alreadyDecided, ExecuteFeatureBattle executeFeatureBattle) {
         this.alreadyDecided = alreadyDecided;
         this.executeFeatureBattle = executeFeatureBattle;
     }

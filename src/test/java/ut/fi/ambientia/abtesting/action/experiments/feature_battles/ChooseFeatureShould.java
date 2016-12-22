@@ -1,6 +1,6 @@
 package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 
-import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
@@ -24,7 +24,7 @@ public class ChooseFeatureShould {
     private static final String USERKEY = "USER KEY";
     private static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
     public static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("EXPERIMENT_IDENTIFIER");
-    private ChooseFeature chooseFeature;
+    private ChooseExperiment chooseFeature;
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private ExecuteFeatureBattle executeFeatureBattle;
 
@@ -32,7 +32,7 @@ public class ChooseFeatureShould {
     public void setUp() throws Exception {
         alreadyDecidedBattles = mock(AlreadyDecidedBattles.class);
         executeFeatureBattle = mock(ExecuteFeatureBattle.class);
-        chooseFeature = new ChooseFeature(alreadyDecidedBattles, executeFeatureBattle);
+        chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle);
     }
 
     @Test
