@@ -19,6 +19,8 @@ public class FeatureBattleExperimentAction implements CreateExperiment {
 
 
     public void createNew(FeatureBattle abTestInstance) {
-        abTestInstanceRepository.createNew(abTestInstance);
+        if (!abTestInstanceRepository.exists(abTestInstance)) {
+            abTestInstanceRepository.createNew(abTestInstance);
+        }
     }
 }

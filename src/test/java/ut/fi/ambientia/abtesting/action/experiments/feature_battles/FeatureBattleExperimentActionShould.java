@@ -31,7 +31,7 @@ public class FeatureBattleExperimentActionShould {
 
     @Test
     public void not_create_feature_battle_if_id_is_defined() throws Exception {
-        when(abTestInstanceRepository.exists(featureBattle) ).thenReturn( false );
+        when(abTestInstanceRepository.exists(featureBattle) ).thenReturn( true );
 
         featureBattleExperimentAction.createNew(featureBattle);
 
