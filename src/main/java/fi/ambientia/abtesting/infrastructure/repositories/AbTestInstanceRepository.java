@@ -14,7 +14,11 @@ public class AbTestInstanceRepository {
 
     }
 
-    public void createNew(FeatureBattle abTestInstance) {
+    public void createNew(FeatureBattle featureBattle) {
 
+    }
+
+    public boolean exists(FeatureBattle featureBattle) {
+        return false;
     }
 }
