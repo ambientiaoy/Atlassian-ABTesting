@@ -10,18 +10,17 @@ import java.util.Optional;
 
 @Component
 public class ChooseFeature {
-    private final AlreadyDecidedBattles alreadyDecide;
+    private final AlreadyDecidedBattles alreadyDecided;
     private final ExecuteFeatureBattle executeFeatureBattle;
 
     @Autowired
-    public ChooseFeature(AlreadyDecidedBattles alreadyDecide, ExecuteFeatureBattle executeFeatureBattle) {
-        this.alreadyDecide = alreadyDecide;
+    public ChooseFeature(AlreadyDecidedBattles alreadyDecided, ExecuteFeatureBattle executeFeatureBattle) {
+        this.alreadyDecided = alreadyDecided;
         this.executeFeatureBattle = executeFeatureBattle;
     }
 
     public Experiment forUser(UserIdentifier user, ExperimentIdentifier experiment) {
-//        Optional<Experiment> experimentOptional = alreadyDecide.forIdentifier(user);
-        Optional<Experiment> experimentOptional = alreadyDecide.experimentOf(experiment).targetedFor(user);
+        Optional<Experiment> experimentOptional = experimentForUser(user, experiment);
 
         return experimentOptional.orElse( executeFeatureBattleAndGetResult( user , experiment) );
     }
@@ -29,6 +28,10 @@ public class ChooseFeature {
     private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, ExperimentIdentifier experiment) {
         executeFeatureBattle.forIdentifier(user );
         // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
-        return alreadyDecide.experimentOf(experiment).targetedFor(user).get();
+        return experimentForUser(user, experiment).get();
+    }
+
+    private Optional<Experiment> experimentForUser(UserIdentifier user, ExperimentIdentifier experiment) {
+        return alreadyDecided.experimentOf(experiment).targetedFor(user);
     }
 }

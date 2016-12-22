@@ -29,8 +29,8 @@ public class AlreadyDecidedBattles {
 
         return (user) -> featureBattleResults.
                 stream().
-                filter( (it) -> it.forUser( user )).
-                map( (it) -> it.getExperiment() ).
+                filter(featureBattleResult -> featureBattleResult.forUser( user )).
+                map(FeatureBattleResult::getExperiment).
                 findFirst();
     }
 }

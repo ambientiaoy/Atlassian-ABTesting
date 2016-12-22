@@ -2,15 +2,23 @@ package fi.ambientia.abtesting.model.feature_battles;
 
 import fi.ambientia.abtesting.model.Identifier;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.NewAndShiny;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 
 public class FeatureBattleResult {
+    private final UserIdentifier userIdentifier;
+    private final Experiment experiment;
+
+    public FeatureBattleResult(UserIdentifier userIdentifier, Experiment experiment) {
+        this.userIdentifier = userIdentifier;
+        this.experiment = experiment;
+    }
+
     public boolean forUser(Identifier user) {
-        return false;
+        return user.equals( userIdentifier );
 
     }
 
     public Experiment getExperiment() {
-        return new NewAndShiny();
+        return experiment ;
     }
 }
