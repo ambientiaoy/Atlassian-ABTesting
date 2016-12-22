@@ -27,11 +27,25 @@
         <resource type="download" name="abtesting.js" location="/js/abtesting.js"/>
         <resource type="download" name="images/" location="/images"/>
 
-        <context>abtesting</context>
     </web-resource>
+
+    <ao key="ao-module" namespace="ABTesting-AO-module">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <!--<entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo</entity>-->
+    </ao>
 
     <xhtml-macro name="display-feature-battle"
                  class="fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle" key="display-feature-battle-xhtml-macro">
+        <description>
+            Displays list of user links
+        </description>
+        <parameters>
+            <parameter name="Name" type="string" />
+        </parameters>
+    </xhtml-macro>
+
+    <xhtml-macro name="velocity-display-feature-battle"
+                 class="fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattleVm" key="display-feature-battle-xhtml-macro-velocity">
         <description>
             Displays list of user links
         </description>
