@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JsonFeatureBattlesTestArguent {
+public class FeatureBattlesRouteShould {
 
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
     private CreateExperiment createNewHypothesis;

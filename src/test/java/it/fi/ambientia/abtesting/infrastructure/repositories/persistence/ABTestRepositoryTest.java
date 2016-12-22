@@ -7,6 +7,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,6 +32,7 @@ public class ABTestRepositoryTest {
         repository = new AbTestInstanceRepository(ao);
     }
 
+    @Ignore
     @Test
     public void should() throws Exception {
         ABTestAo[] abTestAos = ao.find(ABTestAo.class);
