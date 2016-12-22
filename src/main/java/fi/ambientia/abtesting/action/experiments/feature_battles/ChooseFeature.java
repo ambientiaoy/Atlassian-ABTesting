@@ -1,6 +1,8 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +19,10 @@ public class ChooseFeature {
         this.executeFeatureBattle = executeFeatureBattle;
     }
 
-    public Experiment forUser(String userKey) {
-        Optional<Experiment> experimentOptional = alreadyDecidedBattles.forIdentifier(userKey);
+    public Experiment forUser(UserIdentifier userKey, ExperimentIdentifier identifier) {
+        Optional<Experiment> experimentOptional = alreadyDecidedBattles.forIdentifier(userKey.getIdentifier());
 
-        return experimentOptional.orElse( executeFeatureBattleAndGetResult( userKey ) );
+        return experimentOptional.orElse( executeFeatureBattleAndGetResult( userKey.getIdentifier() ) );
     }
 
     private Experiment executeFeatureBattleAndGetResult(String userKey) {

@@ -4,8 +4,10 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
+import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +22,8 @@ import static org.mockito.Mockito.when;
 public class ChooseFeatureShould {
 
     private static final String USERKEY = "USER KEY";
+    private static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
+    public static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("EXPERIMENT_IDENTIFIER");
     private ChooseFeature chooseFeature;
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private ExecuteFeatureBattle executeFeatureBattle;
@@ -35,7 +39,7 @@ public class ChooseFeatureShould {
     public void return_the_already_decided_feature_battle_if_it_is_decided() throws Exception {
         when(alreadyDecidedBattles.forIdentifier( USERKEY )).thenReturn(Optional.of( new NewAndShiny() ) );
 
-        Experiment experiment = chooseFeature.forUser(USERKEY);
+        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
     }
@@ -44,7 +48,7 @@ public class ChooseFeatureShould {
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
         when(alreadyDecidedBattles.forIdentifier( USERKEY )).thenReturn( Optional.empty(), Optional.of( new GoodOldWay() ) );
 
-        Experiment experiment = chooseFeature.forUser(USERKEY);
+        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
         verify( executeFeatureBattle ).forIdentifier( USERKEY );
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));

@@ -10,6 +10,8 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseFeature;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Component("DisplayFeatureBattle")
-public class DisplayFeatureBattleVm implements Macro {
+public class DisplayFeatureBattle implements Macro {
 
     public static final String TEMPLATES_FEATUREBATTLE_VM = "/templates/featurebattle.vm";
     public static final String SPACE_KEY = "ABTEST";
@@ -29,7 +31,7 @@ public class DisplayFeatureBattleVm implements Macro {
 
 
     @Autowired
-    public DisplayFeatureBattleVm(@ComponentImport SoyTemplateRenderer renderer, @ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
+    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer, @ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
         this.renderer = renderer;
         this.currentUser = Users.getCurrentUserKey(userManager);
         this.chooseFeature = chooseFeature;
@@ -38,7 +40,7 @@ public class DisplayFeatureBattleVm implements Macro {
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         String currentUserIdentifier = currentUser.get();
 
-        Experiment experiment =  chooseFeature.forUser(currentUserIdentifier);
+        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( map.get("feature_battle")));
 
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
