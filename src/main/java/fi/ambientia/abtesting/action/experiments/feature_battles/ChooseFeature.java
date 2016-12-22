@@ -25,6 +25,7 @@ public class ChooseFeature {
 
     private Experiment executeFeatureBattleAndGetResult(String userKey) {
         executeFeatureBattle.forIdentifier(userKey );
+        // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
         return alreadyDecidedBattles.forIdentifier( userKey ).get();
     }
 }

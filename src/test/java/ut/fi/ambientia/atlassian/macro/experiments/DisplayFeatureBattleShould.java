@@ -13,7 +13,9 @@ import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +29,7 @@ public class DisplayFeatureBattleShould {
     private Map<String, String> map;
     private String string;
     private ConversionContext conversionContext;
-    private UserManager currentUser;
+    private UserManager userManager;
     private SoyTemplateRenderer renderer;
     private ChooseFeature chooseFeature;
     private DisplayFeatureBattle displayFeatureBattle;
@@ -35,17 +37,22 @@ public class DisplayFeatureBattleShould {
 
     @Before
     public void setUp() throws Exception {
-        currentUser = mock(UserManager.class);
+        userManager = mock(UserManager.class);
         chooseFeature = mock(ChooseFeature.class);
         renderer = new SoyTemplateRendererStub();
         experiment = new GoodOldWay();
 
-        displayFeatureBattle = new DisplayFeatureBattle(renderer, currentUser, chooseFeature);
+        displayFeatureBattle = new DisplayFeatureBattle(renderer, userManager, chooseFeature){
+            @Override
+            protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
+                return () -> new HashMap<>();
+            }
+        };
     }
 
     @Test
     public void should_render_a_feature_battle_specific_for_a_user() throws Exception {
-        when(currentUser.getRemoteUserKey()).thenReturn(new UserKey(USER_KEY));
+        when(userManager.getRemoteUserKey()).thenReturn(new UserKey(USER_KEY));
         when(chooseFeature.forUser( USER_KEY )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
@@ -55,14 +62,12 @@ public class DisplayFeatureBattleShould {
 
     @Test
     public void render_default_feature_battle_for_anonymous_user() throws Exception {
-        when(currentUser.getRemoteUserKey()).thenReturn(null);
+        when(userManager.getRemoteUserKey()).thenReturn(null);
         when(chooseFeature.forUser( Users.ANONYMOUS_USER )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
         assertThat(execute, equalTo("RENDERING fi.ambientia.abtesting.model.experiments.GoodOldWay"));
-
-
     }
 
     private class SoyTemplateRendererStub implements SoyTemplateRenderer {
@@ -75,7 +80,7 @@ public class DisplayFeatureBattleShould {
         }
 
         public String render(String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {
-            return "RENDERING " + data.get("macroDef").getClass().getName();
+            return "RENDERING " + data.get("experiment").getClass().getName();
         }
 
         public void render(Appendable appendable, String completeModuleKey, String templateName, Map<String, Object> data) throws SoyException {

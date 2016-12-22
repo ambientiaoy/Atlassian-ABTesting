@@ -41,12 +41,12 @@ public class ChooseFeatureShould {
     }
 
     @Test
-    public void should_execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
+    public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
         when(alreadyDecidedBattles.forIdentifier( USERKEY )).thenReturn( Optional.empty(), Optional.of( new GoodOldWay() ) );
 
         Experiment experiment = chooseFeature.forUser(USERKEY);
 
-        verify( executeFeatureBattle).forIdentifier( USERKEY );
+        verify( executeFeatureBattle ).forIdentifier( USERKEY );
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 }

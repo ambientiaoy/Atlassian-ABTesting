@@ -3,6 +3,7 @@ package fi.ambientia.atlassian.macro.experiments;
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
+import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
@@ -13,7 +14,6 @@ import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -35,11 +35,16 @@ public class DisplayFeatureBattle implements Macro {
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         String currentUserIdentifier = currentUser.get();
 
-        Experiment macroDef = chooseFeature.forUser(currentUserIdentifier);
+        Experiment experiment = chooseFeature.forUser(currentUserIdentifier);
 
-        Map<String, Object> data = new HashMap<String, Object>();
-//        data.put("macroDef", macroDef);
+        Map<String, Object> data = getVelocityContextSupplier().get();
+        data.put("experiment", experiment);
+
         return renderer.render(PluginConstants.SOY_TEMPLATES, "Confluence.Templates.ABTesting.featurebattle.display", data);
+    }
+
+    protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
+        return () -> MacroUtils.defaultVelocityContext();
     }
 
     public BodyType getBodyType() {

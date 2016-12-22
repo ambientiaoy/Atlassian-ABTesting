@@ -2,13 +2,11 @@
 
 /**
  * Renders a Feature Battle
+ * @param action
+ * @param experiment
  */
 {template .display}
 <div class="feature-battle">
-{
-  '<ac:macro ac:name="include">
-    <ac:default-parameter>ABTEST:b1_good_old</ac:default-parameter>
-  </ac:macro>'
-}
+    getText( $action.getHelper().renderConfluenceMacro( $experiment.render() ) )
 </div>
 {/template}
