@@ -35,7 +35,6 @@ public class DisplayFeatureBattleShould {
     private Map<String, String> map = new HashMap<>();
     private String string;
     private ConversionContext conversionContext;
-    private SoyTemplateRenderer renderer;
     private UserManager userManager;
     private ChooseFeature chooseFeature;
     private DisplayFeatureBattle displayFeatureBattle;
@@ -48,7 +47,7 @@ public class DisplayFeatureBattleShould {
         experiment = new GoodOldWay();
         map.put("feature_battle", EXPERIMENT_ID);
 
-        displayFeatureBattle = new DisplayFeatureBattle(renderer, userManager, chooseFeature){
+        displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature){
             @Override
             protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
                 return () -> new HashMap<>();

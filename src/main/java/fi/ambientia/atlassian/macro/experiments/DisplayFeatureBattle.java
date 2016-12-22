@@ -25,22 +25,20 @@ public class DisplayFeatureBattle implements Macro {
     public static final String TEMPLATES_FEATUREBATTLE_VM = "/templates/featurebattle.vm";
     public static final String SPACE_KEY = "ABTEST";
 
-    private final SoyTemplateRenderer renderer;
     private final Supplier<String> currentUser;
     private final ChooseFeature chooseFeature;
 
 
     @Autowired
-    public DisplayFeatureBattle(@ComponentImport SoyTemplateRenderer renderer, @ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
-        this.renderer = renderer;
+    public DisplayFeatureBattle(@ComponentImport final UserManager userManager, ChooseFeature chooseFeature) {
         this.currentUser = Users.getCurrentUserKey(userManager);
         this.chooseFeature = chooseFeature;
     }
 
-    public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
+    public String execute(Map<String, String> parameter, String s, ConversionContext conversionContext) throws MacroExecutionException {
         String currentUserIdentifier = currentUser.get();
 
-        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( map.get("feature_battle")));
+        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( parameter.get("feature_battle")));
 
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
