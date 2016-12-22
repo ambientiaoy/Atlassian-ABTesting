@@ -10,6 +10,22 @@ public class ExperimentIdentifier implements Identifier {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExperimentIdentifier)) return false;
+
+        ExperimentIdentifier that = (ExperimentIdentifier) o;
+
+        return experiment_id != null ? experiment_id.equals(that.experiment_id) : that.experiment_id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return experiment_id != null ? experiment_id.hashCode() : 0;
+    }
+
+    @Override
     public String getIdentifier() {
         return experiment_id;
     }

@@ -11,4 +11,5 @@ public interface FeatureBattleRepository {
 
     List<FeatureBattleResult> experimentsFor(ExperimentIdentifier experiment);
 
+    ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier);
 }

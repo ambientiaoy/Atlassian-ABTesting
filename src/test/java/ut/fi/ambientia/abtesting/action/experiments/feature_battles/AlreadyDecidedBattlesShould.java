@@ -59,20 +59,20 @@ public class AlreadyDecidedBattlesShould {
         assertThat(optional.get(), equalTo( goodOldWay ));
     }
 
-    @Test
-    public void see_if_user_has_already_decided_to_take_either() throws Exception {
-        GoodOldWay goodOldWay = new GoodOldWay();
-        when(featureBattleRepository.votesFor( EXPERIMENT_IDENTIFIER )).
-                thenReturn(
-                        Arrays.asList(createTestFeatureBattleResultWhereUserWantsOldWay(goodOldWay)
-                        ) );
-
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
-
-        assertThat(optional.get(), equalTo( goodOldWay ));
-
-
-    }
+//    @Test
+//    public void see_if_user_has_already_decided_to_take_either() throws Exception {
+//        GoodOldWay goodOldWay = new GoodOldWay();
+//        when(featureBattleRepository.votesFor( EXPERIMENT_IDENTIFIER )).
+//                thenReturn(
+//                        Arrays.asList(createTestFeatureBattleResultWhereUserWantsOldWay(goodOldWay)
+//                        ) );
+//
+//        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
+//
+//        assertThat(optional.get(), equalTo( goodOldWay ));
+//
+//
+//    }
 
     private FeatureBattleResult createTestFeatureBattleResultWhereUserWantsOldWay(GoodOldWay goodOldWay) {
         return null;

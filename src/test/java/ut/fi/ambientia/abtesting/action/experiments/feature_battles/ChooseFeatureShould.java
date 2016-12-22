@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,6 +34,7 @@ public class ChooseFeatureShould {
         alreadyDecidedBattles = mock(AlreadyDecidedBattles.class);
         executeFeatureBattle = mock(ExecuteFeatureBattle.class);
         chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle);
+        when(executeFeatureBattle.experimentOf( any() )).thenReturn( (u) -> Optional.of(new NewAndShiny()));
     }
 
     @Test
@@ -51,7 +53,7 @@ public class ChooseFeatureShould {
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
-        verify( executeFeatureBattle ).forIdentifier( USERIDENTIFIER );
+        verify( executeFeatureBattle ).experimentOf(EXPERIMENT_IDENTIFIER);
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 }

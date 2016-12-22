@@ -26,7 +26,7 @@ public class ChooseExperiment {
     }
 
     private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, ExperimentIdentifier experiment) {
-        executeFeatureBattle.forIdentifier(user );
+        executeFeatureBattle.experimentOf(experiment).targetedFor(user );
         // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
         return experimentForUser(user, experiment).get();
     }
