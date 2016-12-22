@@ -37,7 +37,8 @@ public class ChooseFeatureShould {
 
     @Test
     public void return_the_already_decided_feature_battle_if_it_is_decided() throws Exception {
-        when(alreadyDecidedBattles.forIdentifier( USERKEY )).thenReturn(Optional.of( new NewAndShiny() ) );
+
+        when(alreadyDecidedBattles.forIdentifier( USERIDENTIFIER)).thenReturn(Optional.of( new NewAndShiny() ) );
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
@@ -46,11 +47,11 @@ public class ChooseFeatureShould {
 
     @Test
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
-        when(alreadyDecidedBattles.forIdentifier( USERKEY )).thenReturn( Optional.empty(), Optional.of( new GoodOldWay() ) );
+        when(alreadyDecidedBattles.forIdentifier( USERIDENTIFIER )).thenReturn( Optional.empty(), Optional.of( new GoodOldWay() ) );
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
-        verify( executeFeatureBattle ).forIdentifier( USERKEY );
+        verify( executeFeatureBattle ).forIdentifier( USERIDENTIFIER );
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 }

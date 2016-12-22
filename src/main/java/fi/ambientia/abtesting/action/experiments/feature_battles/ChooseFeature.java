@@ -10,24 +10,25 @@ import java.util.Optional;
 
 @Component
 public class ChooseFeature {
-    private final AlreadyDecidedBattles alreadyDecidedBattles;
+    private final AlreadyDecidedBattles alreadyDecide;
     private final ExecuteFeatureBattle executeFeatureBattle;
 
     @Autowired
-    public ChooseFeature(AlreadyDecidedBattles alreadyDecidedBattles, ExecuteFeatureBattle executeFeatureBattle) {
-        this.alreadyDecidedBattles = alreadyDecidedBattles;
+    public ChooseFeature(AlreadyDecidedBattles alreadyDecide, ExecuteFeatureBattle executeFeatureBattle) {
+        this.alreadyDecide = alreadyDecide;
         this.executeFeatureBattle = executeFeatureBattle;
     }
 
-    public Experiment forUser(UserIdentifier userKey, ExperimentIdentifier identifier) {
-        Optional<Experiment> experimentOptional = alreadyDecidedBattles.forIdentifier(userKey.getIdentifier());
+    public Experiment forUser(UserIdentifier user, ExperimentIdentifier experiment) {
+        Optional<Experiment> experimentOptional = alreadyDecide.forIdentifier(user);
+//        Optional<Experiment> experimentOptional = alreadyDecide.experimentOf(experiment).targetedFor(user);
 
-        return experimentOptional.orElse( executeFeatureBattleAndGetResult( userKey.getIdentifier() ) );
+        return experimentOptional.orElse( executeFeatureBattleAndGetResult( user ) );
     }
 
-    private Experiment executeFeatureBattleAndGetResult(String userKey) {
+    private Experiment executeFeatureBattleAndGetResult(UserIdentifier userKey) {
         executeFeatureBattle.forIdentifier(userKey );
         // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
-        return alreadyDecidedBattles.forIdentifier( userKey ).get();
+        return alreadyDecide.forIdentifier( userKey ).get();
     }
 }
