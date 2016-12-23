@@ -67,7 +67,7 @@ public class AlreadyDecidedBattlesShould {
 //                        Arrays.asList(createTestFeatureBattleResultWhereUserWantsOldWay(goodOldWay)
 //                        ) );
 //
-//        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
+//        Optional<Experiment> optional = alreadyDecidedBattles.forExperiment( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
 //
 //        assertThat(optional.get(), equalTo( goodOldWay ));
 //

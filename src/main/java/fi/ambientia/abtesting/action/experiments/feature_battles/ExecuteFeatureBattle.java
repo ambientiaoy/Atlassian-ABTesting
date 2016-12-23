@@ -4,10 +4,9 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
-import org.elasticsearch.common.cli.commons.Option;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 @Component
 public class ExecuteFeatureBattle {
@@ -23,8 +22,17 @@ public class ExecuteFeatureBattle {
 
     }
 
-    public ExperimentSupplier experimentOf(ExperimentIdentifier experiment) {
+    public StoreUserConsumer forExperiment(ExperimentIdentifier experiment) {
         Experiment randomExperiment = featureBattleRepository.experimentRandomizer(experiment).randomize();
-        return ( user ) -> Optional.of(randomExperiment);
+
+        return (UserIdentifier user) -> {
+            featureBattleRepository.newFeatureBattleFor(experiment).forUser(user).resultBeing(randomExperiment);
+        };
+    }
+
+    public interface StoreUserConsumer extends Consumer<UserIdentifier> {
+        default void andStoreResultToRepository(UserIdentifier user) {
+            this.accept( user );
+        }
     }
 }

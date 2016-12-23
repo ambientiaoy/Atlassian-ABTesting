@@ -2,6 +2,7 @@ package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
+import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ChooseFeatureShould {
+public class ChooseExperimentShould {
 
     private static final String USERKEY = "USER KEY";
     private static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
@@ -28,13 +29,20 @@ public class ChooseFeatureShould {
     private ChooseExperiment chooseFeature;
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private ExecuteFeatureBattle executeFeatureBattle;
+    private RandomizeFeatureBattle randomizeFeatureBattle;
 
     @Before
     public void setUp() throws Exception {
         alreadyDecidedBattles = mock(AlreadyDecidedBattles.class);
         executeFeatureBattle = mock(ExecuteFeatureBattle.class);
-        chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle);
-        when(executeFeatureBattle.experimentOf( any() )).thenReturn( (u) -> Optional.of(new NewAndShiny()));
+        randomizeFeatureBattle = mock(RandomizeFeatureBattle.class);
+        chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
+        when(executeFeatureBattle.forExperiment( any() )).thenReturn( (u) -> Optional.of(new NewAndShiny()));
+        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn((u) -> {
+            assertThat( u, equalTo( USERIDENTIFIER ));
+            return null;
+        });
+
     }
 
     @Test
@@ -49,11 +57,20 @@ public class ChooseFeatureShould {
 
     @Test
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
-        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty(), (u) -> Optional.of( new GoodOldWay() ) );
+        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
-        verify( executeFeatureBattle ).experimentOf(EXPERIMENT_IDENTIFIER);
+        verify( executeFeatureBattle ).forExperiment(EXPERIMENT_IDENTIFIER);
+    }
+
+    @Test
+    public void execute_a_randomizer_to_call_random_page() throws Exception {
+        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
+        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay());
+
+        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
+
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 }

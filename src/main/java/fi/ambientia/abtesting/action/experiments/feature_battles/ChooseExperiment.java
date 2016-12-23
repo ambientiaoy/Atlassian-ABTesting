@@ -12,26 +12,25 @@ import java.util.Optional;
 public class ChooseExperiment {
     private final AlreadyDecidedBattles alreadyDecided;
     private final ExecuteFeatureBattle executeFeatureBattle;
+    private final RandomizeFeatureBattle randomizeFeatureBattle;
 
     @Autowired
-    public ChooseExperiment(AlreadyDecidedBattles alreadyDecided, ExecuteFeatureBattle executeFeatureBattle) {
+    public ChooseExperiment(AlreadyDecidedBattles alreadyDecided, ExecuteFeatureBattle executeFeatureBattle, RandomizeFeatureBattle randomizeFeatureBattle) {
         this.alreadyDecided = alreadyDecided;
         this.executeFeatureBattle = executeFeatureBattle;
+        this.randomizeFeatureBattle = randomizeFeatureBattle;
     }
 
     public Experiment forUser(UserIdentifier user, ExperimentIdentifier experiment) {
-        Optional<Experiment> experimentOptional = experimentForUser(user, experiment);
+        Optional<Experiment> experimentOptional = alreadyDecided.experimentOf(experiment).targetedFor(user);
 
         return experimentOptional.orElse( executeFeatureBattleAndGetResult( user , experiment) );
     }
 
     private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, ExperimentIdentifier experiment) {
-        executeFeatureBattle.experimentOf(experiment).targetedFor(user );
-        // TODO AkS: This might return null - if and only if the executeFeatureBattle does not work as expected
-        return experimentForUser(user, experiment).get();
+        executeFeatureBattle.forExperiment(experiment).andStoreResultToRepository( user );
+
+        return randomizeFeatureBattle.getExperiment(experiment).forUser(user);
     }
 
-    private Optional<Experiment> experimentForUser(UserIdentifier user, ExperimentIdentifier experiment) {
-        return alreadyDecided.experimentOf(experiment).targetedFor(user);
-    }
 }
