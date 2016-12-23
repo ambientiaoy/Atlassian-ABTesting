@@ -2,6 +2,7 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
@@ -54,8 +55,16 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public CreateNewFeatureBattleFor newFeatureBattleFor(ExperimentIdentifier experiment) {
+
+
         return ( user) -> {
-            return ( featureBattle ) -> {};
+            return ( featureBattle ) -> {
+                UserExperimentAO userExperimentAO = ao.create(UserExperimentAO.class);
+                userExperimentAO.setExperimentId( experiment.getIdentifier() );
+                userExperimentAO.setUserId( user.getIdentifier() );
+                userExperimentAO.setExperiment( featureBattle.type() );
+
+            };
         };
     }
 

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class ChooseExperimentShould {
 
     private static final String USERKEY = "USER KEY";
-    private static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
+    public static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
     public static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("EXPERIMENT_IDENTIFIER");
     private ChooseExperiment chooseFeature;
     private AlreadyDecidedBattles alreadyDecidedBattles;

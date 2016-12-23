@@ -4,8 +4,11 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
+import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
@@ -35,7 +38,7 @@ public class FeatureBattleAORepositoryTest {
     {
         assertNotNull(entityManager);
         ao = new TestActiveObjects(entityManager);
-        ao.migrate(ABTestAo.class);
+        ao.migrate(UserExperimentAO.class);
         PluginProperties properties = new PluginProperties(){
             @Override
             protected String getApplicationHome() {
@@ -63,7 +66,17 @@ public class FeatureBattleAORepositoryTest {
 
     @Test
     public void should_store_randomized_experiment_for_user() throws Exception {
+        UserExperimentAO[] abTestAos = ao.find(UserExperimentAO.class);
+        assertThat(abTestAos.length, equalTo(0));
 
+        repository.newFeatureBattleFor( ChooseExperimentShould.EXPERIMENT_IDENTIFIER ).forUser(  ChooseExperimentShould.USERIDENTIFIER ).resultBeing( newAndShiny( ChooseExperimentShould.EXPERIMENT_IDENTIFIER) );
 
+        abTestAos = ao.find(UserExperimentAO.class);
+        assertThat(abTestAos.length, equalTo(1));
+
+    }
+
+    private Experiment newAndShiny(ExperimentIdentifier experimentIdentifier) {
+        return new NewAndShiny(experimentIdentifier);
     }
 }
