@@ -6,27 +6,31 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
+import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
+import fi.ambientia.atlassian.properties.PluginProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Repository
 public class FeatureBattleAORepository implements FeatureBattleRepository{
 
+    private final ActiveObjects ao;
+    private final PluginProperties properties;
+    private Random random;
+
     @Autowired
-    public FeatureBattleAORepository(@ComponentImport ActiveObjects ao) {
-
-    }
-
-    @Override
-    public Optional<Experiment> randomBattleResultFor(ExperimentIdentifier identifier) {
-        return Optional.of( new NewAndShiny(identifier) );
+    public FeatureBattleAORepository(@ComponentImport ActiveObjects ao, PluginProperties properties) {
+        this.ao = ao;
+        this.properties = properties;
+        this.random = new Random();
     }
 
     @Override
@@ -37,7 +41,15 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier) {
-        return () -> new NewAndShiny(experimentIdentifier);
+        return () -> randomBattleResultFor( experimentIdentifier );
+    }
+
+    private Experiment randomBattleResultFor(ExperimentIdentifier identifier) {
+        return randomIntLessThanDefaultFromProperties() ? new NewAndShiny(identifier) : new GoodOldWay(identifier);
+    }
+
+    private boolean randomIntLessThanDefaultFromProperties() {
+        return random.nextInt(100) < properties.propertyOrDefault("feature.battle.default.win", 25);
     }
 
     @Override

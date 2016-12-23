@@ -1,4 +1,4 @@
-package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
+package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;

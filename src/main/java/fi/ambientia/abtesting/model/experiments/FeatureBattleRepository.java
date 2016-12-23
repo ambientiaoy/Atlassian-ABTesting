@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
-    Optional<Experiment> randomBattleResultFor(ExperimentIdentifier identifier);
-
     List<FeatureBattleResult> experimentsFor(ExperimentIdentifier experiment);
 
     ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier);
