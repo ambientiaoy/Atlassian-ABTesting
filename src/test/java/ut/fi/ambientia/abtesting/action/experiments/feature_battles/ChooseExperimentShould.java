@@ -37,7 +37,7 @@ public class ChooseExperimentShould {
         executeFeatureBattle = mock(ExecuteFeatureBattle.class);
         randomizeFeatureBattle = mock(RandomizeFeatureBattle.class);
         chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
-        when(executeFeatureBattle.forExperiment( any() )).thenReturn( (u) -> Optional.of(new NewAndShiny()));
+        when(executeFeatureBattle.forExperiment( any() )).thenReturn( (u) -> Optional.of(getANewAndShiny()));
         when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn((u) -> {
             assertThat( u, equalTo( USERIDENTIFIER ));
             return null;
@@ -48,7 +48,7 @@ public class ChooseExperimentShould {
     @Test
     public void return_the_already_decided_feature_battle_if_it_is_decided() throws Exception {
 
-        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER)).thenReturn( (user) -> Optional.of( new NewAndShiny() ) );
+        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER)).thenReturn( (user) -> Optional.of(getANewAndShiny()) );
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
@@ -67,10 +67,14 @@ public class ChooseExperimentShould {
     @Test
     public void execute_a_randomizer_to_call_random_page() throws Exception {
         when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
-        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay());
+        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay(EXPERIMENT_IDENTIFIER));
 
         Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
+    }
+
+    private NewAndShiny getANewAndShiny() {
+        return new NewAndShiny(EXPERIMENT_IDENTIFIER);
     }
 }

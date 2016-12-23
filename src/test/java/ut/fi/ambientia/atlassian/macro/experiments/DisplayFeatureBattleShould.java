@@ -31,6 +31,7 @@ public class DisplayFeatureBattleShould {
     public static final String USER_KEY = "USER KEY";
     public static final UserIdentifier USER_IDENTIFIER = new UserIdentifier(USER_KEY);
     public static final String EXPERIMENT_ID = "EXPERIMENT_ID";
+    private static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier(EXPERIMENT_ID) ;
     private Map<String, String> map = new HashMap<>();
     private String string;
     private ConversionContext conversionContext;
@@ -43,7 +44,7 @@ public class DisplayFeatureBattleShould {
     public void setUp() throws Exception {
         userManager = mock(UserManager.class);
         chooseFeature = mock(ChooseExperiment.class);
-        experiment = new GoodOldWay();
+        experiment = new GoodOldWay(EXPERIMENT_IDENTIFIER);
         map.put("feature_battle", EXPERIMENT_ID);
 
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature){

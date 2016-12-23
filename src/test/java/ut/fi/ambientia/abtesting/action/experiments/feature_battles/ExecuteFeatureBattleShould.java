@@ -7,8 +7,6 @@ import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Test;
 
-import java.util.function.Consumer;
-
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -24,7 +22,7 @@ public class ExecuteFeatureBattleShould {
 
     @Test
     public void find_feature_battle_details_from_repository() throws Exception {
-        GoodOldWay randomExperiment = new GoodOldWay();
+        GoodOldWay randomExperiment = new GoodOldWay(EXPERIMENT_IDENTIFIER);
         featureBattleRepository = mock(FeatureBattleRepository.class);
         executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository);
         FeatureBattleRepository.StoreExperiment mock = mock(FeatureBattleRepository.StoreExperiment.class);

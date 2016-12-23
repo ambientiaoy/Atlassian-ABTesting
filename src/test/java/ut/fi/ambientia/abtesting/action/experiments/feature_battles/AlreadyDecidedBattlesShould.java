@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -35,7 +34,7 @@ public class AlreadyDecidedBattlesShould {
 
     @Test
     public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
-        GoodOldWay goodOldWay = new GoodOldWay();
+        GoodOldWay goodOldWay = new GoodOldWay(EXPERIMENT_IDENTIFIER);
         when(featureBattleRepository.experimentsFor( EXPERIMENT_IDENTIFIER )).
                 thenReturn(
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)

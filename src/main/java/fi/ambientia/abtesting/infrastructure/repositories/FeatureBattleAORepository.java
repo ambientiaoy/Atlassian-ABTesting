@@ -2,13 +2,13 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import fi.ambientia.abtesting.model.Identifier;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,8 +25,8 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     @Override
-    public Optional<Experiment> randomBattleResultFor(Identifier identifier) {
-        return Optional.of( new NewAndShiny() );
+    public Optional<Experiment> randomBattleResultFor(ExperimentIdentifier identifier) {
+        return Optional.of( new NewAndShiny(identifier) );
     }
 
     @Override
@@ -37,7 +37,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier) {
-        return () -> new NewAndShiny();
+        return () -> new NewAndShiny(experimentIdentifier);
     }
 
     @Override
@@ -45,5 +45,10 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         return ( user) -> {
             return ( featureBattle ) -> {};
         };
+    }
+
+    @Override
+    public List<Experiment> randomizedExperimentsFor(UserIdentifier userientifier) {
+        return new ArrayList<>();
     }
 }

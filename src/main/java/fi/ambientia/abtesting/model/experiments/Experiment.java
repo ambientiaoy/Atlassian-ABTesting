@@ -8,6 +8,8 @@ public interface Experiment {
     Type type();
     String render();
 
+    boolean isRepresentedBy(ExperimentIdentifier experimentIdentifier);
+
     enum Type {
         NEW_AND_SHINY,
         GOOD_OLD
