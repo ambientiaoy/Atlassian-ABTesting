@@ -4,9 +4,12 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 @FunctionalInterface
-public interface ExperimentSupplier {
+public interface ExperimentSupplier extends Function< UserIdentifier, Optional<Experiment>> {
 
-    public Optional<Experiment> targetedFor(UserIdentifier identifier);
+    default Optional<Experiment> targetedFor(UserIdentifier identifier) {
+        return this.apply(identifier);
+    }
 }

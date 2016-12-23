@@ -1,7 +1,11 @@
 package fi.ambientia.abtesting.model.experiments;
 
-@FunctionalInterface
-public interface ExperimentRandomizer {
+import java.util.function.Supplier;
 
-    public Experiment randomize( );
+@FunctionalInterface
+public interface ExperimentRandomizer extends Supplier<Experiment> {
+
+    default public Experiment randomize() {
+        return this.get();
+    }
 }

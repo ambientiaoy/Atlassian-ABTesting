@@ -6,6 +6,7 @@ import fi.ambientia.abtesting.model.user.UserIdentifier;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
     Optional<Experiment> randomBattleResultFor(Identifier identifier);
@@ -23,7 +24,9 @@ public interface FeatureBattleRepository {
     }
 
     @FunctionalInterface
-    interface StoreExperiment {
-        void resultBeing(Experiment randomExperiment);
+    interface StoreExperiment extends Consumer<Experiment> {
+        default void resultBeing(Experiment randomExperiment) {
+            this.accept( randomExperiment );
+        }
     }
 }

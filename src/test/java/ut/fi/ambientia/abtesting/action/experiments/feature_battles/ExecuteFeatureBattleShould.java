@@ -27,12 +27,20 @@ public class ExecuteFeatureBattleShould {
         GoodOldWay randomExperiment = new GoodOldWay();
         featureBattleRepository = mock(FeatureBattleRepository.class);
         executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository);
+        FeatureBattleRepository.StoreExperiment mock = mock(FeatureBattleRepository.StoreExperiment.class);
 
         when(featureBattleRepository.experimentRandomizer(EXPERIMENT_IDENTIFIER)).thenReturn(() -> randomExperiment);
 
-        Consumer<UserIdentifier> userIdentifierConsumer = executeFeatureBattle.forExperiment(EXPERIMENT_IDENTIFIER);
+        when(featureBattleRepository.newFeatureBattleFor( EXPERIMENT_IDENTIFIER )).thenReturn(
+                (user) -> {
+                    return mock;
+                });
 
-//        verify(featureBattleRepository).newFeatureBattleFor( EXPERIMENT_IDENTIFIER );
+        executeFeatureBattle.
+                forExperiment(EXPERIMENT_IDENTIFIER).
+                andStoreResultToRepository( USER_IDENTIFIER );
+
+        verify(mock).resultBeing( randomExperiment );
     }
 
 

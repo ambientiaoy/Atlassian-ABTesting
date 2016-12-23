@@ -5,6 +5,7 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,14 +15,9 @@ import java.util.Optional;
 public class AlreadyDecidedBattles {
     private final FeatureBattleRepository featureBattleRepository;
 
+    @Autowired
     public AlreadyDecidedBattles(FeatureBattleRepository featureBattleRepository) {
         this.featureBattleRepository = featureBattleRepository;
-    }
-
-    public Optional<Experiment> forIdentifier(Identifier identifier) {
-        Optional<Experiment> experimentOptional = featureBattleRepository.randomBattleResultFor(identifier);
-
-        return experimentOptional;
     }
 
     public ExperimentSupplier experimentOf(ExperimentIdentifier experiment) {

@@ -34,19 +34,6 @@ public class AlreadyDecidedBattlesShould {
     }
 
     @Test
-    public void ask_for_repository_if_battle_is_decided() throws Exception {
-        GoodOldWay goodOldWay = new GoodOldWay();
-        when(featureBattleRepository.randomBattleResultFor( USER_IDENTIFIER )).thenReturn(ofNullable( goodOldWay) );
-
-        Optional<Experiment> optional = alreadyDecidedBattles.forIdentifier(USER_IDENTIFIER);
-
-        Experiment experiment = optional.orElseThrow(() -> new NullPointerException("Should not be null"));
-
-        assertThat(experiment, equalTo( goodOldWay ));
-    }
-
-
-    @Test
     public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
         GoodOldWay goodOldWay = new GoodOldWay();
         when(featureBattleRepository.experimentsFor( EXPERIMENT_IDENTIFIER )).
