@@ -1,7 +1,5 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
-import fi.ambientia.abtesting.model.Identifier;
-import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class AlreadyDecidedBattles {
@@ -21,7 +18,7 @@ public class AlreadyDecidedBattles {
     }
 
     public ExperimentSupplier experimentOf(ExperimentIdentifier experiment) {
-        List<FeatureBattleResult> featureBattleResults = featureBattleRepository.experimentsFor(experiment);
+        List<FeatureBattleResult> featureBattleResults = featureBattleRepository.featureBattleResultsFor(experiment);
 
         return (user) -> featureBattleResults.
                 stream().

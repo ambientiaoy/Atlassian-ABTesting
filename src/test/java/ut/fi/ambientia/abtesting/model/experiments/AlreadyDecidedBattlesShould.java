@@ -35,7 +35,7 @@ public class AlreadyDecidedBattlesShould {
     @Test
     public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
         GoodOldWay goodOldWay = new GoodOldWay(EXPERIMENT_IDENTIFIER);
-        when(featureBattleRepository.experimentsFor( EXPERIMENT_IDENTIFIER )).
+        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).
                 thenReturn(
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)
                         ) );

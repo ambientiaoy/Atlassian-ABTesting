@@ -8,13 +8,13 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
-    List<FeatureBattleResult> experimentsFor(ExperimentIdentifier experiment);
+    List<FeatureBattleResult> featureBattleResultsFor(ExperimentIdentifier experiment);
 
     ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier);
 
     CreateNewFeatureBattleFor newFeatureBattleFor(ExperimentIdentifier experiment);
 
-    List<Experiment> randomizedExperimentsFor(UserIdentifier userientifier);
+    List<Experiment> experimentsForUser(UserIdentifier userientifier);
 
     @FunctionalInterface
     interface CreateNewFeatureBattleFor {

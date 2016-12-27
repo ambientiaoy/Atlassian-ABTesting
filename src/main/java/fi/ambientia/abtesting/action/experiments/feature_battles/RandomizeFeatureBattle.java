@@ -3,15 +3,11 @@ package fi.ambientia.abtesting.action.experiments.feature_battles;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
-import fi.ambientia.abtesting.model.experiments.GoodOldWay;
-import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Function;
 
 @Component
@@ -28,7 +24,7 @@ public class RandomizeFeatureBattle {
     public GetExperimentForUser getExperiment(ExperimentIdentifier experimentIdentifier) {
         // TODO AkS: find this from DB?
         return (user) -> {
-            Optional<Experiment> first = repository.randomizedExperimentsFor(user).stream().
+            Optional<Experiment> first = repository.experimentsForUser(user).stream().
                     filter(experiment -> experiment.isRepresentedBy(experimentIdentifier)).
                     findFirst();
 

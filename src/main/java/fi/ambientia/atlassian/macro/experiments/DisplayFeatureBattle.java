@@ -11,6 +11,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperimen
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
+import fi.ambientia.atlassian.routes.Routes;
 import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,14 +36,15 @@ public class DisplayFeatureBattle implements Macro {
     }
 
     public String execute(Map<String, String> parameter, String s, ConversionContext conversionContext) throws MacroExecutionException {
+        // handle input parameters
         String currentUserIdentifier = currentUser.get();
-
-        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( parameter.get("feature_battle")));
-
+        String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> ExperimentIdentifier.DEFAULT_IDENTIFIER);
+        // execute action
+        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( feature_battle_identifier));
+        // create context and render
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
         return getRenderedTemplate(contextMap).get();
-
     }
 
     protected Supplier<String> getRenderedTemplate(Map<String, Object> contextMap) {

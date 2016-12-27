@@ -35,7 +35,7 @@ public class RandomizeFeatureBattleShould {
     @Test
     public void return_experiment_if_defined_in_repository() throws Exception {
         NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
-        when(featureBattleRepository.randomizedExperimentsFor( USERIENTIFIER )).thenReturn(Arrays.asList(newAndShiny));
+        when(featureBattleRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList(newAndShiny));
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);
 
@@ -45,7 +45,7 @@ public class RandomizeFeatureBattleShould {
     @Test
     public void do_stuff() throws Exception {
         NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
-        when(featureBattleRepository.randomizedExperimentsFor( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new ExperimentIdentifier("NOT NOW")) ));
+        when(featureBattleRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new ExperimentIdentifier("NOT NOW")) ));
         when( featureBattleRepository.experimentRandomizer( EXPERIENT_IDENIFIER )).thenReturn( () -> newAndShiny);
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);

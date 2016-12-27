@@ -10,6 +10,13 @@ public class NewAndShiny implements Experiment {
     }
 
     @Override
+    public String toString() {
+        return "NewAndShiny{" +
+                "experientIdenifier=" + experientIdenifier.getIdentifier() +
+                '}';
+    }
+
+    @Override
     public Type type() {
         return Type.NEW_AND_SHINY;
     }

@@ -32,6 +32,7 @@
     <ao key="ao-module" namespace="ABTesting-AO-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo</entity>
+        <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO</entity>
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO</entity>
     </ao>
 

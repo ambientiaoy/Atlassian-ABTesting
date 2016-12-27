@@ -3,6 +3,7 @@ package fi.ambientia.abtesting.model.experiments;
 import fi.ambientia.abtesting.model.Identifier;
 
 public class ExperimentIdentifier implements Identifier {
+    public static final String DEFAULT_IDENTIFIER = "DEFAULT IDENTIFIER FOR EXPERIMENTS";
     private final String experiment_id;
 
     public ExperimentIdentifier(String experiment_id) {

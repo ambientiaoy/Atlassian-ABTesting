@@ -5,12 +5,11 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureB
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
-import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
 import org.junit.Test;
+import ut.fi.ambientia.abtesting.model.TestData;
 
 import java.util.Optional;
 
@@ -23,9 +22,6 @@ import static org.mockito.Mockito.when;
 
 public class ChooseExperimentShould {
 
-    private static final String USERKEY = "USER KEY";
-    public static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
-    public static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("EXPERIMENT_IDENTIFIER");
     private ChooseExperiment chooseFeature;
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private ExecuteFeatureBattle executeFeatureBattle;
@@ -38,8 +34,8 @@ public class ChooseExperimentShould {
         randomizeFeatureBattle = mock(RandomizeFeatureBattle.class);
         chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
         when(executeFeatureBattle.forExperiment( any() )).thenReturn( (u) -> Optional.of(getANewAndShiny()));
-        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn((u) -> {
-            assertThat( u, equalTo( USERIDENTIFIER ));
+        when(randomizeFeatureBattle.getExperiment( TestData.EXPERIMENT_IDENTIFIER)).thenReturn((u) -> {
+            assertThat( u, equalTo( TestData.USERIDENTIFIER ));
             return null;
         });
 
@@ -48,33 +44,33 @@ public class ChooseExperimentShould {
     @Test
     public void return_the_already_decided_feature_battle_if_it_is_decided() throws Exception {
 
-        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER)).thenReturn( (user) -> Optional.of(getANewAndShiny()) );
+        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER)).thenReturn( (user) -> Optional.of(getANewAndShiny()) );
 
-        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
     }
 
     @Test
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
-        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
+        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
 
-        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
 
-        verify( executeFeatureBattle ).forExperiment(EXPERIMENT_IDENTIFIER);
+        verify( executeFeatureBattle ).forExperiment(TestData.EXPERIMENT_IDENTIFIER);
     }
 
     @Test
     public void execute_a_randomizer_to_call_random_page() throws Exception {
-        when(alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
-        when(randomizeFeatureBattle.getExperiment( EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay(EXPERIMENT_IDENTIFIER));
+        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
+        when(randomizeFeatureBattle.getExperiment( TestData.EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay(TestData.EXPERIMENT_IDENTIFIER));
 
-        Experiment experiment = chooseFeature.forUser(USERIDENTIFIER, EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 
     private NewAndShiny getANewAndShiny() {
-        return new NewAndShiny(EXPERIMENT_IDENTIFIER);
+        return new NewAndShiny(TestData.EXPERIMENT_IDENTIFIER);
     }
 }
