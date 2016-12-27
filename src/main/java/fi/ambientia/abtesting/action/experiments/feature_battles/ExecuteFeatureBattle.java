@@ -1,6 +1,8 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
+import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -13,10 +15,12 @@ import java.util.function.Consumer;
 public class ExecuteFeatureBattle {
 
     private final FeatureBattleRepository featureBattleRepository;
+    private final ExperimentRepository experimentRepository;
 
     @Autowired
-    public ExecuteFeatureBattle(FeatureBattleRepository featureBattleRepository) {
+    public ExecuteFeatureBattle(FeatureBattleRepository featureBattleRepository, ExperimentRepository experimentRepository) {
         this.featureBattleRepository = featureBattleRepository;
+        this.experimentRepository = experimentRepository;
     }
 
     public StoreUserConsumer forExperiment(FeatureBattleIdentifier experiment) {

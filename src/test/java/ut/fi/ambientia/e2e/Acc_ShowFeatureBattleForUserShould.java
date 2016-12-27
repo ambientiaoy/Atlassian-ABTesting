@@ -9,7 +9,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatur
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
+import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
@@ -56,10 +56,10 @@ public class Acc_ShowFeatureBattleForUserShould {
 
 
         FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(ao, properties);
-        ExperimentRepository experimentRepository = new ExperimentRepository(ao, properties);
+        ExperimentAORepository experimentRepository = new ExperimentAORepository(ao, properties);
 
-        RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository );
-        ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository);
+        RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
+        ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
         AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleRepository);
 
         chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);

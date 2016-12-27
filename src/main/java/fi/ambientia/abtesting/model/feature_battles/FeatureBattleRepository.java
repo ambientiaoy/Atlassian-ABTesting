@@ -9,13 +9,19 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
+    void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
+
+    void setThreshold(FeatureBattleIdentifier featureBattleIdentifier, int threshold);
+
+    default ExperimentRandomizer experimentRandomizer(FeatureBattleIdentifier featureBattleIdentifier) {
+        return () -> randomBattleResultFor(featureBattleIdentifier);
+    }
+    Experiment randomBattleResultFor(FeatureBattleIdentifier featureBattleIdentifier);
+
+
     List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment);
 
-    ExperimentRandomizer experimentRandomizer(FeatureBattleIdentifier featureBattleIdentifier);
-
     CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier experiment);
-
-    List<Experiment> experimentsForUser(UserIdentifier userientifier);
 
     Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 

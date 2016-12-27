@@ -2,7 +2,7 @@ package ut.fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
+import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
@@ -40,8 +40,8 @@ public class FeatureBattleAORepositoryTest {
     private EntityManager entityManager;
 
     private ActiveObjects ao; // (1)
-    private FeatureBattleAORepository repository;
-    private ExperimentRepository experimentRepository;
+    private FeatureBattleAORepository featureBattleRepository;
+    private ExperimentAORepository experimentRepository;
     private Experiment experiment;
 
     TestPluginProperties properties;
@@ -55,13 +55,13 @@ public class FeatureBattleAORepositoryTest {
         ao.migrate(FeatureBattleAO.class);
         ao.migrate(UserExperimentAO.class);
         properties = new TestPluginProperties();
-        repository = new FeatureBattleAORepository(ao, properties);
-        experimentRepository = new ExperimentRepository(ao, properties);
+        featureBattleRepository = new FeatureBattleAORepository(ao, properties);
+        experimentRepository = new ExperimentAORepository(ao, properties);
     }
 
     @Test
     public void should_get_default_random_value_if_random_percentage_not_defined() throws Exception {
-        ExperimentRandomizer experimentRandomizer = repository.experimentRandomizer(FEATURE_BATTLE_IDENTIFIER);
+        ExperimentRandomizer experimentRandomizer = featureBattleRepository.experimentRandomizer(FEATURE_BATTLE_IDENTIFIER);
 
         properties.setProperty("feature.battle.default.win", CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
         assertThat(experimentRandomizer.randomize().type(), equalTo(Experiment.Type.GOOD_OLD));
@@ -74,10 +74,10 @@ public class FeatureBattleAORepositoryTest {
     public void should_get_experiment_treshhold_from_db() throws Exception {
 
         properties.setProperty("feature.battle.default.win", CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
-        experimentRepository.createExperiment(FEATURE_BATTLE_IDENTIFIER);
-        experimentRepository.setThreshold(FEATURE_BATTLE_IDENTIFIER, CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
+        featureBattleRepository.createFeatureBattle(FEATURE_BATTLE_IDENTIFIER);
+        featureBattleRepository.setThreshold(FEATURE_BATTLE_IDENTIFIER, CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
 
-        ExperimentRandomizer experimentRandomizer = repository.experimentRandomizer(FEATURE_BATTLE_IDENTIFIER);
+        ExperimentRandomizer experimentRandomizer = featureBattleRepository.experimentRandomizer(FEATURE_BATTLE_IDENTIFIER);
         Experiment experiment = experimentRandomizer.randomize();
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
@@ -88,7 +88,7 @@ public class FeatureBattleAORepositoryTest {
         UserExperimentAO[] abTestAos = ao.find(UserExperimentAO.class);
         assertThat(abTestAos.length, equalTo(0));
 
-        repository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( newAndShiny(FEATURE_BATTLE_IDENTIFIER) );
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( newAndShiny(FEATURE_BATTLE_IDENTIFIER) );
 
         abTestAos = ao.find(UserExperimentAO.class);
         assertThat(abTestAos.length, equalTo(1));
@@ -103,16 +103,16 @@ public class FeatureBattleAORepositoryTest {
     @Test
     public void should_get_experiment_for_user() throws Exception {
         Experiment experiment = newAndShiny(FEATURE_BATTLE_IDENTIFIER);
-        repository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing(experiment);
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing(experiment);
 
-        List<Experiment> experiments = repository.experimentsForUser(USERIDENTIFIER);
+        List<Experiment> experiments = experimentRepository.experimentsForUser(USERIDENTIFIER);
 
         assertThat(experiments, hasItem( thatIsEqualTo(experiment, FEATURE_BATTLE_IDENTIFIER)));
     }
 
     @Test
     public void should_get_feature_battle_from_repository() throws Exception {
-//        repository.createFeatureBattle(FEATURE_BATTLE_IDENTIFIER, newAndShiny())
+//        featureBattleRepository.createFeatureBattle(FEATURE_BATTLE_IDENTIFIER, newAndShiny())
 
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
         featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
@@ -121,7 +121,7 @@ public class FeatureBattleAORepositoryTest {
 //        featureBattleAO.setGoodOld ( newGoodOld() );
 //        featureBattleAO.setNewAndShiny
 
-        Optional<FeatureBattle> featureBattle = repository.getFeatureBattle(FEATURE_BATTLE_IDENTIFIER);
+        Optional<FeatureBattle> featureBattle = featureBattleRepository.getFeatureBattle(FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( featureBattle.get().getIdentifier(), equalTo(FEATURE_BATTLE_IDENTIFIER) );
     }

@@ -2,8 +2,10 @@ package ut.fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
+import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
+import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
@@ -23,7 +25,8 @@ public class ExperimentRepositoryTest {
     private PluginProperties properties;
     private ActiveObjects ao;
     private EntityManager entityManager;
-    private ExperimentRepository experimentRepository;
+    private ExperimentAORepository experimentRepository;
+    private FeatureBattleAORepository featureBattleRepository;
 
     @Before
     public void setUp() throws Exception
@@ -31,37 +34,39 @@ public class ExperimentRepositoryTest {
         assertNotNull(entityManager);
         ao = new TestActiveObjects(entityManager);
         ao.migrate(ExperimentAO.class);
+        ao.migrate(FeatureBattleAO.class);
         properties = new PluginProperties(){
             @Override
             protected String getApplicationHome() {
                 return this.getClass().getResource("/").getPath();
             }
         };
-        experimentRepository = new ExperimentRepository(ao, properties);
+        experimentRepository = new ExperimentAORepository(ao, properties);
+        featureBattleRepository = new FeatureBattleAORepository(ao, properties);
     }
 
     @Test
     public void should_create_new_experiment_with_default_threshold() throws Exception {
-        experimentRepository.createExperiment( createExperimentIdentifier() );
+        featureBattleRepository.createFeatureBattle( createExperimentIdentifier() );
 
-        ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
+        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, ExperimentRepository.DEFAULT_THRESHOLD);
+        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, FeatureBattleAORepository.DEFAULT_THRESHOLD);
     }
 
-    protected void assertOnlyOneAOWithIdentifierAndThreshold(ExperimentAO[] experimentAOs, FeatureBattleIdentifier identifier, int threshold) {
+    protected void assertOnlyOneAOWithIdentifierAndThreshold(FeatureBattleAO[] experimentAOs, FeatureBattleIdentifier identifier, int threshold) {
         assertThat( experimentAOs.length, equalTo(1));
-        assertThat( experimentAOs[0].getExperimentId(), equalTo(identifier.getIdentifier() ) );
+        assertThat( experimentAOs[0].getFeatureBattleId(), equalTo(identifier.getIdentifier() ) );
         assertThat( experimentAOs[0].getThreshold(), equalTo(threshold) );
     }
 
     @Test
     public void should_set_threshold() throws Exception {
         FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        experimentRepository.createExperiment(featureBattleIdentifier);
-        experimentRepository.setThreshold(featureBattleIdentifier, 15 );
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
 
-        ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
+        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
 
         assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
     }
@@ -69,12 +74,12 @@ public class ExperimentRepositoryTest {
     @Test
     public void should_not_store_same_identifier_more_than_once() throws Exception {
         FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        experimentRepository.createExperiment(featureBattleIdentifier);
-        experimentRepository.setThreshold(featureBattleIdentifier, 15 );
-        experimentRepository.createExperiment(featureBattleIdentifier);
-        experimentRepository.createExperiment(featureBattleIdentifier);
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
 
-        ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
+        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
 
         assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
     }

@@ -1,6 +1,6 @@
 package ut.fi.ambientia.helpers;
 
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
+import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.atlassian.properties.PluginProperties;
 
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class TestPluginProperties extends PluginProperties {
     private final Map<String, Object> properties;
-    private int threshold = ExperimentRepository.DEFAULT_THRESHOLD;
+    private int threshold = FeatureBattleAORepository.DEFAULT_THRESHOLD;
 
     public TestPluginProperties() {
         properties = new HashMap<>();

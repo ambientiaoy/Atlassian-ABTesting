@@ -1,6 +1,8 @@
 package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
+import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
@@ -19,12 +21,14 @@ public class ExecuteFeatureBattleShould {
     private static final UserIdentifier USER_IDENTIFIER = new UserIdentifier("BARFOO");
     private ExecuteFeatureBattle executeFeatureBattle;
     private FeatureBattleRepository featureBattleRepository;
+    private ExperimentRepository experimentRepository;
 
     @Test
     public void find_feature_battle_details_from_repository() throws Exception {
         GoodOldWay randomExperiment = new GoodOldWay(EXPERIMENT_IDENTIFIER);
         featureBattleRepository = mock(FeatureBattleRepository.class);
-        executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository);
+        experimentRepository = mock(ExperimentRepository.class);
+        executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
         FeatureBattleRepository.StoreExperiment mock = mock(FeatureBattleRepository.StoreExperiment.class);
 
         when(featureBattleRepository.experimentRandomizer(EXPERIMENT_IDENTIFIER)).thenReturn(() -> randomExperiment);

@@ -2,6 +2,7 @@ package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
@@ -24,18 +25,20 @@ public class RandomizeFeatureBattleShould {
     private static final FeatureBattleIdentifier EXPERIENT_IDENIFIER = new FeatureBattleIdentifier("EXP1");
     private RandomizeFeatureBattle randomizeFeatureBattle;
     private FeatureBattleRepository featureBattleRepository;
+    private ExperimentRepository experimentRepository;
 
     @Before
     public void setUp() throws Exception {
         featureBattleRepository = mock(FeatureBattleRepository.class);
-        randomizeFeatureBattle = new RandomizeFeatureBattle(featureBattleRepository);
+        experimentRepository = mock(ExperimentRepository.class);
+        randomizeFeatureBattle = new RandomizeFeatureBattle(featureBattleRepository, experimentRepository);
         when(featureBattleRepository.experimentRandomizer(any(FeatureBattleIdentifier.class))).thenReturn( () -> new GoodOldWay(new FeatureBattleIdentifier("NO SUCH EXP")));
     }
 
     @Test
     public void return_experiment_if_defined_in_repository() throws Exception {
         NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
-        when(featureBattleRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList(newAndShiny));
+        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList(newAndShiny));
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);
 
@@ -45,7 +48,7 @@ public class RandomizeFeatureBattleShould {
     @Test
     public void do_stuff() throws Exception {
         NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
-        when(featureBattleRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("NOT NOW")) ));
+        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("NOT NOW")) ));
         when( featureBattleRepository.experimentRandomizer( EXPERIENT_IDENIFIER )).thenReturn( () -> newAndShiny);
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);

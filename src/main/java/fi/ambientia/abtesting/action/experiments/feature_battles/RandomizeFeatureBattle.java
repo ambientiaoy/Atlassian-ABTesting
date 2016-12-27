@@ -1,6 +1,7 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -13,22 +14,23 @@ import java.util.function.Function;
 @Component
 public class RandomizeFeatureBattle {
 
-    private final FeatureBattleRepository repository;
+    private final FeatureBattleRepository featureBattleRepository;
+    private final ExperimentRepository experimentRepository;
 
     @Autowired
-    public RandomizeFeatureBattle(FeatureBattleRepository repository) {
-
-        this.repository = repository;
+    public RandomizeFeatureBattle(FeatureBattleRepository featureBattleRepository, ExperimentRepository experimentRepository) {
+        this.featureBattleRepository = featureBattleRepository;
+        this.experimentRepository = experimentRepository;
     }
 
     public GetExperimentForUser getExperiment(FeatureBattleIdentifier featureBattleIdentifier) {
         // TODO AkS: find this from DB?
         return (user) -> {
-            Optional<Experiment> first = repository.experimentsForUser(user).stream().
+            Optional<Experiment> first = experimentRepository.experimentsForUser(user).stream().
                     filter(experiment -> experiment.isRepresentedBy(featureBattleIdentifier)).
                     findFirst();
 
-            return first.orElse( repository.experimentRandomizer(featureBattleIdentifier).randomize() );
+            return first.orElse( featureBattleRepository.experimentRandomizer(featureBattleIdentifier).randomize() );
         };
     }
 
