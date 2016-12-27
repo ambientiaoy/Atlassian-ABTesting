@@ -1,0 +1,17 @@
+
+<head>
+    <meta name="decorator" content="atl.admin">
+    <title>
+        Configure Confluence AB tests
+    </title>
+    $webResourceManager.requireResource("fi.ambientia.atlassian.abtesting:admin-resources")
+
+</head>
+
+<body>
+
+Here we can configure the plugin
+
+<table id="feature-battles-table"></table>
+
+</body>

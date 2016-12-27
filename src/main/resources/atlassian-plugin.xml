@@ -5,6 +5,7 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
         <param name="plugin-icon">images/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="configure.url">/admin/abtesting/configure.action</param>
     </plugin-info>
 
     <!-- add our i18n resource -->
@@ -29,6 +30,26 @@
 
     </web-resource>
 
+    <web-resource key="admin-resources" name="Admin resources for configuring ABtests">
+        <dependency>fi.ambientia.atlassian.abtesting:abtesting-restful</dependency>
+        <resource type="download" name="admin_abtesting.js" location="/js/admin/abtesting.js"/>
+
+    </web-resource>
+
+    <web-resource key="abtesting-restful" name="abtesting restful resources">
+        <dependency>fi.ambientia.atlassian.abtesting:abtesting-resources</dependency>
+        <dependency>com.atlassian.auiplugin:aui-experimental-restfultable</dependency>
+    </web-resource>
+
+    <xwork name="configure-ab-testing" key="configure-abtesting-xwork">
+        <package name="ab-testing" extends="default" namespace="/admin/abtesting">
+            <default-interceptor-ref name="defaultStack" />
+            <action name="configure" class="fi.ambientia.atlassian.admin.ConfigureFeatureBattles" method="configure">
+                <result name="success" type="velocity">/templates/admin/configure/configureAction.vm</result>
+            </action>
+        </package>
+    </xwork>
+
     <ao key="ao-module" namespace="ABTesting-AO-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.ABTestAo</entity>
@@ -36,6 +57,11 @@
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO</entity>
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO</entity>
     </ao>
+
+
+    <rest key="rest" path="/abtesting" version="1.0">
+        <description>Provides ABTesting REST API.</description>
+    </rest>
 
     <xhtml-macro name="display-feature-battle"
                  class="fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle" key="display-feature-battle-xhtml-macro-velocity">

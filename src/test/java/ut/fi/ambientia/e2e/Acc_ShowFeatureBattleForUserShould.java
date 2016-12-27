@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
@@ -96,5 +97,18 @@ public class Acc_ShowFeatureBattleForUserShould {
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 
+    @Test
+    public void can_create_experiment_and_is_shown_in_rest_api() throws Exception {
+        fail("ToBeDefined");
+    }
 
+    @Test
+    public void can_update_experiment() throws Exception {
+        fail("ToBeDefined");
+    }
+
+    @Test void can_mark_experiment_as_done(){
+        // not Delete, mark as done, choose either experiment.
+        fail("ToBeDefined");
+    }
 }

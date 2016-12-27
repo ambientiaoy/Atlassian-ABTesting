@@ -1,6 +1,7 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
@@ -9,6 +10,8 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +19,14 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@Repository
 public class ExperimentAORepository implements ExperimentRepository {
     private final ActiveObjects ao;
     private final PluginProperties properties;
     private final Random random;
 
-    public ExperimentAORepository(ActiveObjects ao, PluginProperties properties) {
+    @Autowired
+    public ExperimentAORepository(@ComponentImport ActiveObjects ao, PluginProperties properties) {
         this.ao = ao;
         this.properties = properties;
         this.random = new Random();

@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @Controller
-@Path("/experiments/feature_battle/{featureBattleId}")
+@Path("/feature_battle/{featureBattleId}")
 public class FeatureBattleRoute {
 
     public static final String ROUTE_ROOT = "/ABTest/";

@@ -1,27 +1,31 @@
-new AJS.RestfulTable({
-    autoFocus: true,
-    el: jQuery("#feature-battles-table"),
-    allowReorder: true,
-    resources: {
-        all: "rest/feature_battles",
-        self: "rest/feature_battle"
-    },
-    columns: [
-        {
-            id: "status",
-            header: ""
+var baseUrl = contextPath + "/rest/abtesting/1.0";
+
+AJS.toInit(function() {
+    new AJS.RestfulTable({
+        autoFocus: true,
+        el: jQuery("#feature-battles-table"),
+        allowReorder: true,
+        resources: {
+            all: baseUrl + "/feature_battles",
+            self: "/rest/feature_battle"
         },
-        {
-            id: "name",
-            header: AJS.I18n.getText("common.words.name")
-        },
-        {
-            id: "description",
-            header: AJS.I18n.getText("common.words.description")
-        },
-        {
-            id: "releaseDate",
-            header: AJS.I18n.getText("version.releasedate")
-        }
-    ]
+        columns: [
+            {
+                id: "id",
+                header: ""
+            },
+            {
+                id: "threshold",
+                header: AJS.I18n.getText("feature.battle.threshold")
+            },
+            {
+                id: "goodOld",
+                header: AJS.I18n.getText("feature.battle.goodold")
+            },
+            {
+                id: "newAndShiny",
+                header: AJS.I18n.getText("feature.battle.newandshiny")
+            }
+        ]
+    });
 });
