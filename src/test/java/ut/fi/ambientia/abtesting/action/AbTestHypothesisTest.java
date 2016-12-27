@@ -20,7 +20,7 @@ public class AbTestHypothesisTest {
     public void setUp() throws Exception {
         abTestInstanceRepository = mock(AbTestInstanceRepository.class);
         hypothesis = new CreateNewFeatureBattle(abTestInstanceRepository);
-        abTestInstance = new JsonFeatureBattleArgument("UNIQUE_KEY");
+        abTestInstance = new JsonFeatureBattleArgument("UNIQUE_KEY", 10);
 
     }
 

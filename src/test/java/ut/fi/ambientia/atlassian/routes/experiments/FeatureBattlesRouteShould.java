@@ -31,7 +31,7 @@ public class FeatureBattlesRouteShould {
         createNewHypothesis = mock(CreateExperiment.class);
         featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattle.class);
         featureBattles = new FeatureBattles(createNewHypothesis, featureBattle);
-        newAbTest = new JsonFeatureBattleArgument(AB_INSTANCE_UNIQUE_KEY);
+        newAbTest = new JsonFeatureBattleArgument(AB_INSTANCE_UNIQUE_KEY, 10);
 
         Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();
         when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_not_found );
