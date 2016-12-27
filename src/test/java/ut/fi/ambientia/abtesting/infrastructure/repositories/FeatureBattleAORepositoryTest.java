@@ -10,18 +10,15 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
-import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import ut.fi.ambientia.helpers.TestPluginProperties;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -113,28 +110,4 @@ public class FeatureBattleAORepositoryTest {
         return new NewAndShiny(experimentIdentifier);
     }
 
-    private class TestPluginProperties extends PluginProperties {
-        private final Map<String, Object> properties;
-        private int threshold = ExperimentRepository.DEFAULT_THRESHOLD;
-
-        private TestPluginProperties() {
-            properties = new HashMap<>();
-        }
-
-        @Override
-        protected String getApplicationHome() {
-            return this.getClass().getResource("/").getPath();
-        }
-
-
-        public void setProperty(String property, int threshold){
-            this.properties.put(property, threshold);
-        }
-
-        @Override
-        public Integer propertyOrDefault(String key, int i) {
-            Optional<Integer> optional = Optional.ofNullable((Integer) properties.get(key));
-            return optional.orElse( i );
-        }
-    }
 }
