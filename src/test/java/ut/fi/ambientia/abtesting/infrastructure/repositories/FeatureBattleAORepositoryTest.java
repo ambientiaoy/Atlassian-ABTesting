@@ -7,6 +7,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAOReposit
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
+import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
@@ -94,10 +95,16 @@ public class FeatureBattleAORepositoryTest {
         assertThat(abTestAos.length, equalTo(1));
     }
 
-    @Ignore
     @Test
     public void should_not_save_more_than_one_experiments() throws Exception {
-        fail("NOT TESTED");
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( newAndShiny(FEATURE_BATTLE_IDENTIFIER) );
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( goodOld(FEATURE_BATTLE_IDENTIFIER) );
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( goodOld(FEATURE_BATTLE_IDENTIFIER) );
+
+        UserExperimentAO[] abTestAos = ao.find(UserExperimentAO.class);
+        assertThat(abTestAos.length, equalTo(1));
+        assertThat(abTestAos[0].getExperimentType(), equalTo(Experiment.Type.GOOD_OLD));
+
     }
 
     @Test
@@ -128,6 +135,9 @@ public class FeatureBattleAORepositoryTest {
 
     private Experiment newAndShiny(FeatureBattleIdentifier featureBattleIdentifier) {
         return new NewAndShiny(featureBattleIdentifier);
+    }
+    private Experiment goodOld(FeatureBattleIdentifier featureBattleIdentifier) {
+        return new GoodOldWay(featureBattleIdentifier);
     }
 
 }

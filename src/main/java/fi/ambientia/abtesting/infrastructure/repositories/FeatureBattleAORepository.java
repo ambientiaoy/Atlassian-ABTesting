@@ -10,13 +10,10 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.atlassian.properties.PluginProperties;
-import net.java.ao.Entity;
-import net.java.ao.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -38,7 +35,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
-        Optional<FeatureBattleAO> featureBattleAO = find(FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
+        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
         if(featureBattleAO.isPresent()){
             return;
         }
@@ -51,15 +48,12 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public void setThreshold(FeatureBattleIdentifier featureBattleIdentifier, int threshold) {
-        Optional<FeatureBattleAO> optional = find(FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
+        Optional<FeatureBattleAO> optional = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
         optional.ifPresent(( featureBattleAO ) -> {
             featureBattleAO.setThreshold( threshold );
             featureBattleAO.save();
         });
     }
-
-
-
 
     @Override
     public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment) {
@@ -82,20 +76,20 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     protected UserExperimentAO getUserExperimentAO(String userId, String experimentId) {
-        Optional<UserExperimentAO> userExperimentAO1 = find(UserExperimentAO.class, "USER_ID = ? AND EXPERIMENT_ID = ?", userId, experimentId);
+        Optional<UserExperimentAO> userExperimentAO1 = EnsureOnlyOneAOEntityExists.execute(ao, UserExperimentAO.class, "USER_ID = ? AND EXPERIMENT_ID = ?", userId, experimentId);
 
-        return userExperimentAO1.orElse( ao.create(UserExperimentAO.class));
+        return userExperimentAO1.orElseGet(() -> ao.create(UserExperimentAO.class));
     }
 
     @Override
     public Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
-        Optional<FeatureBattleAO> featureBattleAO = find(FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
+        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
         return featureBattleAO.map( entity -> new FeatureBattle(new FeatureBattleIdentifier( entity.getFeatureBattleId() )));
     }
 
     @Override
     public Experiment randomBattleResultFor(FeatureBattleIdentifier identifier) {
-        Optional<FeatureBattleAO> experimentAOOptional = find(FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", identifier.getIdentifier());
+        Optional<FeatureBattleAO> experimentAOOptional = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", identifier.getIdentifier());
 
         Optional<Experiment> experiment = experimentAOOptional.map(featureBattleAO -> Experiment.randomize(random, featureBattleAO.getThreshold(), identifier));
 
@@ -105,14 +99,4 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
 
-    protected <T extends Entity> Optional<T> find(Class<T> klazz, String clause, Object... params) {
-        T[] ts = ao.find(klazz, Query.select().where(clause, params));
-        if( ts.length > 1){
-            Arrays.asList(ts).stream().forEach( entity -> ao.delete( entity ));
-        }
-        if( ts.length == 1){
-            return Optional.of(ts[0]);
-        }
-        return Optional.empty();
-    }
 }

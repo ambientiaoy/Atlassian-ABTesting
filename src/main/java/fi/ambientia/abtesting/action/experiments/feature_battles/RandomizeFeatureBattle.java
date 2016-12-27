@@ -24,7 +24,7 @@ public class RandomizeFeatureBattle {
     }
 
     public GetExperimentForUser getExperiment(FeatureBattleIdentifier featureBattleIdentifier) {
-        // TODO AkS: find this from DB?
+        // TODO AkS: execute this from DB?
         return (user) -> {
             Optional<Experiment> first = experimentRepository.experimentsForUser(user).stream().
                     filter(experiment -> experiment.isRepresentedBy(featureBattleIdentifier)).

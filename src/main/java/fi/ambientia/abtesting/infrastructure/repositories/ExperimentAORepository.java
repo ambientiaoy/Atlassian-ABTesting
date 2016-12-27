@@ -27,18 +27,6 @@ public class ExperimentAORepository implements ExperimentRepository {
         this.random = new Random();
     }
 
-    public static Optional<ExperimentAO> getExperimentAO(FeatureBattleIdentifier featureBattleIdentifier, ActiveObjects ao) {
-        ExperimentAO[] userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", featureBattleIdentifier.getIdentifier()));
-        if( userExperimentAOs.length > 1){
-            Arrays.asList(userExperimentAOs).stream().skip(1).forEach(userExperimentAO -> ao.delete( userExperimentAO ));
-            userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", featureBattleIdentifier.getIdentifier()));
-        }
-        if( userExperimentAOs.length == 1){
-            return Optional.of( userExperimentAOs[0] );
-        }
-        return Optional.empty();
-    }
-
     @Override
     public List<Experiment> experimentsForUser(UserIdentifier userientifier) {
         Query query = Query.select().from(UserExperimentAO.class).where("USER_ID = ?", userientifier.getIdentifier());

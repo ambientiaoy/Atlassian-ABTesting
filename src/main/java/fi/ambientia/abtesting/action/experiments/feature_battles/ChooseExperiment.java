@@ -24,7 +24,7 @@ public class ChooseExperiment {
     public Experiment forUser(UserIdentifier user, FeatureBattleIdentifier experiment) {
         Optional<Experiment> experimentOptional = alreadyDecided.experimentOf(experiment).targetedFor(user);
 
-        return experimentOptional.orElse( executeFeatureBattleAndGetResult( user , experiment) );
+        return experimentOptional.orElseGet( () -> executeFeatureBattleAndGetResult( user , experiment) );
     }
 
     private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, FeatureBattleIdentifier experiment) {

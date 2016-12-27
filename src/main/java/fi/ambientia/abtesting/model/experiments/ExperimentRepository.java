@@ -7,8 +7,6 @@ import fi.ambientia.abtesting.model.user.UserIdentifier;
 import java.util.List;
 import java.util.Optional;
 
-import static fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository.getExperimentAO;
-
 public interface ExperimentRepository {
     List<Experiment> experimentsForUser(UserIdentifier userientifier);
 
