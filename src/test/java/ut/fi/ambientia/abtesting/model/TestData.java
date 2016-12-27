@@ -1,6 +1,6 @@
 package ut.fi.ambientia.abtesting.model;
 
-import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 
 public class TestData {

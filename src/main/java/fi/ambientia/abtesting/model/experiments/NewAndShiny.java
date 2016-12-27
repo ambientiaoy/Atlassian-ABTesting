@@ -1,5 +1,7 @@
 package fi.ambientia.abtesting.model.experiments;
 
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+
 public class NewAndShiny implements Experiment {
 
     private static final String NEW_AND_SHINY = "b2_new_and_shiny";

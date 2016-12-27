@@ -1,5 +1,7 @@
 package fi.ambientia.abtesting.model.experiments;
 
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+
 import java.util.Random;
 import java.util.function.Function;
 

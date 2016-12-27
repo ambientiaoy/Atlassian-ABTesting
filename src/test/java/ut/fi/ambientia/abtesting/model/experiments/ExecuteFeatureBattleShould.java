@@ -1,8 +1,8 @@
 package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
-import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
-import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Test;

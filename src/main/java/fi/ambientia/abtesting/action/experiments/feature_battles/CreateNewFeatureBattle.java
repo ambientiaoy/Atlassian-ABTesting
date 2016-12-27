@@ -12,7 +12,6 @@ public class CreateNewFeatureBattle implements CreateExperiment {
 
     @Autowired
     public CreateNewFeatureBattle(AbTestInstanceRepository abTestInstanceRepository) {
-
         this.abTestInstanceRepository = abTestInstanceRepository;
     }
 

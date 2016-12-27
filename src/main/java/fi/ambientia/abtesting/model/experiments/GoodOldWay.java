@@ -1,5 +1,7 @@
 package fi.ambientia.abtesting.model.experiments;
 
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+
 public class GoodOldWay implements Experiment {
 
     public static final String B_1_GOOD_OLD = "b1_good_old";

@@ -4,7 +4,7 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
-import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;

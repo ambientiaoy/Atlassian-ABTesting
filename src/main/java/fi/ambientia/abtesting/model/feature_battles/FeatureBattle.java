@@ -1,6 +1,6 @@
-package fi.ambientia.abtesting.model;
+package fi.ambientia.abtesting.model.feature_battles;
 
-import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 
 public class FeatureBattle {
 

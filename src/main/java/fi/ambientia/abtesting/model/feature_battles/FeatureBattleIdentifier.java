@@ -1,4 +1,4 @@
-package fi.ambientia.abtesting.model.experiments;
+package fi.ambientia.abtesting.model.feature_battles;
 
 import fi.ambientia.abtesting.model.Identifier;
 
