@@ -27,7 +27,6 @@ public class ExperimentAORepository implements ExperimentRepository {
         this.random = new Random();
     }
 
-
     public static Optional<ExperimentAO> getExperimentAO(FeatureBattleIdentifier featureBattleIdentifier, ActiveObjects ao) {
         ExperimentAO[] userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", featureBattleIdentifier.getIdentifier()));
         if( userExperimentAOs.length > 1){

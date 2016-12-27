@@ -1,21 +1,28 @@
 package fi.ambientia.atlassian.routes.arguments;
 
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.write.FeatureBattleInput;
 
 public class JsonFeatureBattleArgument implements FeatureBattleInput {
     private final String uniqueKey;
-    private final Integer defaultThreshold;
+    private final Integer threshold;
 
-    public JsonFeatureBattleArgument(String uniqueKey, Integer defaultThreshold) {
+    public JsonFeatureBattleArgument(String uniqueKey, Integer threshold) {
         this.uniqueKey = uniqueKey;
-        this.defaultThreshold = defaultThreshold;
+        this.threshold = threshold;
     }
 
     public String getUniqueKey() {
         return uniqueKey;
     }
 
-    public Integer getDefaultThreshold() {
-        return defaultThreshold;
+    @Override
+    public FeatureBattleIdentifier getFeatureBattleIdentifier() {
+        return new FeatureBattleIdentifier( uniqueKey );
+    }
+
+    @Override
+    public Integer getThreshold() {
+        return threshold;
     }
 }

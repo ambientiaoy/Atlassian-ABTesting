@@ -82,14 +82,9 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     protected UserExperimentAO getUserExperimentAO(String userId, String experimentId) {
-        UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, Query.select().from(UserExperimentAO.class).where("USER_ID = ? AND EXPERIMENT_ID = ?", userId, experimentId));
-        if( userExperimentAOs.length > 1){
-            Arrays.asList(userExperimentAOs).stream().forEach( userExperimentAO -> ao.delete( userExperimentAO ));
-        }
-        if( userExperimentAOs.length == 1){
-            return userExperimentAOs[0];
-        }
-        return ao.create(UserExperimentAO.class);
+        Optional<UserExperimentAO> userExperimentAO1 = find(UserExperimentAO.class, "USER_ID = ? AND EXPERIMENT_ID = ?", userId, experimentId);
+
+        return userExperimentAO1.orElse( ao.create(UserExperimentAO.class));
     }
 
     @Override

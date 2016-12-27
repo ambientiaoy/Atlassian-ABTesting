@@ -8,10 +8,10 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperimen
 import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
-import fi.ambientia.abtesting.infrastructure.repositories.AbTestInstanceRepository;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
@@ -52,6 +52,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         ao = new TestActiveObjects(entityManager);
         ao.migrate(UserExperimentAO.class);
         ao.migrate(ExperimentAO.class);
+        ao.migrate(FeatureBattleAO.class);
         properties = new TestPluginProperties();
 
 
@@ -64,8 +65,7 @@ public class Acc_ShowFeatureBattleForUserShould {
 
         chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
 
-        AbTestInstanceRepository abTestInstanceRepository = new AbTestInstanceRepository(ao);
-        CreateExperiment createExperiment = new CreateNewFeatureBattle( abTestInstanceRepository );
+        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository );
         featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute);
