@@ -18,14 +18,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
 import static ut.fi.ambientia.abtesting.model.TestData.EXPERIMENT_IDENTIFIER;
 import static ut.fi.ambientia.abtesting.model.TestData.USERIDENTIFIER;
 import static ut.fi.ambientia.matchers.ExperimentMatcher.thatIsEqualTo;
@@ -42,6 +44,8 @@ public class FeatureBattleAORepositoryTest {
     private ExperimentRepository experimentRepository;
     private Experiment experiment;
 
+    TestPluginProperties properties;
+
     @Before
     public void setUp() throws Exception
     {
@@ -49,38 +53,26 @@ public class FeatureBattleAORepositoryTest {
         ao = new TestActiveObjects(entityManager);
         ao.migrate(UserExperimentAO.class);
         ao.migrate(ExperimentAO.class);
-        PluginProperties properties = new PluginProperties(){
-            @Override
-            protected String getApplicationHome() {
-                return this.getClass().getResource("/").getPath();
-            }
-        };
+        properties = new TestPluginProperties();
         repository = new FeatureBattleAORepository(ao, properties);
         experimentRepository = new ExperimentRepository(ao, properties);
     }
 
     @Test
     public void should_get_default_random_value_if_random_percentage_not_defined() throws Exception {
-        PluginProperties properties = mock(PluginProperties.class);
         ExperimentRandomizer experimentRandomizer = repository.experimentRandomizer(EXPERIMENT_IDENTIFIER);
-        when( properties.propertyOrDefault("feature.battle.default.win", 25)).
-                thenReturn(
-                        CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD,
-                        CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
-        repository = new FeatureBattleAORepository(ao, properties);
-        experiment = experimentRandomizer.randomize();
 
-        assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
+        properties.setProperty("feature.battle.default.win", CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
+        assertThat(experimentRandomizer.randomize().type(), equalTo(Experiment.Type.GOOD_OLD));
 
+        properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
         assertThat(experimentRandomizer.randomize().type(), equalTo(Experiment.Type.NEW_AND_SHINY));
     }
 
     @Test
     public void should_get_experiment_treshhold_from_db() throws Exception {
-        PluginProperties properties = mock(PluginProperties.class);
-        experimentWouldBeGoodOldIfThresholdWasREadFromProperties(properties);
-        repository = new FeatureBattleAORepository(ao, properties);
 
+        properties.setProperty("feature.battle.default.win", CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
         experimentRepository.createExperiment( EXPERIMENT_IDENTIFIER );
         experimentRepository.setThreshold( EXPERIMENT_IDENTIFIER, CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
 
@@ -88,10 +80,6 @@ public class FeatureBattleAORepositoryTest {
         Experiment experiment = experimentRandomizer.randomize();
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
-    }
-
-    protected void experimentWouldBeGoodOldIfThresholdWasREadFromProperties(PluginProperties properties) {
-        when( properties.propertyOrDefault("feature.battle.default.win", 25)).thenReturn(CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
     }
 
     @Test
@@ -123,5 +111,30 @@ public class FeatureBattleAORepositoryTest {
 
     private Experiment newAndShiny(ExperimentIdentifier experimentIdentifier) {
         return new NewAndShiny(experimentIdentifier);
+    }
+
+    private class TestPluginProperties extends PluginProperties {
+        private final Map<String, Object> properties;
+        private int threshold = ExperimentRepository.DEFAULT_THRESHOLD;
+
+        private TestPluginProperties() {
+            properties = new HashMap<>();
+        }
+
+        @Override
+        protected String getApplicationHome() {
+            return this.getClass().getResource("/").getPath();
+        }
+
+
+        public void setProperty(String property, int threshold){
+            this.properties.put(property, threshold);
+        }
+
+        @Override
+        public Integer propertyOrDefault(String key, int i) {
+            Optional<Integer> optional = Optional.ofNullable((Integer) properties.get(key));
+            return optional.orElse( i );
+        }
     }
 }

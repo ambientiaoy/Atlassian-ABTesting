@@ -58,12 +58,8 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         Optional<Experiment> experiment = experimentAOOptional.map(experimentAO -> Experiment.randomize(random, experimentAO.getThreshold(), identifier));
 
         return experiment.orElse(
-                Experiment.randomize(random, properties.propertyOrDefault("feature.battle.default.win", 25), identifier)
+                Experiment.randomize(random, properties.propertyOrDefault("feature.battle.default.win", ExperimentRepository.DEFAULT_THRESHOLD), identifier)
         );
-    }
-
-    private boolean randomIntLessThanDefaultFromProperties() {
-        return random.nextInt(100) < properties.propertyOrDefault("feature.battle.default.win", 25);
     }
 
     @Override
