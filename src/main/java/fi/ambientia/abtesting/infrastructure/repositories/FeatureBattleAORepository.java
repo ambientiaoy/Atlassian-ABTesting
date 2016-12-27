@@ -4,12 +4,11 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
+import fi.ambientia.abtesting.model.FeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
-import fi.ambientia.abtesting.model.experiments.GoodOldWay;
-import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
@@ -97,5 +96,10 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
                 collect(Collectors.toList());
 
         return experiments;
+    }
+
+    @Override
+    public Optional<FeatureBattle> getFeatureBattle(ExperimentIdentifier experimentIdentifier) {
+        throw new UnsupportedOperationException("not implemented");
     }
 }

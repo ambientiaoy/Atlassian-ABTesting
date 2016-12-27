@@ -23,10 +23,10 @@ public class FeatureBattles {
 
     public static final String ROUTE_ROOT = "/ABTest/";
     private CreateExperiment createNewHypothesis;
-    private fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle;
+    private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
 
     @Autowired
-    public FeatureBattles(CreateExperiment createNewHypothesis, fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle) {
+    public FeatureBattles(CreateExperiment createNewHypothesis, fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle) {
         this.createNewHypothesis = createNewHypothesis;
         this.featureBattle = featureBattle;
     }

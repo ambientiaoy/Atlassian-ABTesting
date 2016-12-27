@@ -15,7 +15,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.Experiment
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattle;
+import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import ut.fi.ambientia.abtesting.model.TestData;
 import ut.fi.ambientia.helpers.TestPluginProperties;
-import ut.fi.ambientia.mocks.Dummy;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,7 +42,7 @@ public class ShowFeatureBattleForUserShould {
     private ActiveObjects ao;
     private TestPluginProperties properties;
     private ChooseExperiment chooseExperiment;
-    private FeatureBattle featureBattleRoute;
+    private FeatureBattleRoute featureBattleRoute;
     private FeatureBattles featureBattles;
 
     @Before
@@ -67,7 +66,7 @@ public class ShowFeatureBattleForUserShould {
 
         AbTestInstanceRepository abTestInstanceRepository = new AbTestInstanceRepository(ao);
         CreateExperiment createExperiment = new CreateNewFeatureBattle( abTestInstanceRepository );
-        featureBattleRoute = new FeatureBattle(createExperiment);
+        featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute);
     }

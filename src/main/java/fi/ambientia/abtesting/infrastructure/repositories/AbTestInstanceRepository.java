@@ -2,7 +2,7 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import fi.ambientia.abtesting.model.write.FeatureBattle;
+import fi.ambientia.abtesting.model.write.FeatureBattleInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,11 +14,11 @@ public class AbTestInstanceRepository {
 
     }
 
-    public void createNew(FeatureBattle featureBattle) {
+    public void createNew(FeatureBattleInput featureBattle) {
 
     }
 
-    public boolean exists(FeatureBattle featureBattle) {
+    public boolean exists(FeatureBattleInput featureBattle) {
         return false;
     }
 }

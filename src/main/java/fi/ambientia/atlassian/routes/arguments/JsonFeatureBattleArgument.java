@@ -1,6 +1,8 @@
 package fi.ambientia.atlassian.routes.arguments;
 
-public class JsonFeatureBattleArgument implements fi.ambientia.abtesting.model.write.FeatureBattle {
+import fi.ambientia.abtesting.model.write.FeatureBattleInput;
+
+public class JsonFeatureBattleArgument implements FeatureBattleInput {
     private final String uniqueKey;
     private final Integer defaultThreshold;
 

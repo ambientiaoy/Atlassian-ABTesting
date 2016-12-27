@@ -23,13 +23,13 @@ public class FeatureBattlesRouteShould {
     private CreateExperiment createNewHypothesis;
     private FeatureBattles featureBattles;
     private JsonFeatureBattleArgument newAbTest;
-    private fi.ambientia.atlassian.routes.experiments.FeatureBattle featureBattle;
+    private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
     private HttpServletRequest context = mock(HttpServletRequest.class);
 
     @Before
     public void setUp() throws Exception {
         createNewHypothesis = mock(CreateExperiment.class);
-        featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattle.class);
+        featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute.class);
         featureBattles = new FeatureBattles(createNewHypothesis, featureBattle);
         newAbTest = new JsonFeatureBattleArgument(AB_INSTANCE_UNIQUE_KEY, 10);
 

@@ -1,5 +1,6 @@
 package fi.ambientia.abtesting.model.experiments;
 
+import fi.ambientia.abtesting.model.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 
@@ -15,6 +16,8 @@ public interface FeatureBattleRepository {
     CreateNewFeatureBattleFor newFeatureBattleFor(ExperimentIdentifier experiment);
 
     List<Experiment> experimentsForUser(UserIdentifier userientifier);
+
+    Optional<FeatureBattle> getFeatureBattle(ExperimentIdentifier experimentIdentifier);
 
     @FunctionalInterface
     interface CreateNewFeatureBattleFor {
