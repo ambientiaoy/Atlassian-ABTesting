@@ -1,11 +1,9 @@
 package ut.fi.ambientia.matchers;
 
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.jose4j.jwk.Use;
 
 public class UserIdentifierMatcher extends TypeSafeMatcher<UserIdentifier> {
     private final UserIdentifier expected;

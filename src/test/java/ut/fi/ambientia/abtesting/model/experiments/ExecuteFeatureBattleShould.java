@@ -1,7 +1,7 @@
 package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class ExecuteFeatureBattleShould {
 
 
-    private static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("FOOBAR");
+    private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier("FOOBAR");
     private static final UserIdentifier USER_IDENTIFIER = new UserIdentifier("BARFOO");
     private ExecuteFeatureBattle executeFeatureBattle;
     private FeatureBattleRepository featureBattleRepository;

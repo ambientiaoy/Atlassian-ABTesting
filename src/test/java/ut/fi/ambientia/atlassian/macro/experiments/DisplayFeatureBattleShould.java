@@ -5,7 +5,7 @@ import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
@@ -31,7 +31,7 @@ public class DisplayFeatureBattleShould {
     public static final String USER_KEY = "USER KEY";
     public static final UserIdentifier USER_IDENTIFIER = new UserIdentifier(USER_KEY);
     public static final String EXPERIMENT_ID = "EXPERIMENT_ID";
-    private static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier(EXPERIMENT_ID) ;
+    private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier(EXPERIMENT_ID) ;
     private Map<String, String> map = new HashMap<>();
     private String string;
     private ConversionContext conversionContext;
@@ -67,7 +67,7 @@ public class DisplayFeatureBattleShould {
     @Test
     public void should_render_a_feature_battle_specific_for_a_user() throws Exception {
         when(userManager.getRemoteUserKey()).thenReturn(new UserKey(USER_KEY));
-        when(chooseFeature.forUser( argThat( UserIdentifierMatcher.matchesWithUser(USER_IDENTIFIER)), any( ExperimentIdentifier.class ) ) ).thenReturn( experiment );
+        when(chooseFeature.forUser( argThat( UserIdentifierMatcher.matchesWithUser(USER_IDENTIFIER)), any( FeatureBattleIdentifier.class ) ) ).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
@@ -77,7 +77,7 @@ public class DisplayFeatureBattleShould {
     @Test
     public void render_default_feature_battle_for_anonymous_user() throws Exception {
         when(userManager.getRemoteUserKey()).thenReturn(null);
-        when(chooseFeature.forUser(argThat( UserIdentifierMatcher.matchesWithUser( new UserIdentifier( Users.ANONYMOUS_USER) )), any( ExperimentIdentifier.class ) )).thenReturn( experiment );
+        when(chooseFeature.forUser(argThat( UserIdentifierMatcher.matchesWithUser( new UserIdentifier( Users.ANONYMOUS_USER) )), any( FeatureBattleIdentifier.class ) )).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 
@@ -86,7 +86,7 @@ public class DisplayFeatureBattleShould {
 
     @Test
     public void find_a_feature_battle_for_specific_identifier() throws Exception {
-        when(chooseFeature.forUser(any(UserIdentifier.class), argThat( matchesWith( new ExperimentIdentifier(EXPERIMENT_ID) )))).thenReturn( experiment );
+        when(chooseFeature.forUser(any(UserIdentifier.class), argThat( matchesWith( new FeatureBattleIdentifier(EXPERIMENT_ID) )))).thenReturn( experiment );
 
         String execute = displayFeatureBattle.execute(map, string, conversionContext);
 

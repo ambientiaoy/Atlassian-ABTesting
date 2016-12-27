@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
-public class ShowFeatureBattleForUserShould {
+public class Acc_ShowFeatureBattleForUserShould {
 
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
@@ -76,11 +76,11 @@ public class ShowFeatureBattleForUserShould {
         Experiment experiment;
 
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
-        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
         assertThat( experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
 
         properties.setProperty("feature.battle.default.win", SMALL_ENOUGH_FOR_GOOD_OLD);
-        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 
@@ -88,10 +88,10 @@ public class ShowFeatureBattleForUserShould {
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 
-        JsonFeatureBattleArgument newAbTest = new JsonFeatureBattleArgument( TestData.EXPERIMENT_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD);
+        JsonFeatureBattleArgument newAbTest = new JsonFeatureBattleArgument( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD);
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
-        Experiment experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }

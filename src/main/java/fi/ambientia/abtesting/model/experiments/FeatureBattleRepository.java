@@ -9,15 +9,15 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
-    List<FeatureBattleResult> featureBattleResultsFor(ExperimentIdentifier experiment);
+    List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment);
 
-    ExperimentRandomizer experimentRandomizer(ExperimentIdentifier experimentIdentifier);
+    ExperimentRandomizer experimentRandomizer(FeatureBattleIdentifier featureBattleIdentifier);
 
-    CreateNewFeatureBattleFor newFeatureBattleFor(ExperimentIdentifier experiment);
+    CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier experiment);
 
     List<Experiment> experimentsForUser(UserIdentifier userientifier);
 
-    Optional<FeatureBattle> getFeatureBattle(ExperimentIdentifier experimentIdentifier);
+    Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 
     @FunctionalInterface
     interface CreateNewFeatureBattleFor {

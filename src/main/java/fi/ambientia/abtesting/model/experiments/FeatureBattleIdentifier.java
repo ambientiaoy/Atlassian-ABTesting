@@ -2,20 +2,20 @@ package fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.model.Identifier;
 
-public class ExperimentIdentifier implements Identifier {
+public class FeatureBattleIdentifier implements Identifier {
     public static final String DEFAULT_IDENTIFIER = "DEFAULT IDENTIFIER FOR EXPERIMENTS";
     private final String experiment_id;
 
-    public ExperimentIdentifier(String experiment_id) {
+    public FeatureBattleIdentifier(String experiment_id) {
         this.experiment_id = experiment_id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExperimentIdentifier)) return false;
+        if (!(o instanceof FeatureBattleIdentifier)) return false;
 
-        ExperimentIdentifier that = (ExperimentIdentifier) o;
+        FeatureBattleIdentifier that = (FeatureBattleIdentifier) o;
 
         return experiment_id != null ? experiment_id.equals(that.experiment_id) : that.experiment_id == null;
 

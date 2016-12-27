@@ -4,7 +4,7 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentRepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
@@ -46,10 +46,10 @@ public class ExperimentRepositoryTest {
 
         ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.EXPERIMENT_IDENTIFIER, ExperimentRepository.DEFAULT_THRESHOLD);
+        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, ExperimentRepository.DEFAULT_THRESHOLD);
     }
 
-    protected void assertOnlyOneAOWithIdentifierAndThreshold(ExperimentAO[] experimentAOs, ExperimentIdentifier identifier, int threshold) {
+    protected void assertOnlyOneAOWithIdentifierAndThreshold(ExperimentAO[] experimentAOs, FeatureBattleIdentifier identifier, int threshold) {
         assertThat( experimentAOs.length, equalTo(1));
         assertThat( experimentAOs[0].getExperimentId(), equalTo(identifier.getIdentifier() ) );
         assertThat( experimentAOs[0].getThreshold(), equalTo(threshold) );
@@ -57,29 +57,29 @@ public class ExperimentRepositoryTest {
 
     @Test
     public void should_set_threshold() throws Exception {
-        ExperimentIdentifier experimentIdentifier = createExperimentIdentifier();
-        experimentRepository.createExperiment(experimentIdentifier);
-        experimentRepository.setThreshold( experimentIdentifier, 15 );
+        FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
+        experimentRepository.createExperiment(featureBattleIdentifier);
+        experimentRepository.setThreshold(featureBattleIdentifier, 15 );
 
         ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.EXPERIMENT_IDENTIFIER, 15);
+        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
     }
 
     @Test
     public void should_not_store_same_identifier_more_than_once() throws Exception {
-        ExperimentIdentifier experimentIdentifier = createExperimentIdentifier();
-        experimentRepository.createExperiment(experimentIdentifier);
-        experimentRepository.setThreshold( experimentIdentifier, 15 );
-        experimentRepository.createExperiment(experimentIdentifier);
-        experimentRepository.createExperiment(experimentIdentifier);
+        FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
+        experimentRepository.createExperiment(featureBattleIdentifier);
+        experimentRepository.setThreshold(featureBattleIdentifier, 15 );
+        experimentRepository.createExperiment(featureBattleIdentifier);
+        experimentRepository.createExperiment(featureBattleIdentifier);
 
         ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.EXPERIMENT_IDENTIFIER, 15);
+        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
     }
 
-    private ExperimentIdentifier createExperimentIdentifier() {
-        return TestData.EXPERIMENT_IDENTIFIER;
+    private FeatureBattleIdentifier createExperimentIdentifier() {
+        return TestData.FEATURE_BATTLE_IDENTIFIER;
     }
 }

@@ -1,16 +1,16 @@
 package ut.fi.ambientia.matchers;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 public class ExperimentMatcher extends TypeSafeMatcher<Experiment> {
     private final Experiment expected;
-    private final ExperimentIdentifier identifier;
+    private final FeatureBattleIdentifier identifier;
 
-    public ExperimentMatcher(Experiment experiment, ExperimentIdentifier identifier) {
+    public ExperimentMatcher(Experiment experiment, FeatureBattleIdentifier identifier) {
         expected = experiment;
         this.identifier = identifier;
     }
@@ -26,7 +26,7 @@ public class ExperimentMatcher extends TypeSafeMatcher<Experiment> {
     }
 
 
-    public static Matcher<Experiment> thatIsEqualTo(Experiment experiment, ExperimentIdentifier identifier){
+    public static Matcher<Experiment> thatIsEqualTo(Experiment experiment, FeatureBattleIdentifier identifier){
         return new ExperimentMatcher(experiment, identifier);
     }
 }

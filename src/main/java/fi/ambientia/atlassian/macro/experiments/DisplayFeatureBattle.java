@@ -9,7 +9,7 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.routes.Routes;
 import fi.ambientia.atlassian.users.Users;
@@ -38,9 +38,9 @@ public class DisplayFeatureBattle implements Macro {
     public String execute(Map<String, String> parameter, String s, ConversionContext conversionContext) throws MacroExecutionException {
         // handle input parameters
         String currentUserIdentifier = currentUser.get();
-        String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> ExperimentIdentifier.DEFAULT_IDENTIFIER);
+        String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> FeatureBattleIdentifier.DEFAULT_IDENTIFIER);
         // execute action
-        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new ExperimentIdentifier( feature_battle_identifier));
+        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier( feature_battle_identifier));
         // create context and render
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);

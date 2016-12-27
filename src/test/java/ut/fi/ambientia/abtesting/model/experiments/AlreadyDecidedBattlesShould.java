@@ -2,7 +2,7 @@ package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
@@ -22,7 +22,7 @@ public class AlreadyDecidedBattlesShould {
 
     private static final String USERKEY = "USERKEY";
     private static final UserIdentifier USER_IDENTIFIER = new UserIdentifier(USERKEY);
-    private static final ExperimentIdentifier EXPERIMENT_IDENTIFIER = new ExperimentIdentifier("EXPERIMENT");
+    private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier("EXPERIMENT");
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private FeatureBattleRepository featureBattleRepository;
 
@@ -48,12 +48,12 @@ public class AlreadyDecidedBattlesShould {
 //    @Test
 //    public void see_if_user_has_already_decided_to_take_either() throws Exception {
 //        GoodOldWay goodOldWay = new GoodOldWay();
-//        when(featureBattleRepository.votesFor( EXPERIMENT_IDENTIFIER )).
+//        when(featureBattleRepository.votesFor( FEATURE_BATTLE_IDENTIFIER )).
 //                thenReturn(
 //                        Arrays.asList(createTestFeatureBattleResultWhereUserWantsOldWay(goodOldWay)
 //                        ) );
 //
-//        Optional<Experiment> optional = alreadyDecidedBattles.forExperiment( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
+//        Optional<Experiment> optional = alreadyDecidedBattles.forExperiment( FEATURE_BATTLE_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
 //
 //        assertThat(optional.get(), equalTo( goodOldWay ));
 //

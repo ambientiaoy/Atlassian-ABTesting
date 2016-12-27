@@ -2,7 +2,7 @@ package fi.ambientia.atlassian.routes.experiments;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.abtesting.model.FeatureBattle;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,9 +38,9 @@ public class FeatureBattleRouteShould {
 
     @Test
     public void return_404_if_not_found() throws Exception {
-        when(featureBattleRepository.getFeatureBattle( any(ExperimentIdentifier.class))).thenReturn(Optional.empty());
+        when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.empty());
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.EXPERIMENT_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
         assertThat( head.getStatus(), equalTo(404));
     }
@@ -50,19 +50,19 @@ public class FeatureBattleRouteShould {
     @Test
     public void return_200_if_found() throws Exception {
         FeatureBattle fb = mock(FeatureBattle.class);
-        when(featureBattleRepository.getFeatureBattle( any(ExperimentIdentifier.class))).thenReturn(Optional.of( fb ));
+        when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.of( fb ));
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.EXPERIMENT_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
         assertThat( head.getStatus(), equalTo(200));
     }
 
     @Test
     public void return_FeatureBattleDescriptor_if_found() throws Exception {
-        FeatureBattle fb = new FeatureBattle(TestData.EXPERIMENT_IDENTIFIER);
-        when(featureBattleRepository.getFeatureBattle( any(ExperimentIdentifier.class))).thenReturn(Optional.of( fb ));
+        FeatureBattle fb = new FeatureBattle(TestData.FEATURE_BATTLE_IDENTIFIER);
+        when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.of( fb ));
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.EXPERIMENT_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
         assertThat( head.getEntity(), is(equalTo(null)));
     }

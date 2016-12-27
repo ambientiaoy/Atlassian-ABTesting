@@ -1,7 +1,7 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class ExecuteFeatureBattle {
         this.featureBattleRepository = featureBattleRepository;
     }
 
-    public StoreUserConsumer forExperiment(ExperimentIdentifier experiment) {
+    public StoreUserConsumer forExperiment(FeatureBattleIdentifier experiment) {
         Experiment randomExperiment = featureBattleRepository.experimentRandomizer(experiment).randomize();
 
         return (UserIdentifier user) -> {

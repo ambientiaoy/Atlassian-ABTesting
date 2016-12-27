@@ -3,9 +3,9 @@ package fi.ambientia.abtesting.model.experiments;
 public class NewAndShiny implements Experiment {
 
     private static final String NEW_AND_SHINY = "b2_new_and_shiny";
-    private final ExperimentIdentifier experientIdenifier;
+    private final FeatureBattleIdentifier experientIdenifier;
 
-    public NewAndShiny(ExperimentIdentifier experientIdenifier) {
+    public NewAndShiny(FeatureBattleIdentifier experientIdenifier) {
         this.experientIdenifier = experientIdenifier;
     }
 
@@ -27,7 +27,7 @@ public class NewAndShiny implements Experiment {
     }
 
     @Override
-    public boolean isRepresentedBy(ExperimentIdentifier identifier) {
+    public boolean isRepresentedBy(FeatureBattleIdentifier identifier) {
         return identifier != null && identifier.equals(experientIdenifier);
     }
 }

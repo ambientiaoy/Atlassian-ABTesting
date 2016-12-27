@@ -2,7 +2,7 @@ package fi.ambientia.atlassian.routes.experiments;
 
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.FeatureBattleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class FeatureBattleRoute {
     @Produces({MediaType.APPLICATION_JSON})
     public Response head(@Context HttpServletRequest request, @PathParam("featureBattleId") String featureBattleId){
 
-        Optional<fi.ambientia.abtesting.model.FeatureBattle> featureBattle = featureBattleRepository.getFeatureBattle(new ExperimentIdentifier(featureBattleId));
+        Optional<fi.ambientia.abtesting.model.FeatureBattle> featureBattle = featureBattleRepository.getFeatureBattle(new FeatureBattleIdentifier(featureBattleId));
 
         return featureBattle.map( featureBattle1 -> Response.ok().build() ).orElse( Response.status(Response.Status.NOT_FOUND ).build());
     }

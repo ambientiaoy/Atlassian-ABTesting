@@ -1,7 +1,5 @@
 package fi.ambientia.abtesting.model.experiments;
 
-import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
-
 import java.util.Random;
 import java.util.function.Function;
 
@@ -13,7 +11,7 @@ public interface Experiment {
     Type type();
     String render();
 
-    boolean isRepresentedBy(ExperimentIdentifier experimentIdentifier);
+    boolean isRepresentedBy(FeatureBattleIdentifier featureBattleIdentifier);
 
     static WithIdentifier forType(Type experimentType) {
         return experimentType.equals( Type.NEW_AND_SHINY ) ?
@@ -21,9 +19,9 @@ public interface Experiment {
                 ( experimentIdentifier ) -> new GoodOldWay( experimentIdentifier );
     }
 
-    static Experiment randomize(Random random, Integer threshold, ExperimentIdentifier experimentIdentifier) {
+    static Experiment randomize(Random random, Integer threshold, FeatureBattleIdentifier featureBattleIdentifier) {
         return random.nextInt(100) < threshold ?
-            new NewAndShiny(experimentIdentifier) : new GoodOldWay( experimentIdentifier);
+            new NewAndShiny(featureBattleIdentifier) : new GoodOldWay(featureBattleIdentifier);
     }
 
     enum Type {
@@ -32,9 +30,9 @@ public interface Experiment {
     }
 
     @FunctionalInterface
-    public interface WithIdentifier extends Function<ExperimentIdentifier, Experiment> {
+    public interface WithIdentifier extends Function<FeatureBattleIdentifier, Experiment> {
         default Experiment withIdentifier(String identifier){
-            return this.apply( new ExperimentIdentifier(identifier) );
+            return this.apply( new FeatureBattleIdentifier(identifier) );
         }
     }
 }

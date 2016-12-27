@@ -3,10 +3,10 @@ package fi.ambientia.abtesting.model.experiments;
 public class GoodOldWay implements Experiment {
 
     public static final String B_1_GOOD_OLD = "b1_good_old";
-    private final ExperimentIdentifier experimentIdentifier;
+    private final FeatureBattleIdentifier featureBattleIdentifier;
 
-    public GoodOldWay(ExperimentIdentifier experimentIdentifier) {
-        this.experimentIdentifier = experimentIdentifier;
+    public GoodOldWay(FeatureBattleIdentifier featureBattleIdentifier) {
+        this.featureBattleIdentifier = featureBattleIdentifier;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class GoodOldWay implements Experiment {
     }
 
     @Override
-    public boolean isRepresentedBy(ExperimentIdentifier experimentIdentifier) {
-        return this.experimentIdentifier != null && this.experimentIdentifier.equals( experimentIdentifier ) ;
+    public boolean isRepresentedBy(FeatureBattleIdentifier featureBattleIdentifier) {
+        return this.featureBattleIdentifier != null && this.featureBattleIdentifier.equals(featureBattleIdentifier) ;
     }
 }

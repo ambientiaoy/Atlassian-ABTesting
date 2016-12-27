@@ -2,8 +2,7 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
-import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
 
@@ -20,30 +19,30 @@ public class ExperimentRepository {
         this.properties = properties;
     }
 
-    public void createExperiment(ExperimentIdentifier experimentIdentifier) {
-        if( getExperimentAO(experimentIdentifier, ao).isPresent() ){
+    public void createExperiment(FeatureBattleIdentifier featureBattleIdentifier) {
+        if( getExperimentAO(featureBattleIdentifier, ao).isPresent() ){
             return;
         }
 
         ExperimentAO experimentAO = ao.create(ExperimentAO.class);
-        experimentAO.setExperimentId( experimentIdentifier.getIdentifier() );
+        experimentAO.setExperimentId( featureBattleIdentifier.getIdentifier() );
         experimentAO.setThreshold( properties.propertyOrDefault("experiment.default.threshold", DEFAULT_THRESHOLD));
         experimentAO.save();
     }
 
-    public void setThreshold(ExperimentIdentifier experimentIdentifier, int threshold) {
-        Optional<ExperimentAO> optional = getExperimentAO(experimentIdentifier, ao);
+    public void setThreshold(FeatureBattleIdentifier featureBattleIdentifier, int threshold) {
+        Optional<ExperimentAO> optional = getExperimentAO(featureBattleIdentifier, ao);
         optional.ifPresent(( experimentAO ) -> {
             experimentAO.setThreshold( threshold );
             experimentAO.save();
         });
     }
 
-    public static Optional<ExperimentAO> getExperimentAO(ExperimentIdentifier experimentIdentifier, ActiveObjects ao) {
-        ExperimentAO[] userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", experimentIdentifier.getIdentifier()));
+    public static Optional<ExperimentAO> getExperimentAO(FeatureBattleIdentifier featureBattleIdentifier, ActiveObjects ao) {
+        ExperimentAO[] userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", featureBattleIdentifier.getIdentifier()));
         if( userExperimentAOs.length > 1){
             Arrays.asList(userExperimentAOs).stream().skip(1).forEach(userExperimentAO -> ao.delete( userExperimentAO ));
-            userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", experimentIdentifier.getIdentifier()));
+            userExperimentAOs = ao.find(ExperimentAO.class, Query.select().from(ExperimentAO.class).where("EXPERIMENT_ID = ? ", featureBattleIdentifier.getIdentifier()));
         }
         if( userExperimentAOs.length == 1){
             return Optional.of( userExperimentAOs[0] );

@@ -1,7 +1,7 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,13 +21,13 @@ public class ChooseExperiment {
         this.randomizeFeatureBattle = randomizeFeatureBattle;
     }
 
-    public Experiment forUser(UserIdentifier user, ExperimentIdentifier experiment) {
+    public Experiment forUser(UserIdentifier user, FeatureBattleIdentifier experiment) {
         Optional<Experiment> experimentOptional = alreadyDecided.experimentOf(experiment).targetedFor(user);
 
         return experimentOptional.orElse( executeFeatureBattleAndGetResult( user , experiment) );
     }
 
-    private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, ExperimentIdentifier experiment) {
+    private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, FeatureBattleIdentifier experiment) {
         executeFeatureBattle.forExperiment(experiment).andStoreResultToRepository( user );
 
         return randomizeFeatureBattle.getExperiment(experiment).forUser(user);

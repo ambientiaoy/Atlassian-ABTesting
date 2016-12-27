@@ -1,7 +1,6 @@
 package ut.fi.ambientia.matchers;
 
 import fi.ambientia.abtesting.model.Identifier;
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

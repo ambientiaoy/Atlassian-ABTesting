@@ -1,20 +1,20 @@
 package ut.fi.ambientia.matchers;
 
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class ExperimentIdentifierMatcher extends TypeSafeMatcher<ExperimentIdentifier> {
-    private final ExperimentIdentifier expected;
+public class ExperimentIdentifierMatcher extends TypeSafeMatcher<FeatureBattleIdentifier> {
+    private final FeatureBattleIdentifier expected;
 
-    public ExperimentIdentifierMatcher(ExperimentIdentifier expected) {
+    public ExperimentIdentifierMatcher(FeatureBattleIdentifier expected) {
         this.expected = expected;
     }
 
     @Override
-    protected boolean matchesSafely(ExperimentIdentifier experimentIdentifier) {
-        return experimentIdentifier.getIdentifier().equals(expected.getIdentifier());
+    protected boolean matchesSafely(FeatureBattleIdentifier featureBattleIdentifier) {
+        return featureBattleIdentifier.getIdentifier().equals(expected.getIdentifier());
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ExperimentIdentifierMatcher extends TypeSafeMatcher<ExperimentIdent
                              "\ngot:      " + "something else");
     }
 
-    public static Matcher<ExperimentIdentifier> matchesWith(ExperimentIdentifier experimentIdentifier) {
-        return new ExperimentIdentifierMatcher( experimentIdentifier );
+    public static Matcher<FeatureBattleIdentifier> matchesWith(FeatureBattleIdentifier featureBattleIdentifier) {
+        return new ExperimentIdentifierMatcher(featureBattleIdentifier);
     }
 }

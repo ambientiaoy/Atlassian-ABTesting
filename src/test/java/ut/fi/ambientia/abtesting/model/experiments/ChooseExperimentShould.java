@@ -34,7 +34,7 @@ public class ChooseExperimentShould {
         randomizeFeatureBattle = mock(RandomizeFeatureBattle.class);
         chooseFeature = new ChooseExperiment(alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
         when(executeFeatureBattle.forExperiment( any() )).thenReturn( (u) -> Optional.of(getANewAndShiny()));
-        when(randomizeFeatureBattle.getExperiment( TestData.EXPERIMENT_IDENTIFIER)).thenReturn((u) -> {
+        when(randomizeFeatureBattle.getExperiment( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn((u) -> {
             assertThat( u, equalTo( TestData.USERIDENTIFIER ));
             return null;
         });
@@ -44,33 +44,33 @@ public class ChooseExperimentShould {
     @Test
     public void return_the_already_decided_feature_battle_if_it_is_decided() throws Exception {
 
-        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER)).thenReturn( (user) -> Optional.of(getANewAndShiny()) );
+        when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn( (user) -> Optional.of(getANewAndShiny()) );
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
     }
 
     @Test
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
-        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
+        when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn( (u) -> Optional.empty() );
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
-        verify( executeFeatureBattle ).forExperiment(TestData.EXPERIMENT_IDENTIFIER);
+        verify( executeFeatureBattle ).forExperiment(TestData.FEATURE_BATTLE_IDENTIFIER);
     }
 
     @Test
     public void execute_a_randomizer_to_call_random_page() throws Exception {
-        when(alreadyDecidedBattles.experimentOf( TestData.EXPERIMENT_IDENTIFIER )).thenReturn( (u) -> Optional.empty() );
-        when(randomizeFeatureBattle.getExperiment( TestData.EXPERIMENT_IDENTIFIER)).thenReturn(u -> new GoodOldWay(TestData.EXPERIMENT_IDENTIFIER));
+        when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn( (u) -> Optional.empty() );
+        when(randomizeFeatureBattle.getExperiment( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn(u -> new GoodOldWay(TestData.FEATURE_BATTLE_IDENTIFIER));
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.EXPERIMENT_IDENTIFIER);
+        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
     }
 
     private NewAndShiny getANewAndShiny() {
-        return new NewAndShiny(TestData.EXPERIMENT_IDENTIFIER);
+        return new NewAndShiny(TestData.FEATURE_BATTLE_IDENTIFIER);
     }
 }

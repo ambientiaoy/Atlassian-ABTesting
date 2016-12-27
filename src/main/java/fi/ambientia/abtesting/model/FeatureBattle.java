@@ -1,12 +1,16 @@
 package fi.ambientia.abtesting.model;
 
-import fi.ambientia.abtesting.model.experiments.ExperimentIdentifier;
+import fi.ambientia.abtesting.model.experiments.FeatureBattleIdentifier;
 
 public class FeatureBattle {
 
-    private final ExperimentIdentifier experimentIdentifier;
+    private final FeatureBattleIdentifier featureBattleIdentifier;
 
-    public FeatureBattle(ExperimentIdentifier experimentIdentifier) {
-        this.experimentIdentifier = experimentIdentifier;
+    public FeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+        this.featureBattleIdentifier = featureBattleIdentifier;
+    }
+
+    public FeatureBattleIdentifier getIdentifier() {
+        return featureBattleIdentifier;
     }
 }
