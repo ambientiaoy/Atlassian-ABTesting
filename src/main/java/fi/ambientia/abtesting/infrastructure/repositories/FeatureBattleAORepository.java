@@ -83,6 +83,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
                 // FIXME AkS: I See a null here!
                 userExperimentAO.setExperiment( experimentAOOptional.orElse( null ) );
                 userExperimentAO.setUserId( user.getIdentifier() );
+                userExperimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
                 userExperimentAO.setExperimentType( experiment.type() );
                 userExperimentAO.save();
 
@@ -90,10 +91,8 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         };
     }
 
-    protected UserExperimentAO getUserExperimentAO(String userId, String experimentId) {
-        Optional<ExperimentAO> experimentOptional = EnsureOnlyOneAOEntityExists.execute(ao, ExperimentAO.class, "EXPERIMENT_ID = ? ", experimentId);
-        Integer experimentID = experimentOptional.isPresent() ? experimentOptional.get().getID() : -1 ;
-        Optional<UserExperimentAO> userExperimentAO1 = EnsureOnlyOneAOEntityExists.execute(ao, UserExperimentAO.class, "USER_ID = ? AND EXPERIMENT_ID = ?", userId, experimentID );
+    protected UserExperimentAO getUserExperimentAO(String userId, String featureBattleId) {
+        Optional<UserExperimentAO> userExperimentAO1 = EnsureOnlyOneAOEntityExists.execute(ao, UserExperimentAO.class, "USER_ID = ? AND FEATURE_BATTLE_id = ?", userId, featureBattleId );
 
         return userExperimentAO1.orElseGet(() -> ao.create(UserExperimentAO.class));
     }

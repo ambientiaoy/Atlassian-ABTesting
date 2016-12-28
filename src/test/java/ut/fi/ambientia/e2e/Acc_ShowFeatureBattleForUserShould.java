@@ -74,19 +74,6 @@ public class Acc_ShowFeatureBattleForUserShould {
     }
 
     @Test
-    public void select_one_randomly_if_no_feature_battles_have_been_stored() throws Exception {
-        Experiment experiment;
-
-        properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
-        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
-        assertThat( experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
-
-        properties.setProperty("feature.battle.default.win", SMALL_ENOUGH_FOR_GOOD_OLD);
-        experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
-        assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
-    }
-
-    @Test
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 

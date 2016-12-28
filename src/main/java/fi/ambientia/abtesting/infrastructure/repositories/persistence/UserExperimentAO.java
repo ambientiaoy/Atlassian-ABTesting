@@ -10,6 +10,9 @@ public interface UserExperimentAO extends Entity {
     String getUserId();
     void setUserId(String identifier);
 
+    String getFeatureBattleId();
+    void setFeatureBattleId(String featureBattleId);
+
     ExperimentAO getExperiment();
     void setExperiment(ExperimentAO experiment);
 

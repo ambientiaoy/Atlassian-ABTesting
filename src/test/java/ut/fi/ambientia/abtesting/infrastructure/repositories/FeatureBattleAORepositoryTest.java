@@ -91,6 +91,13 @@ public class FeatureBattleAORepositoryTest {
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
         featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
         featureBattleAO.save();
+        ExperimentAO experimentAO = ao.create(ExperimentAO.class);
+        experimentAO.setFeatureBattle( featureBattleAO );
+        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        experimentAO.setPage("PAGE");
+        experimentAO.setExperimentType(Experiment.Type.GOOD_OLD);
+        experimentAO.save();
+
 
         featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( newAndShiny(FEATURE_BATTLE_IDENTIFIER) );
 
@@ -103,6 +110,8 @@ public class FeatureBattleAORepositoryTest {
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
         featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
         featureBattleAO.save();
+        createNewExperiment(featureBattleAO, Experiment.Type.NEW_AND_SHINY);
+        createNewExperiment(featureBattleAO, Experiment.Type.GOOD_OLD);
 
 
         featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing( newAndShiny(FEATURE_BATTLE_IDENTIFIER) );
@@ -113,6 +122,15 @@ public class FeatureBattleAORepositoryTest {
         assertThat(abTestAos.length, equalTo(1));
         assertThat(abTestAos[0].getExperimentType(), equalTo(Experiment.Type.GOOD_OLD));
 
+    }
+
+    protected void createNewExperiment(FeatureBattleAO featureBattleAO, Experiment.Type type) {
+        ExperimentAO experimentAO = ao.create(ExperimentAO.class);
+        experimentAO.setFeatureBattle( featureBattleAO );
+        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        experimentAO.setExperimentType(type);
+        experimentAO.setPage("PAGE");
+        experimentAO.save();
     }
 
     @Test
