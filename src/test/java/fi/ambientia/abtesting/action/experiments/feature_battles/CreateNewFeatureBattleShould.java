@@ -1,7 +1,7 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
-import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
+import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;
 
@@ -18,7 +18,7 @@ public class CreateNewFeatureBattleShould {
 
         String identifier = TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier();
         int threshold = 16;
-        createNewFeatureBattle.createNew( new JsonFeatureBattleArgument(identifier, threshold));
+        createNewFeatureBattle.createNew( new CreateNewFeatureBattleCommand(identifier, threshold, "good old", "shiny new"));
 
         verify( featureBattleRepository ).createFeatureBattle( TestData.FEATURE_BATTLE_IDENTIFIER );
         verify( featureBattleRepository ).setThreshold( TestData.FEATURE_BATTLE_IDENTIFIER, threshold);

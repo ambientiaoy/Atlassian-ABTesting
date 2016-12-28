@@ -14,7 +14,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.Experiment
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
+import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import net.java.ao.EntityManager;
@@ -89,12 +89,13 @@ public class Acc_ShowFeatureBattleForUserShould {
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 
-        JsonFeatureBattleArgument newAbTest = new JsonFeatureBattleArgument( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD);
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
         Experiment experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
+        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, Experiment.ABTEST, "Good Old")));
     }
 
     @Test
@@ -107,7 +108,8 @@ public class Acc_ShowFeatureBattleForUserShould {
         fail("ToBeDefined");
     }
 
-    @Test void can_mark_experiment_as_done(){
+    @Test
+    public void can_mark_experiment_as_done(){
         // not Delete, mark as done, choose either experiment.
         fail("ToBeDefined");
     }

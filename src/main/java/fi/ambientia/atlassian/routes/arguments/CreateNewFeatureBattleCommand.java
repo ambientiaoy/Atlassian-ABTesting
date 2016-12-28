@@ -3,13 +3,17 @@ package fi.ambientia.atlassian.routes.arguments;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.write.FeatureBattleInput;
 
-public class JsonFeatureBattleArgument implements FeatureBattleInput {
+public class CreateNewFeatureBattleCommand implements FeatureBattleInput {
     private final String uniqueKey;
     private final Integer threshold;
+    private final String goodOldPage;
+    private final String newAndShinyPage;
 
-    public JsonFeatureBattleArgument(String uniqueKey, Integer threshold) {
+    public CreateNewFeatureBattleCommand(String uniqueKey, Integer threshold, String goodOldPage, String newAndShinyPage) {
         this.uniqueKey = uniqueKey;
         this.threshold = threshold;
+        this.goodOldPage = goodOldPage;
+        this.newAndShinyPage = newAndShinyPage;
     }
 
     public String getUniqueKey() {
@@ -24,5 +28,13 @@ public class JsonFeatureBattleArgument implements FeatureBattleInput {
     @Override
     public Integer getThreshold() {
         return threshold;
+    }
+
+    public String getGoodOldPage() {
+        return goodOldPage;
+    }
+
+    public String getNewAndShinyPage() {
+        return newAndShinyPage;
     }
 }

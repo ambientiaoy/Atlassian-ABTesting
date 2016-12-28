@@ -1,7 +1,7 @@
 package ut.fi.ambientia.atlassian.routes.experiments;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
-import fi.ambientia.atlassian.routes.arguments.JsonFeatureBattleArgument;
+import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class FeatureBattlesRouteShould {
     public final String AB_INSTANCE_UNIQUE_KEY = "KEY";
     private CreateExperiment createNewHypothesis;
     private FeatureBattles featureBattles;
-    private JsonFeatureBattleArgument newAbTest;
+    private CreateNewFeatureBattleCommand newAbTest;
     private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
     private HttpServletRequest context = mock(HttpServletRequest.class);
 
@@ -31,7 +31,7 @@ public class FeatureBattlesRouteShould {
         createNewHypothesis = mock(CreateExperiment.class);
         featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute.class);
         featureBattles = new FeatureBattles(createNewHypothesis, featureBattle);
-        newAbTest = new JsonFeatureBattleArgument(AB_INSTANCE_UNIQUE_KEY, 10);
+        newAbTest = new CreateNewFeatureBattleCommand(AB_INSTANCE_UNIQUE_KEY, 10, "Good Old", "Shiny new");
 
         Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();
         when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_not_found );
