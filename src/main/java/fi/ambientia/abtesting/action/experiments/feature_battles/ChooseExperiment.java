@@ -27,10 +27,10 @@ public class ChooseExperiment {
         return experimentOptional.orElseGet( () -> executeFeatureBattleAndGetResult( user , experiment) );
     }
 
-    private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, FeatureBattleIdentifier experiment) {
-        executeFeatureBattle.forExperiment(experiment).andStoreResultToRepository( user );
+    private Experiment executeFeatureBattleAndGetResult(UserIdentifier user, FeatureBattleIdentifier featureBattleIdentifier) {
+        executeFeatureBattle.forExperiment(featureBattleIdentifier).andStoreResultToRepository( user );
 
-        return randomizeFeatureBattle.getExperiment(experiment).forUser(user);
+        return randomizeFeatureBattle.getExperiment(featureBattleIdentifier).forUser(user);
     }
 
 }

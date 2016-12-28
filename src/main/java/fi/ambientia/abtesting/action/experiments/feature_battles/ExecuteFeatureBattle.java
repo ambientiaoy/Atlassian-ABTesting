@@ -23,11 +23,11 @@ public class ExecuteFeatureBattle {
         this.experimentRepository = experimentRepository;
     }
 
-    public StoreUserConsumer forExperiment(FeatureBattleIdentifier experiment) {
-        Experiment randomExperiment = featureBattleRepository.experimentRandomizer(experiment).randomize();
+    public StoreUserConsumer forExperiment(FeatureBattleIdentifier featureBattleIdentifier) {
+        Experiment randomExperiment = featureBattleRepository.experimentRandomizer(featureBattleIdentifier).randomize();
 
         return (UserIdentifier user) -> {
-            featureBattleRepository.newFeatureBattleFor(experiment).forUser(user).resultBeing(randomExperiment);
+            featureBattleRepository.newFeatureBattleFor(featureBattleIdentifier).forUser(user).resultBeing(randomExperiment);
         };
     }
 

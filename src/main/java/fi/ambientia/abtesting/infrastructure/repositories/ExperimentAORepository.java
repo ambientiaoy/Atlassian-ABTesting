@@ -38,7 +38,7 @@ public class ExperimentAORepository implements ExperimentRepository {
         UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
 
         List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
-                map(userExperimentAO -> Experiment.forType(userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId())).
+                map(userExperimentAO -> Experiment.forType(userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId(), userExperimentAO.getExperiment().getPage())).
                 collect(Collectors.toList());
 
         return experiments;

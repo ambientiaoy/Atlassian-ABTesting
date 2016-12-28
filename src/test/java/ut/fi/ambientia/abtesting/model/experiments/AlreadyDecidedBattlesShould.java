@@ -9,6 +9,7 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
 import org.junit.Test;
+import ut.fi.ambientia.abtesting.model.TestData;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class AlreadyDecidedBattlesShould {
 
     @Test
     public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
-        GoodOldWay goodOldWay = new GoodOldWay(EXPERIMENT_IDENTIFIER);
+        GoodOldWay goodOldWay = TestData.getGoodOld();
         when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).
                 thenReturn(
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)
@@ -44,6 +45,8 @@ public class AlreadyDecidedBattlesShould {
 
         assertThat(optional.get(), equalTo( goodOldWay ));
     }
+
+    // FIXME AkS: commented out test
 
 //    @Test
 //    public void see_if_user_has_already_decided_to_take_either() throws Exception {

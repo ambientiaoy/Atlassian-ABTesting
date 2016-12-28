@@ -10,6 +10,7 @@ import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
 import org.junit.Test;
+import ut.fi.ambientia.abtesting.model.TestData;
 
 import java.util.Arrays;
 
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class RandomizeFeatureBattleShould {
 
     private static final UserIdentifier USERIENTIFIER = new UserIdentifier("FOOBARBAZ");
-    private static final FeatureBattleIdentifier EXPERIENT_IDENIFIER = new FeatureBattleIdentifier("EXP1");
+    private static final FeatureBattleIdentifier EXPERIENT_IDENIFIER = TestData.FEATURE_BATTLE_IDENTIFIER;
     private RandomizeFeatureBattle randomizeFeatureBattle;
     private FeatureBattleRepository featureBattleRepository;
     private ExperimentRepository experimentRepository;
@@ -32,12 +33,12 @@ public class RandomizeFeatureBattleShould {
         featureBattleRepository = mock(FeatureBattleRepository.class);
         experimentRepository = mock(ExperimentRepository.class);
         randomizeFeatureBattle = new RandomizeFeatureBattle(featureBattleRepository, experimentRepository);
-        when(featureBattleRepository.experimentRandomizer(any(FeatureBattleIdentifier.class))).thenReturn( () -> new GoodOldWay(new FeatureBattleIdentifier("NO SUCH EXP")));
+        when(featureBattleRepository.experimentRandomizer(any(FeatureBattleIdentifier.class))).thenReturn( () -> TestData.getGoodOld());
     }
 
     @Test
-    public void return_experiment_if_defined_in_repository() throws Exception {
-        NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
+    public void return_experiment_already_defined_for_user () throws Exception {
+        NewAndShiny newAndShiny = TestData.getNewAndShiny();
         when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList(newAndShiny));
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);
@@ -46,9 +47,9 @@ public class RandomizeFeatureBattleShould {
     }
 
     @Test
-    public void do_stuff() throws Exception {
-        NewAndShiny newAndShiny = new NewAndShiny(EXPERIENT_IDENIFIER);
-        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("NOT NOW")) ));
+    public void return_the_experiment_given_by_randomizer () throws Exception {
+        NewAndShiny newAndShiny = TestData.getNewAndShiny();
+        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("FOOBARBAX"), "page" )) );
         when( featureBattleRepository.experimentRandomizer( EXPERIENT_IDENIFIER )).thenReturn( () -> newAndShiny);
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);

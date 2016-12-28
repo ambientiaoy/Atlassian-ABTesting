@@ -76,7 +76,7 @@ public class ExperimentRepositoryTest {
 
     @Test
     public void should_get_experiment_for_user() throws Exception {
-        Experiment experiment = new NewAndShiny(FEATURE_BATTLE_IDENTIFIER);
+        Experiment experiment = TestData.getNewAndShiny();
 
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
         featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
@@ -91,10 +91,6 @@ public class ExperimentRepositoryTest {
         MatcherAssert.assertThat(experiments, hasItem( thatIsEqualTo(experiment, FEATURE_BATTLE_IDENTIFIER)));
     }
 
-
-    private Experiment goodOld(FeatureBattleIdentifier featureBattleIdentifier) {
-        return new GoodOldWay(featureBattleIdentifier);
-    }
 
     private FeatureBattleIdentifier createExperimentIdentifier() {
         return TestData.FEATURE_BATTLE_IDENTIFIER;

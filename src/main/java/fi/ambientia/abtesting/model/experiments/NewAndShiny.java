@@ -6,9 +6,11 @@ public class NewAndShiny implements Experiment {
 
     private static final String NEW_AND_SHINY = "b2_new_and_shiny";
     private final FeatureBattleIdentifier experientIdenifier;
+    private final String page;
 
-    public NewAndShiny(FeatureBattleIdentifier experientIdenifier) {
+    public NewAndShiny(FeatureBattleIdentifier experientIdenifier, String page) {
         this.experientIdenifier = experientIdenifier;
+        this.page = page;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class NewAndShiny implements Experiment {
 
     @Override
     public String render() {
-        return String.format(INCLUDE_PAGE, ABTEST, NEW_AND_SHINY);
+        return String.format(INCLUDE_PAGE, ABTEST, page);
     }
 
     @Override

@@ -6,9 +6,11 @@ public class GoodOldWay implements Experiment {
 
     public static final String B_1_GOOD_OLD = "b1_good_old";
     private final FeatureBattleIdentifier featureBattleIdentifier;
+    private final String page;
 
-    public GoodOldWay(FeatureBattleIdentifier featureBattleIdentifier) {
+    public GoodOldWay(FeatureBattleIdentifier featureBattleIdentifier, String page) {
         this.featureBattleIdentifier = featureBattleIdentifier;
+        this.page = page;
     }
 
     @Override
@@ -18,7 +20,7 @@ public class GoodOldWay implements Experiment {
 
     @Override
     public String render() {
-        return String.format(INCLUDE_PAGE, ABTEST, B_1_GOOD_OLD);
+        return String.format(INCLUDE_PAGE, ABTEST, page);
     }
 
     @Override

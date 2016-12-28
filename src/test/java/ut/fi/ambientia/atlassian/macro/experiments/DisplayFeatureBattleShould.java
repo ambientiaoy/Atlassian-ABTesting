@@ -44,7 +44,7 @@ public class DisplayFeatureBattleShould {
     public void setUp() throws Exception {
         userManager = mock(UserManager.class);
         chooseFeature = mock(ChooseExperiment.class);
-        experiment = new GoodOldWay(EXPERIMENT_IDENTIFIER);
+        experiment = new GoodOldWay(EXPERIMENT_IDENTIFIER, "page");
         map.put("feature_battle", EXPERIMENT_ID);
 
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature){

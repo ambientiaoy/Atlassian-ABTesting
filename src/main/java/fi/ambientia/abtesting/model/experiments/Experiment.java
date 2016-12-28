@@ -3,6 +3,7 @@ package fi.ambientia.abtesting.model.experiments;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public interface Experiment {
@@ -17,13 +18,16 @@ public interface Experiment {
 
     static WithIdentifier forType(Type experimentType) {
         return experimentType.equals( Type.NEW_AND_SHINY ) ?
-                ( experimentIdentifier ) -> new NewAndShiny( experimentIdentifier ) :
-                ( experimentIdentifier ) -> new GoodOldWay( experimentIdentifier );
+                ( experimentIdentifier, page ) -> new NewAndShiny( experimentIdentifier, page ) :
+                ( experimentIdentifier, page ) -> new GoodOldWay( experimentIdentifier, page );
     }
 
-    static Experiment randomize(Random random, Integer threshold, FeatureBattleIdentifier featureBattleIdentifier) {
-        return random.nextInt(100) < threshold ?
-            new NewAndShiny(featureBattleIdentifier) : new GoodOldWay(featureBattleIdentifier);
+    static Experiment.Type randomize(Random random, Integer threshold, FeatureBattleIdentifier featureBattleIdentifier) {
+        return random.nextInt(100) < threshold ? Type.NEW_AND_SHINY : Type.GOOD_OLD;
+    }
+
+    static Experiment missingExperiment() {
+        return new MissingExperiment();
     }
 
     enum Type {
@@ -32,9 +36,9 @@ public interface Experiment {
     }
 
     @FunctionalInterface
-    public interface WithIdentifier extends Function<FeatureBattleIdentifier, Experiment> {
-        default Experiment withIdentifier(String identifier){
-            return this.apply( new FeatureBattleIdentifier(identifier) );
+    public interface WithIdentifier extends BiFunction<FeatureBattleIdentifier, String, Experiment> {
+        default Experiment withIdentifier(String identifier, String page){
+            return this.apply( new FeatureBattleIdentifier(identifier) , page);
         }
     }
 }

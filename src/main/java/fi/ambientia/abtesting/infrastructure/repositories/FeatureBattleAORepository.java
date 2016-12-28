@@ -7,6 +7,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBat
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.IdResolver;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
@@ -105,13 +106,18 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public Experiment randomBattleResultFor(FeatureBattleIdentifier identifier) {
-        Optional<FeatureBattleAO> experimentAOOptional = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", identifier.getIdentifier());
+        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", identifier.getIdentifier());
 
-        Optional<Experiment> experiment = experimentAOOptional.map(featureBattleAO -> Experiment.randomize(random, featureBattleAO.getThreshold(), identifier));
+        Optional<Experiment.Type> type = featureBattleAO.map(featureBattleAO1 -> Experiment.randomize(random, featureBattleAO1.getThreshold(), identifier));
 
-        return experiment.orElse(
-                Experiment.randomize(random, properties.propertyOrDefault("feature.battle.default.win", DEFAULT_THRESHOLD), identifier)
+        Optional<ExperimentAO> experimentAO = featureBattleAO.flatMap(
+                (fbAO) -> type.flatMap(
+                        (_type) -> EnsureOnlyOneAOEntityExists.execute(ao, ExperimentAO.class, "FEATURE_BATTLE_ID = ? AND EXPERIMENT_TYPE = ?", fbAO.getID(), _type.name()))
         );
+
+        return experimentAO.map(
+                (_ao) -> Experiment.forType( _ao.getExperimentType() ).withIdentifier( _ao.getExperimentId(), _ao.getPage() )
+        ).orElse( Experiment.missingExperiment() );
     }
 
 
