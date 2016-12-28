@@ -9,6 +9,7 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
+import fi.ambientia.atlassian.properties.PluginProperties;
 import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.matchers.ExperimentIdentifierMatcher.matchesWith;
+import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 public class DisplayFeatureBattleShould {
 
@@ -47,7 +49,7 @@ public class DisplayFeatureBattleShould {
         experiment = new GoodOldWay(EXPERIMENT_IDENTIFIER, "page");
         map.put("feature_battle", EXPERIMENT_ID);
 
-        displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature){
+        displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature, dummy(PluginProperties.class)){
             @Override
             protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
                 return () -> new HashMap<>();

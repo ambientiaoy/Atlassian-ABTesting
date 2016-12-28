@@ -11,6 +11,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperimen
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
+import fi.ambientia.atlassian.properties.PluginProperties;
 import fi.ambientia.atlassian.routes.Routes;
 import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,12 @@ public class DisplayFeatureBattle implements Macro {
 
     private final Supplier<String> currentUser;
     private final ChooseExperiment chooseFeature;
+    private final PluginProperties properties;
 
 
     @Autowired
-    public DisplayFeatureBattle(@ComponentImport final UserManager userManager, ChooseExperiment chooseFeature) {
+    public DisplayFeatureBattle(@ComponentImport final UserManager userManager, ChooseExperiment chooseFeature, PluginProperties properties) {
+        this.properties = properties;
         this.currentUser = Users.getCurrentUserKey(userManager);
         this.chooseFeature = chooseFeature;
     }
@@ -39,8 +42,9 @@ public class DisplayFeatureBattle implements Macro {
         // handle input parameters
         String currentUserIdentifier = currentUser.get();
         String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> FeatureBattleIdentifier.DEFAULT_IDENTIFIER);
+        String abtestSpaceKey = properties.propertyOrDefault("default.abtest.space.key", "ABTEST");
         // execute action
-        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier( feature_battle_identifier));
+        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier(feature_battle_identifier));
         // create context and render
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);

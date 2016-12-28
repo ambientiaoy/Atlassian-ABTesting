@@ -25,9 +25,19 @@ public class TestPluginProperties extends PluginProperties {
         this.properties.put(property, threshold);
     }
 
+    public void setProperty(String property, String value){
+        this.properties.put(property, threshold);
+    }
+
     @Override
     public Integer propertyOrDefault(String key, int i) {
         Optional<Integer> optional = Optional.ofNullable((Integer) properties.get(key));
         return optional.orElse( i );
+    }
+
+    @Override
+    public String propertyOrDefault(String key, String defaultString) {
+        Optional<String> optional = Optional.ofNullable((String) properties.get(key));
+        return optional.orElse( defaultString );
     }
 }
