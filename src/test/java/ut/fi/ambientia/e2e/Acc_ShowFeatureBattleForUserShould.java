@@ -99,6 +99,11 @@ public class Acc_ShowFeatureBattleForUserShould {
     }
 
     @Test
+    public void cannot_create_experiment_if_page_is_not_found() throws Exception {
+        fail("ToBeDefined");
+    }
+
+    @Test
     public void can_create_experiment_and_is_shown_in_rest_api() throws Exception {
         fail("ToBeDefined");
     }
