@@ -1,5 +1,6 @@
 package fi.ambientia.abtesting.model.feature_battles;
 
+import fi.ambientia.abtesting.model.IdResolver;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRandomizer;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -9,9 +10,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
-    void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier, String oldPage, String newPage);
+    IdResolver createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 
-    void setThreshold(FeatureBattleIdentifier featureBattleIdentifier, int threshold);
+    void setThreshold(Integer featureBattleIdentifier, int threshold);
 
     default ExperimentRandomizer experimentRandomizer(FeatureBattleIdentifier featureBattleIdentifier) {
         return () -> randomBattleResultFor(featureBattleIdentifier);
@@ -48,5 +49,10 @@ public interface FeatureBattleRepository {
         default void resultBeing(Experiment randomExperiment) {
             this.accept( randomExperiment );
         }
+    }
+
+    @FunctionalInterface
+    interface FeatureBattleResolver {
+        FeatureBattle andGetId();
     }
 }

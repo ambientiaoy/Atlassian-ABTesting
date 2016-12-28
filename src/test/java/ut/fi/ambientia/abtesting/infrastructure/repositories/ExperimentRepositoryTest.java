@@ -6,18 +6,29 @@ import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
+import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.GoodOldWay;
+import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ut.fi.ambientia.abtesting.model.TestData;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static ut.fi.ambientia.abtesting.model.TestData.FEATURE_BATTLE_IDENTIFIER;
+import static ut.fi.ambientia.abtesting.model.TestData.USERIDENTIFIER;
+import static ut.fi.ambientia.matchers.ExperimentMatcher.thatIsEqualTo;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
 public class ExperimentRepositoryTest {
@@ -35,6 +46,7 @@ public class ExperimentRepositoryTest {
         ao = new TestActiveObjects(entityManager);
         ao.migrate(ExperimentAO.class);
         ao.migrate(FeatureBattleAO.class);
+        ao.migrate(UserExperimentAO.class);
         properties = new PluginProperties(){
             @Override
             protected String getApplicationHome() {
@@ -42,46 +54,46 @@ public class ExperimentRepositoryTest {
             }
         };
         experimentRepository = new ExperimentAORepository(ao, properties);
-        featureBattleRepository = new FeatureBattleAORepository(ao, properties);
+        featureBattleRepository = new FeatureBattleAORepository(ao, properties, experimentRepository);
     }
 
     @Test
-    public void should_create_new_experiment_with_default_threshold() throws Exception {
-        featureBattleRepository.createFeatureBattle( createExperimentIdentifier(), "Good old", "Shiny new");
+    public void should_create_new_experiments() throws Exception {
+        FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        featureBattleAO.save();
 
-        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
+        Integer page = experimentRepository.create(featureBattleAO.getID(), Experiment.Type.GOOD_OLD).forPage("page").andGetId();
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, FeatureBattleAORepository.DEFAULT_THRESHOLD);
-    }
+        ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
 
-    protected void assertOnlyOneAOWithIdentifierAndThreshold(FeatureBattleAO[] experimentAOs, FeatureBattleIdentifier identifier, int threshold) {
         assertThat( experimentAOs.length, equalTo(1));
-        assertThat( experimentAOs[0].getFeatureBattleId(), equalTo(identifier.getIdentifier() ) );
-        assertThat( experimentAOs[0].getThreshold(), equalTo(threshold) );
+        assertThat( experimentAOs[0].getFeatureBattle().getFeatureBattleId(), equalTo(FEATURE_BATTLE_IDENTIFIER.getIdentifier() ) );
+        assertThat( experimentAOs[0].getExperimentType(), equalTo(Experiment.Type.GOOD_OLD));
+        assertThat( experimentAOs[0].getPage(), equalTo("page"));
+
     }
 
     @Test
-    public void should_set_threshold() throws Exception {
-        FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
-        featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
+    public void should_get_experiment_for_user() throws Exception {
+        Experiment experiment = new NewAndShiny(FEATURE_BATTLE_IDENTIFIER);
 
-        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
+        FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        featureBattleAO.save();
 
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
+        Integer page = experimentRepository.create(featureBattleAO.getID(), Experiment.Type.NEW_AND_SHINY).forPage("page").andGetId();
+
+        featureBattleRepository.newFeatureBattleFor(FEATURE_BATTLE_IDENTIFIER).forUser(  USERIDENTIFIER ).resultBeing(experiment);
+
+        List<Experiment> experiments = experimentRepository.experimentsForUser(USERIDENTIFIER);
+
+        MatcherAssert.assertThat(experiments, hasItem( thatIsEqualTo(experiment, FEATURE_BATTLE_IDENTIFIER)));
     }
 
-    @Test
-    public void should_not_store_same_identifier_more_than_once() throws Exception {
-        FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
-        featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
 
-        FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
-
-        assertOnlyOneAOWithIdentifierAndThreshold(experimentAOs, TestData.FEATURE_BATTLE_IDENTIFIER, 15);
+    private Experiment goodOld(FeatureBattleIdentifier featureBattleIdentifier) {
+        return new GoodOldWay(featureBattleIdentifier);
     }
 
     private FeatureBattleIdentifier createExperimentIdentifier() {

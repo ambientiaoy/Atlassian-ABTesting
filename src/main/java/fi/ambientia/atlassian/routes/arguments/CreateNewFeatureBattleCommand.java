@@ -3,7 +3,7 @@ package fi.ambientia.atlassian.routes.arguments;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.write.FeatureBattleInput;
 
-public class CreateNewFeatureBattleCommand implements FeatureBattleInput {
+public class CreateNewFeatureBattleCommand {
     private final String uniqueKey;
     private final Integer threshold;
     private final String goodOldPage;
@@ -20,12 +20,10 @@ public class CreateNewFeatureBattleCommand implements FeatureBattleInput {
         return uniqueKey;
     }
 
-    @Override
     public FeatureBattleIdentifier getFeatureBattleIdentifier() {
         return new FeatureBattleIdentifier( uniqueKey );
     }
 
-    @Override
     public Integer getThreshold() {
         return threshold;
     }

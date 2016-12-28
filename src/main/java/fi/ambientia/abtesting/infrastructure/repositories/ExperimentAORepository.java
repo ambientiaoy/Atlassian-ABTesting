@@ -3,10 +3,10 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
@@ -38,10 +38,29 @@ public class ExperimentAORepository implements ExperimentRepository {
         UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
 
         List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
-                map(userExperimentAO -> Experiment.forType(userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperimentId())).
+                map(userExperimentAO -> Experiment.forType(userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId())).
                 collect(Collectors.toList());
 
         return experiments;
+    }
+
+    @Override
+    public CreateNewExperiment create(Integer featureBattleId, Experiment.Type experimentType) {
+        // TODO AkS: what to do if featureBattle is not found!
+        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "ID = ?", featureBattleId);
+
+        return ( page ) -> {
+            Optional<ExperimentAO> optional = EnsureOnlyOneAOEntityExists.execute(ao, ExperimentAO.class, "EXPERIMENT_TYPE = ? and PAGE = ?", experimentType, page);
+            ExperimentAO experimentAO = optional.orElse(ao.create(ExperimentAO.class));
+            //FIXME AkS: I see null here!
+            experimentAO.setFeatureBattle( featureBattleAO.orElse( null ) );
+            experimentAO.setExperimentType( experimentType );
+            //FIXME AkS: I see null here!
+            experimentAO.setExperimentId( featureBattleAO.map( (fb) -> fb.getFeatureBattleId() ).orElse( null )  );
+            experimentAO.setPage( page );
+            experimentAO.save();
+            return () -> experimentAO.getID();
+        };
     }
 
 

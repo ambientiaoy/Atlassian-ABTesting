@@ -20,6 +20,7 @@ import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ut.fi.ambientia.abtesting.model.TestData;
@@ -57,8 +58,8 @@ public class Acc_ShowFeatureBattleForUserShould {
         properties = new TestPluginProperties();
 
 
-        FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(ao, properties);
         ExperimentAORepository experimentRepository = new ExperimentAORepository(ao, properties);
+        FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(ao, properties, experimentRepository);
 
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
@@ -66,7 +67,7 @@ public class Acc_ShowFeatureBattleForUserShould {
 
         chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
 
-        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository );
+        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository, experimentRepository);
         featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute);
@@ -98,21 +99,25 @@ public class Acc_ShowFeatureBattleForUserShould {
         assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, Experiment.ABTEST, "Good Old")));
     }
 
+    @Ignore
     @Test
     public void cannot_create_experiment_if_page_is_not_found() throws Exception {
         fail("ToBeDefined");
     }
 
+    @Ignore
     @Test
     public void can_create_experiment_and_is_shown_in_rest_api() throws Exception {
         fail("ToBeDefined");
     }
 
+    @Ignore
     @Test
     public void can_update_experiment() throws Exception {
         fail("ToBeDefined");
     }
 
+    @Ignore
     @Test
     public void can_mark_experiment_as_done(){
         // not Delete, mark as done, choose either experiment.

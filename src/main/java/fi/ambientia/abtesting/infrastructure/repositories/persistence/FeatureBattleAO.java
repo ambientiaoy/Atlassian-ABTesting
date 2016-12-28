@@ -1,6 +1,8 @@
 package fi.ambientia.abtesting.infrastructure.repositories.persistence;
 
+import fi.ambientia.abtesting.model.experiments.Experiment;
 import net.java.ao.Entity;
+import net.java.ao.OneToMany;
 
 public interface FeatureBattleAO extends Entity{
     void setFeatureBattleId(String identifier);
@@ -9,9 +11,6 @@ public interface FeatureBattleAO extends Entity{
     void setThreshold(int threshold);
     int getThreshold();
 
-    void setGoodOld(String oldPage);
-    String getGoodOld();
-
-    void setNewAndShiny(String newPage);
-    String getNewAndShiny();
+    @OneToMany
+    ExperimentAO[] getExperiments();
 }

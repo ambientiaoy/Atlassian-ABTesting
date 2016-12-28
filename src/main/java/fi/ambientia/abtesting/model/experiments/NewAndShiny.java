@@ -14,7 +14,7 @@ public class NewAndShiny implements Experiment {
     @Override
     public String toString() {
         return "NewAndShiny{" +
-                "experientIdenifier=" + experientIdenifier.getIdentifier() +
+                "experientIdentifier=" + experientIdenifier.getIdentifier() +
                 '}';
     }
 
