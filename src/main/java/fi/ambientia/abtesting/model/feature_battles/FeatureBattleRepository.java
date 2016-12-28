@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface FeatureBattleRepository {
-    void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
+    void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier, String oldPage, String newPage);
 
     void setThreshold(FeatureBattleIdentifier featureBattleIdentifier, int threshold);
 
@@ -24,6 +24,18 @@ public interface FeatureBattleRepository {
     CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier experiment);
 
     Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
+
+    @FunctionalInterface
+    interface NewFeatureBattleForOldPage{
+        // TODO AkS: Add a wrapping concept for a page
+        NewFeatureBattleForNewPage forOldPage( String pagePath );
+    }
+    @FunctionalInterface
+    interface NewFeatureBattleForNewPage{
+        void forNewPage( String string);
+    }
+
+
 
     @FunctionalInterface
     interface CreateNewFeatureBattleFor {

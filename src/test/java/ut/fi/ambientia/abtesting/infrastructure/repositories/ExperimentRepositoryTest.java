@@ -47,7 +47,7 @@ public class ExperimentRepositoryTest {
 
     @Test
     public void should_create_new_experiment_with_default_threshold() throws Exception {
-        featureBattleRepository.createFeatureBattle( createExperimentIdentifier() );
+        featureBattleRepository.createFeatureBattle( createExperimentIdentifier(), "Good old", "Shiny new");
 
         FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
 
@@ -63,7 +63,7 @@ public class ExperimentRepositoryTest {
     @Test
     public void should_set_threshold() throws Exception {
         FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
         featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
 
         FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
@@ -74,10 +74,10 @@ public class ExperimentRepositoryTest {
     @Test
     public void should_not_store_same_identifier_more_than_once() throws Exception {
         FeatureBattleIdentifier featureBattleIdentifier = createExperimentIdentifier();
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
         featureBattleRepository.setThreshold(featureBattleIdentifier, 15 );
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
-        featureBattleRepository.createFeatureBattle(featureBattleIdentifier);
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
+        featureBattleRepository.createFeatureBattle(featureBattleIdentifier, "Good old", "shiny new");
 
         FeatureBattleAO[] experimentAOs = ao.find(FeatureBattleAO.class);
 

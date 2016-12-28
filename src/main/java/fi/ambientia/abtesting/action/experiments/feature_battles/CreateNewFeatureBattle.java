@@ -16,7 +16,7 @@ public class CreateNewFeatureBattle implements CreateExperiment {
     }
 
     public void createNew(FeatureBattleInput featureBattleInput) {
-        featureBattleRepository.createFeatureBattle(featureBattleInput.getFeatureBattleIdentifier());
+        featureBattleRepository.createFeatureBattle(featureBattleInput.getFeatureBattleIdentifier(), "good old", "shiny new");
         featureBattleRepository.setThreshold( featureBattleInput.getFeatureBattleIdentifier(),  featureBattleInput.getThreshold() );
     }
 }

@@ -8,4 +8,10 @@ public interface FeatureBattleAO extends Entity{
 
     void setThreshold(int threshold);
     int getThreshold();
+
+    void setGoodOld(String oldPage);
+    String getGoodOld();
+
+    void setNewAndShiny(String newPage);
+    String getNewAndShiny();
 }

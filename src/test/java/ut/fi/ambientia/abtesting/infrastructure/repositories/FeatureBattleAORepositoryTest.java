@@ -75,7 +75,7 @@ public class FeatureBattleAORepositoryTest {
     public void should_get_experiment_treshhold_from_db() throws Exception {
 
         properties.setProperty("feature.battle.default.win", CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD);
-        featureBattleRepository.createFeatureBattle(FEATURE_BATTLE_IDENTIFIER);
+        featureBattleRepository.createFeatureBattle(FEATURE_BATTLE_IDENTIFIER, "Good old", "Shiny new");
         featureBattleRepository.setThreshold(FEATURE_BATTLE_IDENTIFIER, CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW);
 
         ExperimentRandomizer experimentRandomizer = featureBattleRepository.experimentRandomizer(FEATURE_BATTLE_IDENTIFIER);

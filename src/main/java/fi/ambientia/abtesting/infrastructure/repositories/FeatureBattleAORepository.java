@@ -34,16 +34,18 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     @Override
-    public void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+    public void createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier, String oldPage, String newPage) {
         Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
         if(featureBattleAO.isPresent()){
             return;
         }
-
         FeatureBattleAO experimentAO = ao.create(FeatureBattleAO.class);
         experimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
         experimentAO.setThreshold( properties.propertyOrDefault("experiment.default.threshold", DEFAULT_THRESHOLD));
+        experimentAO.setGoodOld( oldPage );
+        experimentAO.setNewAndShiny( newPage );
         experimentAO.save();
+
     }
 
     @Override
