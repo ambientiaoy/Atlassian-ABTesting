@@ -4,7 +4,6 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 
 import java.util.Random;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public interface Experiment {
 
@@ -18,8 +17,8 @@ public interface Experiment {
 
     static WithIdentifier forType(Type experimentType) {
         return experimentType.equals( Type.NEW_AND_SHINY ) ?
-                ( experimentIdentifier, page ) -> new NewAndShiny( experimentIdentifier, page ) :
-                ( experimentIdentifier, page ) -> new GoodOldWay( experimentIdentifier, page );
+                ( experimentIdentifier, page ) -> new NewAndShiny( experimentIdentifier, page) :
+                ( experimentIdentifier, page ) -> new GoodOldWay( experimentIdentifier, page);
     }
 
     static Experiment.Type randomize(Random random, Integer threshold, FeatureBattleIdentifier featureBattleIdentifier) {
@@ -36,8 +35,8 @@ public interface Experiment {
     }
 
     @FunctionalInterface
-    public interface WithIdentifier extends BiFunction<FeatureBattleIdentifier, String, Experiment> {
-        default Experiment withIdentifier(String identifier, String page){
+    public interface WithIdentifier extends BiFunction<FeatureBattleIdentifier, PageObject, Experiment> {
+        default Experiment withIdentifier(String identifier, PageObject page){
             return this.apply( new FeatureBattleIdentifier(identifier) , page);
         }
     }

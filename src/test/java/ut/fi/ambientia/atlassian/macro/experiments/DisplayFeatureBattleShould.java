@@ -5,6 +5,7 @@ import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -13,6 +14,7 @@ import fi.ambientia.atlassian.properties.PluginProperties;
 import fi.ambientia.atlassian.users.Users;
 import org.junit.Before;
 import org.junit.Test;
+import ut.fi.ambientia.abtesting.model.TestData;
 import ut.fi.ambientia.matchers.UserIdentifierMatcher;
 
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class DisplayFeatureBattleShould {
     public void setUp() throws Exception {
         userManager = mock(UserManager.class);
         chooseFeature = mock(ChooseExperiment.class);
-        experiment = new GoodOldWay(EXPERIMENT_IDENTIFIER, "page");
+        experiment = TestData.getGoodOld();
         map.put("feature_battle", EXPERIMENT_ID);
 
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseFeature, dummy(PluginProperties.class)){

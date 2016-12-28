@@ -7,13 +7,12 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBat
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.IdResolver;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.GoodOldWay;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.atlassian.properties.PluginProperties;
-import net.java.ao.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -116,8 +115,9 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         );
 
         return experimentAO.map(
-                (_ao) -> Experiment.forType( _ao.getExperimentType() ).withIdentifier( _ao.getExperimentId(), _ao.getPage() )
-        ).orElse( Experiment.missingExperiment() );
+                (_ao) -> Experiment.forType( _ao.getExperimentType() ).withIdentifier( _ao.getExperimentId(),
+                        new PageObject(properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"), _ao.getPage() ) )
+        ).orElse(Experiment.missingExperiment() );
     }
 
 

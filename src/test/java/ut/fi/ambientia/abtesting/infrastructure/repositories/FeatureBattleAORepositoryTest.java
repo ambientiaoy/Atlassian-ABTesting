@@ -8,6 +8,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.Experiment
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
@@ -167,12 +168,12 @@ public class FeatureBattleAORepositoryTest {
         assertThat( featureBattle.get().getIdentifier(), equalTo(FEATURE_BATTLE_IDENTIFIER) );
     }
     private Experiment newAndShiny(FeatureBattleIdentifier featureBattleIdentifier) {
-        return new NewAndShiny(featureBattleIdentifier, "page");
+        return new NewAndShiny(featureBattleIdentifier, new PageObject(properties.propertyOrDefault("default.abtest.space.key", "ABTEST"), "page"));
     }
 
 
     private Experiment goodOld(FeatureBattleIdentifier featureBattleIdentifier) {
-        return new GoodOldWay(featureBattleIdentifier, "page");
+        return new GoodOldWay(featureBattleIdentifier, new PageObject(properties.propertyOrDefault("default.abtest.space.key", "ABTEST"), "page"));
     }
 
     private FeatureBattleIdentifier createExperimentIdentifier() {

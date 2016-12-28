@@ -2,14 +2,22 @@ package fi.ambientia.atlassian.routes.arguments;
 
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.write.FeatureBattleInput;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CreateNewFeatureBattleCommand {
+
     private final String uniqueKey;
     private final Integer threshold;
     private final String goodOldPage;
     private final String newAndShinyPage;
 
-    public CreateNewFeatureBattleCommand(String uniqueKey, Integer threshold, String goodOldPage, String newAndShinyPage) {
+    @JsonCreator
+    public CreateNewFeatureBattleCommand(
+            @JsonProperty("uniqueKey") String uniqueKey,
+            @JsonProperty("threshold") Integer threshold,
+            @JsonProperty("goodOld") String goodOldPage,
+            @JsonProperty("newAndShiny") String newAndShinyPage) {
         this.uniqueKey = uniqueKey;
         this.threshold = threshold;
         this.goodOldPage = goodOldPage;

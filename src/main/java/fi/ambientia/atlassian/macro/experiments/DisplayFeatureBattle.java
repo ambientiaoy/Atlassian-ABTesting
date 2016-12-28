@@ -43,10 +43,15 @@ public class DisplayFeatureBattle implements Macro {
         String currentUserIdentifier = currentUser.get();
         String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> FeatureBattleIdentifier.DEFAULT_IDENTIFIER);
         String abtestSpaceKey = properties.propertyOrDefault("default.abtest.space.key", "ABTEST");
+
+        // get winner from Action parameters, if present!
+        Map<String, Object> contextMap = getVelocityContextSupplier().get();
+        // ((ViewPageAction) contextMap.get("action")).getCurrentRequest().getParameterMap()
+
         // execute action
         Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier(feature_battle_identifier));
+
         // create context and render
-        Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
         return getRenderedTemplate(contextMap).get();
     }

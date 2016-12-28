@@ -4,13 +4,14 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 
 public class GoodOldWay implements Experiment {
 
-    public static final String B_1_GOOD_OLD = "b1_good_old";
     private final FeatureBattleIdentifier featureBattleIdentifier;
+    private final PageObject pageObject;
     private final String page;
 
-    public GoodOldWay(FeatureBattleIdentifier featureBattleIdentifier, String page) {
+    public GoodOldWay(FeatureBattleIdentifier featureBattleIdentifier, PageObject pageObject) {
         this.featureBattleIdentifier = featureBattleIdentifier;
-        this.page = page;
+        this.pageObject = pageObject;
+        this.page = pageObject.getPage();
     }
 
     @Override
@@ -20,7 +21,7 @@ public class GoodOldWay implements Experiment {
 
     @Override
     public String render() {
-        return String.format(INCLUDE_PAGE, ABTEST, page);
+        return String.format(INCLUDE_PAGE, pageObject.getSpaceKey(), page);
     }
 
     @Override

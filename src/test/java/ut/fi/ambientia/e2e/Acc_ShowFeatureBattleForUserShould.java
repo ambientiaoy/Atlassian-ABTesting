@@ -106,6 +106,7 @@ public class Acc_ShowFeatureBattleForUserShould {
 
     @Test
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
+        properties.setProperty("default.abtest.space.key", "FOOBAR");
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 
         CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
@@ -114,7 +115,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         Experiment experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
-        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, Experiment.ABTEST, "Good Old")));
+        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old")));
     }
 
     @Test

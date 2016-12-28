@@ -4,13 +4,14 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 
 public class NewAndShiny implements Experiment {
 
-    private static final String NEW_AND_SHINY = "b2_new_and_shiny";
     private final FeatureBattleIdentifier experientIdenifier;
+    private final PageObject pageObject;
     private final String page;
 
-    public NewAndShiny(FeatureBattleIdentifier experientIdenifier, String page) {
+    public NewAndShiny(FeatureBattleIdentifier experientIdenifier, PageObject pageObject) {
         this.experientIdenifier = experientIdenifier;
-        this.page = page;
+        this.pageObject = pageObject;
+        this.page = pageObject.getPage();
     }
 
     @Override
@@ -27,7 +28,7 @@ public class NewAndShiny implements Experiment {
 
     @Override
     public String render() {
-        return String.format(INCLUDE_PAGE, ABTEST, page);
+        return String.format(INCLUDE_PAGE, pageObject.getSpaceKey(), page);
     }
 
     @Override

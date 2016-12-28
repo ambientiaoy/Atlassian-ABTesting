@@ -2,6 +2,7 @@ package ut.fi.ambientia.abtesting.model;
 
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.experiments.NewAndShiny;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 
@@ -11,10 +12,10 @@ public class TestData {
     public static final UserIdentifier USERIDENTIFIER = new UserIdentifier(USERKEY);
 
     public static NewAndShiny getNewAndShiny() {
-        return new NewAndShiny(FEATURE_BATTLE_IDENTIFIER, "page");
+        return new NewAndShiny(FEATURE_BATTLE_IDENTIFIER, new PageObject("ABTEST", "page"));
     }
 
     public static GoodOldWay getGoodOld() {
-        return new GoodOldWay(FEATURE_BATTLE_IDENTIFIER, "page");
+        return new GoodOldWay(FEATURE_BATTLE_IDENTIFIER, new PageObject("ABTEST", "page"));
     }
 }

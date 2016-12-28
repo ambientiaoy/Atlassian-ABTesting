@@ -7,6 +7,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBat
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
@@ -38,7 +39,11 @@ public class ExperimentAORepository implements ExperimentRepository {
         UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
 
         List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
-                map(userExperimentAO -> Experiment.forType(userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId(), userExperimentAO.getExperiment().getPage())).
+                map(userExperimentAO -> Experiment.forType(
+                        userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId(),
+                        new PageObject(
+                                properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"),
+                                userExperimentAO.getExperiment().getPage() ) )).
                 collect(Collectors.toList());
 
         return experiments;

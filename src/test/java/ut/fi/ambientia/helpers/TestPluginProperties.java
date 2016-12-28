@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public class TestPluginProperties extends PluginProperties {
     private final Map<String, Object> properties;
-    private int threshold = FeatureBattleAORepository.DEFAULT_THRESHOLD;
 
     public TestPluginProperties() {
         properties = new HashMap<>();
@@ -26,7 +25,7 @@ public class TestPluginProperties extends PluginProperties {
     }
 
     public void setProperty(String property, String value){
-        this.properties.put(property, threshold);
+        this.properties.put(property, value);
     }
 
     @Override

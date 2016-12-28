@@ -3,6 +3,7 @@ package ut.fi.ambientia.abtesting.model.experiments;
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
+import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
@@ -49,7 +50,7 @@ public class RandomizeFeatureBattleShould {
     @Test
     public void return_the_experiment_given_by_randomizer () throws Exception {
         NewAndShiny newAndShiny = TestData.getNewAndShiny();
-        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("FOOBARBAX"), "page" )) );
+        when(experimentRepository.experimentsForUser( USERIENTIFIER )).thenReturn(Arrays.asList( new GoodOldWay( new FeatureBattleIdentifier("FOOBARBAX"), new PageObject("ABTEST", "page"))) );
         when( featureBattleRepository.experimentRandomizer( EXPERIENT_IDENIFIER )).thenReturn( () -> newAndShiny);
 
         Experiment experiment = randomizeFeatureBattle.getExperiment(EXPERIENT_IDENIFIER).forUser(USERIENTIFIER);
