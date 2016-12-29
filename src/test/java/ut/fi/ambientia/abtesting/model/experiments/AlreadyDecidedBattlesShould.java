@@ -7,6 +7,7 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -27,12 +28,12 @@ public class AlreadyDecidedBattlesShould {
     private static final UserIdentifier USER_IDENTIFIER = new UserIdentifier(USERKEY);
     private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier("EXPERIMENT");
     private AlreadyDecidedBattles alreadyDecidedBattles;
-    private FeatureBattleRepository featureBattleRepository;
+    private FeatureBattleResults featureBattleRepository;
     private final GoodOldWay goodOldWay = TestData.getGoodOld();
 
     @Before
     public void setUp() throws Exception {
-        featureBattleRepository = mock(FeatureBattleRepository.class);
+        featureBattleRepository = mock(FeatureBattleResults.class);
         alreadyDecidedBattles = new AlreadyDecidedBattles( featureBattleRepository );
         when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).
                 thenReturn(

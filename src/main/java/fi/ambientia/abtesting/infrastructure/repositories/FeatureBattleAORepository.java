@@ -63,12 +63,6 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     @Override
-    public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment) {
-        // TODO AkS implement!
-        return new ArrayList<>();
-    }
-
-    @Override
     public CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier featureBattleIdentifier) {
         Optional<FeatureBattleAO> fbAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
         List<ExperimentAO> experimentAOs = Arrays.asList(fbAO.get().getExperiments());

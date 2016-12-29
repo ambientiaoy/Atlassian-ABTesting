@@ -13,10 +13,12 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureB
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
+import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
@@ -75,10 +77,11 @@ public class Acc_ShowFeatureBattleForUserShould {
 
         ExperimentAORepository experimentRepository = new ExperimentAORepository(ao, properties);
         FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(ao, properties, experimentRepository);
+        FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(ao, properties);
 
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
-        AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleRepository);
+        AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleResults);
 
         chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
 
