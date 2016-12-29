@@ -16,6 +16,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAOReposit
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
@@ -69,9 +70,10 @@ public class Acc_ShowFeatureBattleForUserShould {
         when(httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn(null);
         assertNotNull(entityManager);
         ao = new TestActiveObjects(entityManager);
-        ao.migrate(UserExperimentAO.class);
         ao.migrate(ExperimentAO.class);
         ao.migrate(FeatureBattleAO.class);
+        ao.migrate(FeatureBattleResultAO.class);
+        ao.migrate(UserExperimentAO.class);
         properties = new TestPluginProperties();
 
 

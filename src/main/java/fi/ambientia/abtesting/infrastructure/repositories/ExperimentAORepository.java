@@ -26,6 +26,14 @@ public class ExperimentAORepository implements ExperimentRepository {
     private final PluginProperties properties;
     private final Random random;
 
+    public static Experiment buildExperiment(PluginProperties properties, ExperimentAO experiment) {
+        return Experiment.forType(
+                experiment.getExperimentType()).withIdentifier(experiment.getExperimentId(),
+                new PageObject(
+                        properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"),
+                        experiment.getPage() ) );
+    }
+
     @Autowired
     public ExperimentAORepository(@ComponentImport ActiveObjects ao, PluginProperties properties) {
         this.ao = ao;
@@ -39,11 +47,7 @@ public class ExperimentAORepository implements ExperimentRepository {
         UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
 
         List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
-                map(userExperimentAO -> Experiment.forType(
-                        userExperimentAO.getExperimentType()).withIdentifier(userExperimentAO.getExperiment().getExperimentId(),
-                        new PageObject(
-                                properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"),
-                                userExperimentAO.getExperiment().getPage() ) )).
+                map(userExperimentAO -> buildExperiment(properties, userExperimentAO.getExperiment())).
                 collect(Collectors.toList());
 
         return experiments;
