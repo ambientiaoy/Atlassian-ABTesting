@@ -11,6 +11,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperimen
 import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
+import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
@@ -30,6 +31,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
 import ut.fi.ambientia.abtesting.model.TestData;
 import ut.fi.ambientia.helpers.TestPluginProperties;
 
@@ -74,12 +76,14 @@ public class Acc_ShowFeatureBattleForUserShould {
         ao.migrate(FeatureBattleAO.class);
         ao.migrate(FeatureBattleResultAO.class);
         ao.migrate(UserExperimentAO.class);
+        SimpleActiveObjects sao = new WrappingActiveObjects(ao);
+
         properties = new TestPluginProperties();
 
 
-        ExperimentAORepository experimentRepository = new ExperimentAORepository(ao, properties);
-        FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(ao, properties, experimentRepository);
-        FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(ao, properties);
+        ExperimentAORepository experimentRepository = new ExperimentAORepository(sao, properties);
+        FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
+        FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(sao, properties);
 
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);

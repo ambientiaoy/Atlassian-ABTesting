@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:atlassian-scanner="http://www.atlassian.com/schema/atlassian-scanner"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:atlassian-scanner="http://www.atlassian.com/schema/atlassian-scanner"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
         http://www.atlassian.com/schema/atlassian-scanner
         http://www.atlassian.com/schema/atlassian-scanner/atlassian-scanner.xsd">
+
+    <!-- Use ActiveObjects' @Transactional with Atlassian Spring Scanner enabled -->
+
+<!--
+    <osgi:reference id="ao_osgi">
+        <osgi:interfaces>
+            <beans:value>com.atlassian.activeobjects.external.ActiveObjects</beans:value>
+        </osgi:interfaces>
+    </osgi:reference>
+
+    <beans:bean id="tx-processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+        <beans:constructor-arg ref="ao_osgi"/>
+    </beans:bean>
+-->
+
+<!--
+    <bean id="tx-processor"
+          class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+        <constructor-arg ref="activeObjects" />
+    </bean>
+-->
+
     <atlassian-scanner:scan-indexes/>
 </beans>

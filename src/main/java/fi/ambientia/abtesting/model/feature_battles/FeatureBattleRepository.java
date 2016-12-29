@@ -35,22 +35,17 @@ public interface FeatureBattleRepository {
     interface NewFeatureBattleForNewPage{
         void forNewPage( String string);
     }
-
-
-
     @FunctionalInterface
     interface CreateNewFeatureBattleFor {
 
         StoreExperiment forUser(UserIdentifier user);
     }
-
     @FunctionalInterface
     interface StoreExperiment extends Consumer<Experiment> {
         default void resultBeing(Experiment randomExperiment) {
             this.accept( randomExperiment );
         }
     }
-
     @FunctionalInterface
     interface FeatureBattleResolver {
         FeatureBattle andGetId();

@@ -1,7 +1,6 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
-import com.atlassian.activeobjects.external.ActiveObjects;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
@@ -13,7 +12,9 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.properties.PluginProperties;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -25,14 +26,17 @@ import java.util.stream.Collectors;
 @Repository
 public class FeatureBattleAORepository implements FeatureBattleRepository{
 
+    Logger logger = Logger.getLogger(FeatureBattleAORepository.class);
+
     public static final int DEFAULT_THRESHOLD = 10;
-    private final ActiveObjects ao;
+    // AO is imported via META-INF/spring/plugin-context.xml
+    private final SimpleActiveObjects ao;
     private final PluginProperties properties;
     private final ExperimentAORepository experimentAORepository;
     private Random random;
 
     @Autowired
-    public FeatureBattleAORepository(@ComponentImport ActiveObjects ao, PluginProperties properties, ExperimentAORepository experimentAORepository) {
+    public FeatureBattleAORepository(@Qualifier("TransactionalActiveObject") SimpleActiveObjects ao, PluginProperties properties, ExperimentAORepository experimentAORepository) {
         this.ao = ao;
         this.properties = properties;
         this.experimentAORepository = experimentAORepository;
@@ -41,6 +45,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public IdResolver createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+        logger.info("Creating a new featureBattle " + featureBattleIdentifier.getIdentifier());
         Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
         if(featureBattleAO.isPresent()){
             return () -> featureBattleAO.get().getID();
@@ -49,6 +54,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         experimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
         experimentAO.setThreshold( properties.propertyOrDefault("experiment.default.threshold", DEFAULT_THRESHOLD));
         experimentAO.save();
+        logger.debug("Created a new featureBattle with id: " + experimentAO.getID());
 
         return () -> experimentAO.getID();
     }
@@ -64,11 +70,13 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
     @Override
     public CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier featureBattleIdentifier) {
+        logger.info("Creating new featureBattle for User ");
         Optional<FeatureBattleAO> fbAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
         List<ExperimentAO> experimentAOs = Arrays.asList(fbAO.get().getExperiments());
 
         return ( user) -> {
             return ( experiment ) -> {
+                logger.info("Creating new featureBattle '"+ featureBattleIdentifier.getIdentifier() + "'for User " + user.getIdentifier() + " result being " + experiment.type().toString() );
                 Optional<ExperimentAO> experimentAOOptional = experimentAOs.stream().
                         filter((experimentAO -> experimentAO.getExperimentType().equals(experiment.type()))).
                         findFirst();
@@ -80,6 +88,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
                 userExperimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
                 userExperimentAO.setExperimentType( experiment.type() );
                 userExperimentAO.save();
+                logger.debug("Created '" +userExperimentAO.getID() );
 
             };
         };
@@ -111,6 +120,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     @Override
     public List<FeatureBattle> getAll() {
         List<FeatureBattleAO> featureBattleAOs = Arrays.asList(ao.find(FeatureBattleAO.class));
+        logger.debug("All featurebattles: \n\t" + featureBattleAOs.stream().map( featureBattleAO -> featureBattleAO.toString() ).collect( Collectors.joining("\n\t")));
         return featureBattleAOs.stream().map( item -> {
             List<ExperimentAO> experimentAOs = Arrays.asList(item.getExperiments());
             return new FeatureBattle( new FeatureBattleIdentifier( item.getFeatureBattleId() ), experimentAOs.stream().

@@ -2,6 +2,8 @@ package ut.fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
+import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
+import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
@@ -47,8 +49,9 @@ public class FeatureBattleResultsAORepositoryTest {
         ao.migrate(FeatureBattleAO.class);
         ao.migrate(FeatureBattleResultAO.class);
         ao.migrate(UserExperimentAO.class);
+        SimpleActiveObjects sao = new WrappingActiveObjects(ao);
         properties = new TestPluginProperties();
-        featureBattles = new FeatureBattleResultsAORepository(ao, properties);
+        featureBattles = new FeatureBattleResultsAORepository(sao, properties);
     }
 
     @Test

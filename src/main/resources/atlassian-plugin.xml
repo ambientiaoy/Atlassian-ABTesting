@@ -58,7 +58,6 @@
         <entity>fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO</entity>
     </ao>
 
-
     <rest key="rest" path="/abtesting" version="1.0">
         <description>Provides ABTesting REST API.</description>
     </rest>

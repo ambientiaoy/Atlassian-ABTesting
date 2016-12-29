@@ -2,6 +2,8 @@ package ut.fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
+import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
+import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
@@ -38,6 +40,7 @@ public class ExperimentRepositoryTest {
     private EntityManager entityManager;
     private ExperimentAORepository experimentRepository;
     private FeatureBattleAORepository featureBattleRepository;
+    private SimpleActiveObjects sao;
 
     @Before
     public void setUp() throws Exception
@@ -47,14 +50,16 @@ public class ExperimentRepositoryTest {
         ao.migrate(ExperimentAO.class);
         ao.migrate(FeatureBattleAO.class);
         ao.migrate(UserExperimentAO.class);
+        sao = new WrappingActiveObjects(ao);
+
         properties = new PluginProperties(){
             @Override
             protected String getApplicationHome() {
                 return this.getClass().getResource("/").getPath();
             }
         };
-        experimentRepository = new ExperimentAORepository(ao, properties);
-        featureBattleRepository = new FeatureBattleAORepository(ao, properties, experimentRepository);
+        experimentRepository = new ExperimentAORepository(sao, properties);
+        featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
     }
 
     @Test

@@ -5,7 +5,6 @@ import fi.ambientia.abtesting.model.user.UserIdentifier;
 
 import java.util.List;
 
-
 public interface ExperimentRepository {
     List<Experiment> experimentsForUser(UserIdentifier userientifier);
 
