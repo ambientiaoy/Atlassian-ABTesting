@@ -1,6 +1,8 @@
 package ut.fi.ambientia.atlassian.routes.experiments;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
@@ -10,6 +12,8 @@ import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
@@ -27,17 +31,16 @@ public class FeatureBattlesRouteShould {
     private CreateNewFeatureBattleCommand newAbTest;
     private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
     private HttpServletRequest context = mock(HttpServletRequest.class);
+    private final FeatureBattleRepository featureBattleRepository = mock(FeatureBattleRepository.class);
 
     @Before
     public void setUp() throws Exception {
         createNewHypothesis = mock(CreateExperiment.class);
-        FeatureBattleRepository featureBattleRepository = mock(FeatureBattleRepository.class);
         featureBattle = new FeatureBattleRoute(createNewHypothesis, featureBattleRepository);
         featureBattles = new FeatureBattles(createNewHypothesis, featureBattle, featureBattleRepository);
         newAbTest = new CreateNewFeatureBattleCommand(AB_INSTANCE_UNIQUE_KEY, 10, "Good Old", "Shiny new");
 
-        Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();
-        when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_not_found );
+        when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.empty());
     }
 
     @Test
@@ -61,9 +64,12 @@ public class FeatureBattlesRouteShould {
 
     @Test
     public void shouldFailWhenResourceAlreadyExists() throws Exception {
+        FeatureBattle fb = mock(FeatureBattle.class);
+        when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.of( fb ));
+
         // arrange
         Response response_ok = Response.status(Response.Status.OK ).build();
-        when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_ok );
+//        when(featureBattle.head(any(HttpServletRequest.class), argThat(equalTo(AB_INSTANCE_UNIQUE_KEY)))).thenReturn( response_ok );
 
         Response response = featureBattles.createNew(context,  newAbTest );
 

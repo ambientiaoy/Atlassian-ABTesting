@@ -42,7 +42,6 @@ public class FeatureBattleRoute {
     @HEAD
     @Produces({MediaType.APPLICATION_JSON})
     public Response head(@Context HttpServletRequest request, @PathParam("featureBattleId") String featureBattleId){
-
         Optional<FeatureBattle> featureBattle = featureBattleRepository.getFeatureBattle(new FeatureBattleIdentifier(featureBattleId));
 
         return featureBattle.map( featureBattle1 -> Response.ok().build() ).orElse( Response.status(Response.Status.NOT_FOUND ).build());
