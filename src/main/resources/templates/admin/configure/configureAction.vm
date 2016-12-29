@@ -14,4 +14,22 @@ Here we can configure the plugin
 
 <table id="feature-battles-table"></table>
 
+<div class="documentation">
+    <h2>Documentation of ABtests</h2>
+
+    <h3>Configuring ABTests</h3>
+    <p>You can configure the SPACE key the test pages are located. By default they are located in Space 'ABTESTS', but you can modify the by chaning the details in confluence/home/ABTestPlugin.properties file</p>
+
+    <h3>Creating new AB Tests</h3>
+    <p>You can create new abtests by defining EXPERIMENT_ID, threshold (typically 10) and names of pages you have the content to test</p>
+    <p>Then add a macro <code>{display-feature-battle}</code> and define experiment_id to be exactly the one you defined above</p>
+
+    <h3>Test how the feature battle looks like</h3>
+    <p>You can see how the AB tests look like, given for random user - by adding a query parameters to the page URL and reload
+    <code>featureBattleWinner=new_and_shiny</code> to show new page and
+    <code>featureBattleWinner=good_old</code> to show the old version</p>
+
+
+</div>
+
 </body>

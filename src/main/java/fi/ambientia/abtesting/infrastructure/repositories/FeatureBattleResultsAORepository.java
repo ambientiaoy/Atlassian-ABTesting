@@ -1,6 +1,7 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
@@ -10,6 +11,8 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +22,14 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Repository
 public class FeatureBattleResultsAORepository implements FeatureBattleResults {
 
     private final ActiveObjects ao;
     private final PluginProperties properties;
 
-    public FeatureBattleResultsAORepository(ActiveObjects ao, PluginProperties properties) {
+    @Autowired
+    public FeatureBattleResultsAORepository(@ComponentImport ActiveObjects ao, PluginProperties properties) {
         this.ao = ao;
         this.properties = properties;
     }

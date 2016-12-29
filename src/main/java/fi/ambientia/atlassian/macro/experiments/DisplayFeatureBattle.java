@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.IllegalFormatCodePointException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -50,13 +51,13 @@ public class DisplayFeatureBattle implements Macro {
 
         // get winner from Action parameters, if present!
         Optional<String> httpRequestParameters = getHttpRequestParameters();
+        Optional<Experiment.Type> winningExperiment = getType( httpRequestParameters.orElse("NONE") );
         // ((ViewPageAction) contextMap.get("action")).getCurrentRequest().getParameterMap()
 
         // execute action
-        Predicate<FeatureBattleResult> predicate = httpRequestParameters.map( (winner) -> {
-            String winnerInCaps = winner.toUpperCase();
-            return  ChooseExperiment.forExperimentType(Experiment.Type.valueOf(winnerInCaps));
-        }).orElse(ChooseExperiment.forUser(new UserIdentifier( currentUserIdentifier )));
+        Predicate<FeatureBattleResult> predicate = winningExperiment.
+                map(ChooseExperiment::forExperimentType).
+                orElse(ChooseExperiment.forUser(new UserIdentifier( currentUserIdentifier )));
 
         Experiment experiment = chooseFeature.forFeatureBattle(new UserIdentifier(currentUserIdentifier), new FeatureBattleIdentifier(feature_battle_identifier)).matching(predicate);
 //        Experiment experiment =  chooseFeature.forFeatureBattle( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier(feature_battle_identifier));
@@ -65,6 +66,16 @@ public class DisplayFeatureBattle implements Macro {
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
         return getRenderedTemplate(contextMap).get();
+    }
+
+    protected Optional<Experiment.Type> getType(String winner) {
+        try{
+            String winnerInCaps = winner.toUpperCase();
+            return Optional.of(Experiment.Type.valueOf(winnerInCaps));
+        } catch (IllegalArgumentException ex){
+            // TODO AkS: add logger
+            return Optional.empty();
+        }
     }
 
     protected Optional<String> getHttpRequestParameters() {
