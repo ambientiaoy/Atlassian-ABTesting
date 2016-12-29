@@ -28,4 +28,9 @@ public class GoodOldWay implements Experiment {
     public boolean isRepresentedBy(FeatureBattleIdentifier featureBattleIdentifier) {
         return this.featureBattleIdentifier != null && this.featureBattleIdentifier.equals(featureBattleIdentifier) ;
     }
+
+    @Override
+    public String page() {
+        return page;
+    }
 }

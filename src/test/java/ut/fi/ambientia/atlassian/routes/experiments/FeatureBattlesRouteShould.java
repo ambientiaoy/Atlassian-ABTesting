@@ -1,7 +1,9 @@
 package ut.fi.ambientia.atlassian.routes.experiments;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
+import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +31,9 @@ public class FeatureBattlesRouteShould {
     @Before
     public void setUp() throws Exception {
         createNewHypothesis = mock(CreateExperiment.class);
-        featureBattle = mock(fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute.class);
-        featureBattles = new FeatureBattles(createNewHypothesis, featureBattle);
+        FeatureBattleRepository featureBattleRepository = mock(FeatureBattleRepository.class);
+        featureBattle = new FeatureBattleRoute(createNewHypothesis, featureBattleRepository);
+        featureBattles = new FeatureBattles(createNewHypothesis, featureBattle, featureBattleRepository);
         newAbTest = new CreateNewFeatureBattleCommand(AB_INSTANCE_UNIQUE_KEY, 10, "Good Old", "Shiny new");
 
         Response response_not_found = Response.status(Response.Status.NOT_FOUND ).build();

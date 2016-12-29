@@ -7,7 +7,7 @@ AJS.toInit(function() {
         allowReorder: true,
         resources: {
             all: baseUrl + "/feature_battles",
-            self: "/rest/feature_battle"
+            self: baseUrl + "/feature_battle"
         },
         columns: [
             {

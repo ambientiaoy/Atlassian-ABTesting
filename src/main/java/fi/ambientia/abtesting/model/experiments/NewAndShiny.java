@@ -35,4 +35,9 @@ public class NewAndShiny implements Experiment {
     public boolean isRepresentedBy(FeatureBattleIdentifier identifier) {
         return identifier != null && identifier.equals(experientIdenifier);
     }
+
+    @Override
+    public String page() {
+        return page;
+    }
 }

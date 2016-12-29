@@ -24,6 +24,8 @@ public interface FeatureBattleRepository {
 
     Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 
+    List<FeatureBattle> getAll();
+
     @FunctionalInterface
     interface NewFeatureBattleForOldPage{
         // TODO AkS: Add a wrapping concept for a page

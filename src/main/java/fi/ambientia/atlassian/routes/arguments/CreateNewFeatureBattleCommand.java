@@ -14,7 +14,7 @@ public class CreateNewFeatureBattleCommand {
 
     @JsonCreator
     public CreateNewFeatureBattleCommand(
-            @JsonProperty("uniqueKey") String uniqueKey,
+            @JsonProperty("id") String uniqueKey,
             @JsonProperty("threshold") Integer threshold,
             @JsonProperty("goodOld") String goodOldPage,
             @JsonProperty("newAndShiny") String newAndShinyPage) {

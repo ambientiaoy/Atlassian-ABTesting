@@ -90,7 +90,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository, experimentRepository);
         featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
 
-        featureBattles = new FeatureBattles(createExperiment, featureBattleRoute);
+        featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
 
         UserManager userManager = mock(UserManager.class);
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));

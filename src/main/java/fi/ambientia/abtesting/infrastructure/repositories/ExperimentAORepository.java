@@ -9,6 +9,7 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
+import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ExperimentAORepository implements ExperimentRepository {
         return Experiment.forType(
                 experiment.getExperimentType()).withIdentifier(experiment.getExperimentId(),
                 new PageObject(
-                        properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"),
+                        properties.propertyOrDefault("default.abtest.space.key", PluginConstants.DEFAULT_SPACE_KEY),
                         experiment.getPage() ) );
     }
 

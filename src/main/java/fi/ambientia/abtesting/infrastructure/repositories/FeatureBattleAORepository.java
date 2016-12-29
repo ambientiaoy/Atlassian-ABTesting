@@ -11,16 +11,16 @@ import fi.ambientia.abtesting.model.experiments.PageObject;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
+import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Repository
 public class FeatureBattleAORepository implements FeatureBattleRepository{
@@ -92,12 +92,6 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     @Override
-    public Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
-        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
-        return featureBattleAO.map( entity -> new FeatureBattle(new FeatureBattleIdentifier( entity.getFeatureBattleId() )));
-    }
-
-    @Override
     public Experiment randomBattleResultFor(FeatureBattleIdentifier identifier) {
         Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", identifier.getIdentifier());
 
@@ -110,9 +104,28 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
 
         return experimentAO.map(
                 (_ao) -> Experiment.forType( _ao.getExperimentType() ).withIdentifier( _ao.getExperimentId(),
-                        new PageObject(properties.propertyOrDefault("default.abtest.space.key", "ABTESTS"), _ao.getPage() ) )
+                        new PageObject(properties.propertyOrDefault("default.abtest.space.key", PluginConstants.DEFAULT_SPACE_KEY), _ao.getPage() ) )
         ).orElse(Experiment.missingExperiment() );
     }
 
+    @Override
+    public List<FeatureBattle> getAll() {
+        List<FeatureBattleAO> featureBattleAOs = Arrays.asList(ao.find(FeatureBattleAO.class));
+        return featureBattleAOs.stream().map( item -> {
+            List<ExperimentAO> experimentAOs = Arrays.asList(item.getExperiments());
+            return new FeatureBattle( new FeatureBattleIdentifier( item.getFeatureBattleId() ), experimentAOs.stream().
+                    map ( experimentAO -> ExperimentAORepository.buildExperiment( properties, experimentAO)).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
+    }
 
+
+    @Override
+    public Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
+        return featureBattleAO.map( entity -> {
+            List<ExperimentAO> experimentAOs = Arrays.asList(entity.getExperiments());
+            return new FeatureBattle(new FeatureBattleIdentifier( entity.getFeatureBattleId() ), experimentAOs.stream().
+                    map(experimentAO -> ExperimentAORepository.buildExperiment(properties, experimentAO)).collect(Collectors.toList()));
+        });
+    }
 }

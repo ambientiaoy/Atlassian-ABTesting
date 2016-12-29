@@ -2,6 +2,8 @@ package fi.ambientia.atlassian.routes.experiments;
 
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.resouces.FeatureBattleResource;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -18,6 +21,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @Path("/feature_battles")
@@ -27,12 +34,14 @@ public class FeatureBattles {
 
     public static final String ROUTE_ROOT = "/ABTest/";
     private CreateExperiment createExperiment;
-    private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
+    private FeatureBattleRoute featureBattle;
+    private final FeatureBattleRepository featureBattleRepository;
 
     @Autowired
-    public FeatureBattles(CreateExperiment createExperiment, fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle) {
+    public FeatureBattles(CreateExperiment createExperiment, FeatureBattleRoute featureBattle, FeatureBattleRepository featureBattleRepository) {
         this.createExperiment = createExperiment;
         this.featureBattle = featureBattle;
+        this.featureBattleRepository = featureBattleRepository;
     }
 
 
@@ -40,26 +49,26 @@ public class FeatureBattles {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAll(@Context HttpServletRequest httpServletRequest){
-        return Response.ok( Arrays.asList(
-                new FeatureBattleResource("FOOBAR", 10, "Good Old", "Fancy new"),
-                new FeatureBattleResource("Baz", 90, "Same Old", "Something blue"),
-                new FeatureBattleResource("FOOBAR", 60, "Oldie", "something borrowed")
 
-        )).build();
+        List<FeatureBattle> all = featureBattleRepository.getAll();
+
+        List<FeatureBattleResource> collect = all.stream().
+                map(featureBattle -> new FeatureBattleResource(
+                        featureBattle.getId(),
+                        featureBattle.getThreshold(),
+                        featureBattle.getGooldOld(),
+                        featureBattle.getNewAndShiny())).
+                collect(Collectors.toList());
+
+        return Response.ok( collect ).build();
     }
 
     @PublicApi
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
     public Response createNew(@Context HttpServletRequest httpServletRequest, CreateNewFeatureBattleCommand newAbTest) {
-        Response head = featureBattle.head(httpServletRequest, newAbTest.getUniqueKey());
-
-        if (head.getStatus() == Response.Status.OK.getStatusCode()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        createExperiment.createNew(newAbTest);
-        URI location = URI.create(ROUTE_ROOT + newAbTest.getUniqueKey());
-        return Response.created(location).build();
+        return featureBattle.createNew(httpServletRequest, newAbTest);
     }
+
+
 }

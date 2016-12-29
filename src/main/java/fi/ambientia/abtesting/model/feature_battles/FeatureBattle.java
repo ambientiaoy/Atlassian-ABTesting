@@ -1,16 +1,19 @@
 package fi.ambientia.abtesting.model.feature_battles;
 
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
-import org.codehaus.jackson.annotate.JsonAnyGetter;
-import org.codehaus.jackson.annotate.JsonProperty;
+import fi.ambientia.abtesting.model.experiments.Experiment;
 import org.codehaus.jackson.annotate.JsonValue;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class FeatureBattle {
 
     private final FeatureBattleIdentifier featureBattleIdentifier;
+    private final List<Experiment> experiments;
 
-    public FeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+    public FeatureBattle(FeatureBattleIdentifier featureBattleIdentifier, List<Experiment> experiments) {
         this.featureBattleIdentifier = featureBattleIdentifier;
+        this.experiments = experiments;
     }
 
     @JsonValue
@@ -25,12 +28,16 @@ public class FeatureBattle {
 
     @JsonValue
     public String getGooldOld(){
-        return "Good Old";
+        return getPage(it -> it.type().equals(Experiment.Type.GOOD_OLD));
     }
 
     @JsonValue
     public String getNewAndShiny(){
-        return "New and shiny";
+        return getPage(it -> it.type().equals(Experiment.Type.NEW_AND_SHINY));
+    }
+
+    protected String getPage(Predicate<Experiment> predicate) {
+        return experiments.stream().filter(predicate).map(it-> it.page()).findFirst().orElse("");
     }
 
     public FeatureBattleIdentifier getIdentifier() {

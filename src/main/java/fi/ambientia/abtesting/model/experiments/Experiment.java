@@ -29,6 +29,8 @@ public interface Experiment {
         return new MissingExperiment();
     }
 
+    String page();
+
     enum Type {
         NEW_AND_SHINY,
         GOOD_OLD

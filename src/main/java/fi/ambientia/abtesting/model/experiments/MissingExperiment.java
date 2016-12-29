@@ -17,4 +17,9 @@ public class MissingExperiment implements Experiment {
     public boolean isRepresentedBy(FeatureBattleIdentifier featureBattleIdentifier) {
         return false;
     }
+
+    @Override
+    public String page() {
+        return "";
+    }
 }

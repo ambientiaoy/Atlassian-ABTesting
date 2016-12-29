@@ -12,6 +12,7 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
+import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import fi.ambientia.atlassian.routes.Routes;
 import fi.ambientia.atlassian.users.Users;
@@ -47,7 +48,7 @@ public class DisplayFeatureBattle implements Macro {
         // handle input parameters
         String currentUserIdentifier = currentUser.get();
         String feature_battle_identifier = Routes.getParameter(parameter, "feature_battle", () -> FeatureBattleIdentifier.DEFAULT_IDENTIFIER);
-        String abtestSpaceKey = properties.propertyOrDefault("default.abtest.space.key", "ABTEST");
+        String abtestSpaceKey = properties.propertyOrDefault("default.abtest.space.key", PluginConstants.DEFAULT_SPACE_KEY);
 
         // get winner from Action parameters, if present!
         Optional<String> httpRequestParameters = getHttpRequestParameters();
