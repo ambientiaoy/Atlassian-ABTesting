@@ -15,7 +15,10 @@ public class FeatureBattleResult {
 
     public boolean forUser(Identifier user) {
         return user.equals( userIdentifier );
+    }
 
+    public boolean forExperimentType( Experiment.Type type){
+        return experiment.type().equals( type );
     }
 
     public Experiment getExperiment() {

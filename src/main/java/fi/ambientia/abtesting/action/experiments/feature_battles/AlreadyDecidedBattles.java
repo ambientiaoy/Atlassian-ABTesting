@@ -20,9 +20,9 @@ public class AlreadyDecidedBattles {
     public ExperimentSupplier experimentOf(FeatureBattleIdentifier experiment) {
         List<FeatureBattleResult> featureBattleResults = featureBattleRepository.featureBattleResultsFor(experiment);
 
-        return (user) -> featureBattleResults.
+        return (predicate) -> featureBattleResults.
                 stream().
-                filter(featureBattleResult -> featureBattleResult.forUser( user )).
+                filter( predicate ).
                 map(FeatureBattleResult::getExperiment).
                 findFirst();
     }

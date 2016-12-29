@@ -10,6 +10,7 @@ import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import fi.ambientia.atlassian.routes.Routes;
@@ -17,7 +18,10 @@ import fi.ambientia.atlassian.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Component("DisplayFeatureBattle")
@@ -45,15 +49,28 @@ public class DisplayFeatureBattle implements Macro {
         String abtestSpaceKey = properties.propertyOrDefault("default.abtest.space.key", "ABTEST");
 
         // get winner from Action parameters, if present!
-        Map<String, Object> contextMap = getVelocityContextSupplier().get();
+        Optional<String> httpRequestParameters = getHttpRequestParameters();
         // ((ViewPageAction) contextMap.get("action")).getCurrentRequest().getParameterMap()
 
         // execute action
-        Experiment experiment =  chooseFeature.forUser( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier(feature_battle_identifier));
+        Predicate<FeatureBattleResult> predicate = httpRequestParameters.map( (winner) -> {
+            String winnerInCaps = winner.toUpperCase();
+            return  ChooseExperiment.forExperimentType(Experiment.Type.valueOf(winnerInCaps));
+        }).orElse(ChooseExperiment.forUser(new UserIdentifier( currentUserIdentifier )));
+
+        Experiment experiment = chooseFeature.forFeatureBattle(new UserIdentifier(currentUserIdentifier), new FeatureBattleIdentifier(feature_battle_identifier)).matching(predicate);
+//        Experiment experiment =  chooseFeature.forFeatureBattle( new UserIdentifier( currentUserIdentifier ), new FeatureBattleIdentifier(feature_battle_identifier));
 
         // create context and render
+        Map<String, Object> contextMap = getVelocityContextSupplier().get();
         contextMap.put("experiment", experiment);
         return getRenderedTemplate(contextMap).get();
+    }
+
+    protected Optional<String> getHttpRequestParameters() {
+
+        Optional<HttpServletRequest> req = Optional.ofNullable( (HttpServletRequest) getVelocityContextSupplier().get().get("req"));
+        return  req.map( request -> request.getParameter("featureBattleWinner"));
     }
 
     protected Supplier<String> getRenderedTemplate(Map<String, Object> contextMap) {

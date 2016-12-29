@@ -2,7 +2,6 @@ package ut.fi.ambientia.e2e;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
-import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
@@ -18,7 +17,6 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.Experiment
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
@@ -52,6 +50,7 @@ public class Acc_ShowFeatureBattleForUserShould {
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
     private static final int SMALL_ENOUGH_FOR_GOOD_OLD = -1;
+    private HttpServletRequest httpServletRequestMock;
     private EntityManager entityManager;
     private ActiveObjects ao;
     private TestPluginProperties properties;
@@ -59,10 +58,13 @@ public class Acc_ShowFeatureBattleForUserShould {
     private FeatureBattleRoute featureBattleRoute;
     private FeatureBattles featureBattles;
     private DisplayFeatureBattle displayFeatureBattle;
+    private Supplier<HttpServletRequest> supplier = () -> httpServletRequestMock;
 
     @Before
     public void setUp() throws Exception
     {
+        httpServletRequestMock = mock(HttpServletRequest.class);
+        when(httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn(null);
         assertNotNull(entityManager);
         ao = new TestActiveObjects(entityManager);
         ao.migrate(UserExperimentAO.class);
@@ -87,10 +89,15 @@ public class Acc_ShowFeatureBattleForUserShould {
 
         UserManager userManager = mock(UserManager.class);
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
+
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseExperiment, properties){
             @Override
             protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
-                return () -> new HashMap<>();
+                return () -> {
+                    HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+                    objectObjectHashMap.put("req", supplier.get());
+                    return objectObjectHashMap;
+                };
             }
 
             @Override
@@ -112,7 +119,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
-        Experiment experiment = chooseExperiment.forUser( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
+        Experiment experiment = chooseExperiment.forFeatureBattle( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ));
 
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
         assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old")));
@@ -132,10 +139,22 @@ public class Acc_ShowFeatureBattleForUserShould {
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old") ) );
     }
 
+    @Test
+    public void in_macro_user_can_choose_winner_by_defining_action_parameter_to() throws Exception {
+        //arrange - create a featurebattle that would always  return GoodOld
+        properties.setProperty("default.abtest.space.key", "FOOBAR");
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
+        // fake the parameter.
+        when(httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn("new_and_shiny");
+        // act - call for the featurebattle
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        String execute = displayFeatureBattle.execute(parameters, "", null);
 
-
-
+        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Shiny new") ) );
+    }
 
     @Ignore
     @Test

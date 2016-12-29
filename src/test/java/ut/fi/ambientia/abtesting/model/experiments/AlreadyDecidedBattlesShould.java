@@ -1,6 +1,7 @@
 package ut.fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
+import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
@@ -8,6 +9,7 @@ import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;
 
@@ -41,12 +43,19 @@ public class AlreadyDecidedBattlesShould {
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)
                         ) );
 
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor(ChooseExperiment.forUser( USER_IDENTIFIER ));
 
         assertThat(optional.get(), equalTo( goodOldWay ));
     }
 
     // FIXME AkS: commented out test
+
+    @Ignore
+    @Test
+    public void apply_the_predicate_for_test_results() throws Exception {
+        fail("not yet implemented");
+    }
+
 
 //    @Test
 //    public void see_if_user_has_already_decided_to_take_either() throws Exception {

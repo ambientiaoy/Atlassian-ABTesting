@@ -6,6 +6,7 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureB
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;
 
@@ -42,7 +43,7 @@ public class ChooseExperimentShould {
 
         when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn((user) -> Optional.of(TestData.getNewAndShiny()));
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
+        Experiment experiment = chooseFeature.forFeatureBattle(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ));
 
         assertThat(experiment.type(), equalTo(Experiment.Type.NEW_AND_SHINY));
     }
@@ -51,7 +52,7 @@ public class ChooseExperimentShould {
     public void execute_a_new_battle_for_user_that_does_not_have_already_decided_battle() throws Exception {
         when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn( (u) -> Optional.empty() );
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
+        Experiment experiment = chooseFeature.forFeatureBattle(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching(ChooseExperiment.forUser( TestData.USERIDENTIFIER ) );
 
         verify( executeFeatureBattle ).forExperiment(TestData.FEATURE_BATTLE_IDENTIFIER);
     }
@@ -61,9 +62,15 @@ public class ChooseExperimentShould {
         when(alreadyDecidedBattles.experimentOf( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn( (u) -> Optional.empty() );
         when(randomizeFeatureBattle.getExperiment( TestData.FEATURE_BATTLE_IDENTIFIER)).thenReturn(u -> TestData.getGoodOld() );
 
-        Experiment experiment = chooseFeature.forUser(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER);
+        Experiment experiment = chooseFeature.forFeatureBattle(TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ) );
 
         assertThat(experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
+    }
+
+    @Ignore
+    @Test
+    public void find_feature_battle_result_for_experiment_type(){
+
     }
 
 }
