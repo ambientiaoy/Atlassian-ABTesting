@@ -28,52 +28,30 @@ public class AlreadyDecidedBattlesShould {
     private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier("EXPERIMENT");
     private AlreadyDecidedBattles alreadyDecidedBattles;
     private FeatureBattleRepository featureBattleRepository;
+    private final GoodOldWay goodOldWay = TestData.getGoodOld();
 
     @Before
     public void setUp() throws Exception {
         featureBattleRepository = mock(FeatureBattleRepository.class);
         alreadyDecidedBattles = new AlreadyDecidedBattles( featureBattleRepository );
-    }
-
-    @Test
-    public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
-        GoodOldWay goodOldWay = TestData.getGoodOld();
         when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).
                 thenReturn(
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)
                         ) );
+    }
+
+    @Test
+    public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
 
         Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor(ChooseExperiment.forUser( USER_IDENTIFIER ));
 
         assertThat(optional.get(), equalTo( goodOldWay ));
     }
 
-    // FIXME AkS: commented out test
-
-    @Ignore
     @Test
-    public void apply_the_predicate_for_test_results() throws Exception {
-        fail("not yet implemented");
-    }
-
-
-//    @Test
-//    public void see_if_user_has_already_decided_to_take_either() throws Exception {
-//        GoodOldWay goodOldWay = new GoodOldWay();
-//        when(featureBattleRepository.votesFor( FEATURE_BATTLE_IDENTIFIER )).
-//                thenReturn(
-//                        Arrays.asList(createTestFeatureBattleResultWhereUserWantsOldWay(goodOldWay)
-//                        ) );
-//
-//        Optional<Experiment> optional = alreadyDecidedBattles.forExperiment( FEATURE_BATTLE_IDENTIFIER ).targetedFor( USER_IDENTIFIER );
-//
-//        assertThat(optional.get(), equalTo( goodOldWay ));
-//
-//
-//    }
-
-    private FeatureBattleResult createTestFeatureBattleResultWhereUserWantsOldWay(GoodOldWay goodOldWay) {
-        return null;
+    public void not_receive_any_if_filter_is_set_to_return_false() throws Exception {
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( (any) -> false );
+        optional.ifPresent( experiment -> fail("Should not have any, should be empty optional"));
     }
 
     private FeatureBattleResult createTestFeatureBattleResult(GoodOldWay goodOldWay) {
