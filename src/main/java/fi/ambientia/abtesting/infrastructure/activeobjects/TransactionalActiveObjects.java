@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.function.Supplier;
+
 @Service("TransactionalActiveObject")
 public class TransactionalActiveObjects implements SimpleActiveObjects{
 
@@ -55,6 +57,16 @@ public class TransactionalActiveObjects implements SimpleActiveObjects{
             @Override
             public T[] doInTransaction() {
                 return wrappingActiveObjects.find(klazz);
+            }
+        });
+    }
+
+    @Override
+    public <T> T withinTransaction(Supplier<T> supplier) {
+        return ao.executeInTransaction(new TransactionCallback<T>() {
+            @Override
+            public T doInTransaction() {
+                return supplier.get();
             }
         });
     }

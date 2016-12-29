@@ -8,6 +8,8 @@ import net.java.ao.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Supplier;
+
 @Component
 public class WrappingActiveObjects implements SimpleActiveObjects {
     @ComponentImport
@@ -36,5 +38,10 @@ public class WrappingActiveObjects implements SimpleActiveObjects {
     @Override
     public <T extends Entity> T[] find(Class<T> klazz) {
         return ao.find(klazz);
+    }
+
+    @Override
+    public <T> T withinTransaction(Supplier<T> supplier) {
+        return supplier.get();
     }
 }

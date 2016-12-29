@@ -1,5 +1,6 @@
-package fi.ambientia.abtesting.action.experiments.feature_battles;
+package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 
+import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.model.IdResolver;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;

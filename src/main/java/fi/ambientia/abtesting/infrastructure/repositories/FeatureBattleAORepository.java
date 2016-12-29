@@ -46,25 +46,32 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     @Override
     public IdResolver createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
         logger.info("Creating a new featureBattle " + featureBattleIdentifier.getIdentifier());
-        Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
-        if(featureBattleAO.isPresent()){
-            return () -> featureBattleAO.get().getID();
-        }
-        FeatureBattleAO experimentAO = ao.create(FeatureBattleAO.class);
-        experimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
-        experimentAO.setThreshold( properties.propertyOrDefault("experiment.default.threshold", DEFAULT_THRESHOLD));
-        experimentAO.save();
-        logger.debug("Created a new featureBattle with id: " + experimentAO.getID());
+        Integer id = ao.withinTransaction(() -> {
 
-        return () -> experimentAO.getID();
+            Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ?", featureBattleIdentifier.getIdentifier());
+            if(featureBattleAO.isPresent()){
+                return featureBattleAO.get().getID();
+            }
+            FeatureBattleAO experimentAO = ao.create(FeatureBattleAO.class);
+            experimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
+            experimentAO.setThreshold( properties.propertyOrDefault("experiment.default.threshold", DEFAULT_THRESHOLD));
+            experimentAO.save();
+            logger.debug("Created a new featureBattle with id: " + experimentAO.getID());
+            return experimentAO.getID();
+        });
+        return () -> id;
     }
 
     @Override
     public void setThreshold(Integer featureBattleIdentifier, int threshold) {
-        Optional<FeatureBattleAO> optional = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "ID = ? ", featureBattleIdentifier);
-        optional.ifPresent(( featureBattleAO ) -> {
-            featureBattleAO.setThreshold( threshold );
-            featureBattleAO.save();
+        ao.withinTransaction( () -> {
+
+            Optional<FeatureBattleAO> optional = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "ID = ? ", featureBattleIdentifier);
+            optional.ifPresent(( featureBattleAO ) -> {
+                featureBattleAO.setThreshold( threshold );
+                featureBattleAO.save();
+            });
+            return null;
         });
     }
 
@@ -81,14 +88,18 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
                         filter((experimentAO -> experimentAO.getExperimentType().equals(experiment.type()))).
                         findFirst();
 
-                UserExperimentAO userExperimentAO = getUserExperimentAO(user.getIdentifier(), featureBattleIdentifier.getIdentifier());
-                // FIXME AkS: I See a null here!
-                userExperimentAO.setExperiment( experimentAOOptional.orElse( null ) );
-                userExperimentAO.setUserId( user.getIdentifier() );
-                userExperimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
-                userExperimentAO.setExperimentType( experiment.type() );
-                userExperimentAO.save();
-                logger.debug("Created '" +userExperimentAO.getID() );
+                ao.withinTransaction( () ->{
+
+                    UserExperimentAO userExperimentAO = getUserExperimentAO(user.getIdentifier(), featureBattleIdentifier.getIdentifier());
+                    // FIXME AkS: I See a null here!
+                    userExperimentAO.setExperiment( experimentAOOptional.orElse( null ) );
+                    userExperimentAO.setUserId( user.getIdentifier() );
+                    userExperimentAO.setFeatureBattleId( featureBattleIdentifier.getIdentifier() );
+                    userExperimentAO.setExperimentType( experiment.type() );
+                    userExperimentAO.save();
+                    logger.debug("Created '" +userExperimentAO.getID() );
+                    return null;
+                });
 
             };
         };
@@ -120,7 +131,7 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     @Override
     public List<FeatureBattle> getAll() {
         List<FeatureBattleAO> featureBattleAOs = Arrays.asList(ao.find(FeatureBattleAO.class));
-        logger.debug("All featurebattles: \n\t" + featureBattleAOs.stream().map( featureBattleAO -> featureBattleAO.toString() ).collect( Collectors.joining("\n\t")));
+        logger.debug("All featurebattles: \n\t" + featureBattleAOs.stream().map( featureBattleAO -> describeFeatureBattle(featureBattleAO)).collect( Collectors.joining("\n\t")));
         return featureBattleAOs.stream().map( item -> {
             List<ExperimentAO> experimentAOs = Arrays.asList(item.getExperiments());
             return new FeatureBattle( new FeatureBattleIdentifier( item.getFeatureBattleId() ), experimentAOs.stream().
@@ -128,9 +139,21 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
         }).collect(Collectors.toList());
     }
 
+    protected String describeFeatureBattle(FeatureBattleAO featureBattleAO) {
+        return  String.format("FeatureBattle: %s, with Identifier %s, and threshold %d, and experiments %s ",
+                featureBattleAO.getID(),
+                featureBattleAO.getFeatureBattleId(),
+                featureBattleAO.getThreshold(),
+                Arrays.asList(featureBattleAO.getExperiments()).stream().
+                        map(experimentAO -> "Exp " + experimentAO.getExperimentType() + " on page " + experimentAO.getPage() ).
+                        collect(Collectors.joining("\n\t\t"))
+        );
+    }
+
 
     @Override
     public Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier) {
+        logger.debug("GetFeatureBattle for " + featureBattleIdentifier );
         Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getIdentifier());
         return featureBattleAO.map( entity -> {
             List<ExperimentAO> experimentAOs = Arrays.asList(entity.getExperiments());

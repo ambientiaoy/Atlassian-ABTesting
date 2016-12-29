@@ -6,9 +6,9 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import net.java.ao.Entity;
 import net.java.ao.Query;
 
+import java.util.function.Supplier;
+
 public interface SimpleActiveObjects{
-
-
     <T extends Entity> T[] find(Class<T> klazz, Query where);
 
     <T extends Entity> void delete(T entity);
@@ -17,4 +17,6 @@ public interface SimpleActiveObjects{
 
     <T extends Entity> T[] find(Class<T> klazz);
 
+    <T> T withinTransaction(Supplier<T> supplier);
 }
+
