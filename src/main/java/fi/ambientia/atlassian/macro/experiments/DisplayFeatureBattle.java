@@ -30,7 +30,6 @@ import java.util.function.Supplier;
 public class DisplayFeatureBattle implements Macro {
 
     public static final String TEMPLATES_FEATUREBATTLE_VM = "/templates/featurebattle.vm";
-    public static final String SPACE_KEY = "ABTEST";
 
     private final Supplier<String> currentUser;
     private final ChooseExperiment chooseFeature;
@@ -65,6 +64,8 @@ public class DisplayFeatureBattle implements Macro {
 
         // create context and render
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
+        contextMap.put("featureBattle", feature_battle_identifier);
+        contextMap.put("experimentType", experiment.type());
         contextMap.put("experiment", experiment);
         return getRenderedTemplate(contextMap).get();
     }
@@ -91,10 +92,6 @@ public class DisplayFeatureBattle implements Macro {
 
     protected  Supplier<Map<String, Object >> getVelocityContextSupplier() {
         return () -> MacroUtils.defaultVelocityContext();
-    }
-
-    public String getPageToBeRendered(){
-        return "{include:" + SPACE_KEY +":" + "b1_good_old" + "}";
     }
 
     public BodyType getBodyType() {

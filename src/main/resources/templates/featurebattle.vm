@@ -1,3 +1,7 @@
-<div class="feature-battle">
+<div class="feature-battle #if( $experimentType == 'NEW_AND_SHINY' )new-and-shiny #end">
+    <div class="push-right">
+        <button id="featureBattle/${featureBattle}" data-experiment="${experimentType}" data-featureBattle="${featureBattle}">
+            I like this most
+        </button></div>
     $action.getHelper().renderConfluenceMacro( $experiment.render() )
 </div>
