@@ -12,7 +12,9 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperi
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
+import fi.ambientia.atlassian.routes.arguments.FeatureBattleWinCommand;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleWins;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
@@ -25,6 +27,7 @@ import ut.fi.ambientia.e2e.bootstrap.Bootstrap;
 import ut.fi.ambientia.helpers.TestPluginProperties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +49,10 @@ public class Acc_ShowFeatureBattleForUserShould {
     private EntityManager entityManager;
     private ActiveObjects ao;
     private TestPluginProperties properties;
-    private ChooseExperiment chooseExperiment;
     private FeatureBattleRoute featureBattleRoute;
     private FeatureBattles featureBattles;
     private DisplayFeatureBattle displayFeatureBattle;
+    private FeatureBattleWins winFeatureBattle;
 
     @Before
     public void setUp() throws Exception
@@ -70,10 +73,12 @@ public class Acc_ShowFeatureBattleForUserShould {
         bootstrap.bootstrap( sao );
 
         properties = bootstrap.getProperties();
-        chooseExperiment = bootstrap.getChooseExperiment();
+
         featureBattleRoute = bootstrap.getFeatureBattleRoute();
         featureBattles = bootstrap.getFeatureBattles();
         displayFeatureBattle = bootstrap.getDisplayBattle();
+
+        winFeatureBattle = bootstrap.getFeatureBattleWins();
 
     }
 
@@ -86,10 +91,11 @@ public class Acc_ShowFeatureBattleForUserShould {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
-
+        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY));
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
+        assertThat( response.getStatus(), equalTo(200));
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Shiny new") ) );
     }
 }

@@ -16,6 +16,7 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleWins;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import ut.fi.ambientia.helpers.TestPluginProperties;
 
@@ -37,6 +38,7 @@ public class Bootstrap {
 
     public HttpServletRequest httpServletRequestMock;
     private Supplier<HttpServletRequest> supplier = () -> httpServletRequestMock;
+    private FeatureBattleWins featureBattleWins;
 
     public void bootstrap(SimpleActiveObjects sao) {
 
@@ -60,6 +62,8 @@ public class Bootstrap {
         featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
+
+        featureBattleWins = new FeatureBattleWins();
 
         UserManager userManager = mock(UserManager.class);
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
@@ -103,5 +107,9 @@ public class Bootstrap {
 
     public FeatureBattleRoute getFeatureBattleRoute() {
         return featureBattleRoute;
+    }
+
+    public FeatureBattleWins getFeatureBattleWins() {
+        return featureBattleWins;
     }
 }

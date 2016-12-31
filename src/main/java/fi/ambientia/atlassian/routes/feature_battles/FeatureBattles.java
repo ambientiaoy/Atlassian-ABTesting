@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @Path("/feature_battles")
 public class FeatureBattles {
 
+    //feature_battle/{id}/users
+
     // FeatureBattle
 
     public static final String ROUTE_ROOT = "/ABTest/";
