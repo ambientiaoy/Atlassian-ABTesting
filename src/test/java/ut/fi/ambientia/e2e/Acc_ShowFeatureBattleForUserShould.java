@@ -80,48 +80,18 @@ public class Acc_ShowFeatureBattleForUserShould {
     }
 
     @Test
-    public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
-        properties.setProperty("default.abtest.space.key", "FOOBAR");
-        properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
-
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
-
-        Experiment experiment = chooseExperiment.forFeatureBattle( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ));
-
-        assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
-        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old")));
-    }
-
-    @Test
-    public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created_as_shown_on_macro() throws MacroExecutionException {
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
+    public void user_should_be_able_to_choose_a_feature_battle() throws MacroExecutionException {
+        CreateNewFeatureBattleCommand featureBattleCommand =
+                new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        featureBattles.createNew(dummy( HttpServletRequest.class), featureBattleCommand);
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
-        String execute = displayFeatureBattle.execute(parameters, "", null);
 
-        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old") ) );
-    }
 
-    @Test
-    public void in_macro_user_can_choose_winner_by_defining_action_parameter_to() throws Exception {
-        //arrange - create a featurebattle that would always  return GoodOld
-        properties.setProperty("default.abtest.space.key", "FOOBAR");
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
-
-        // fake the parameter.
-        when(bootstrap.httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn("new_and_shiny");
-        // act - call for the featurebattle
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Shiny new") ) );
     }
-
-
 }

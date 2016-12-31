@@ -33,6 +33,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ut.fi.ambientia.abtesting.model.TestData;
+import ut.fi.ambientia.e2e.bootstrap.Bootstrap;
 import ut.fi.ambientia.helpers.TestPluginProperties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,53 +78,20 @@ public class Acc_ChooseExperiment {
         ao.migrate(UserExperimentAO.class);
         SimpleActiveObjects sao = new WrappingActiveObjects(ao);
 
-        properties = new TestPluginProperties();
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.bootstrap( sao );
 
-
-        ExperimentAORepository experimentRepository = new ExperimentAORepository(sao, properties);
-        FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
-        FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(sao, properties);
-
-        RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
-        ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
-        AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleResults);
-
-        chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
-
-        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository, experimentRepository);
-        featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
-
-        featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
-
-        UserManager userManager = mock(UserManager.class);
-        when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
-
-        displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseExperiment, properties){
-            @Override
-            protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
-                return () -> {
-                    HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-                    objectObjectHashMap.put("req", supplier.get());
-                    return objectObjectHashMap;
-                };
-            }
-
-            @Override
-            protected Supplier<String> getRenderedTemplate(Map<String, Object> contextMap) {
-                return () -> {
-                    return contextMap.get("experiment") == null ?
-                            "null" :
-                            ((Experiment) contextMap.get("experiment")).render();
-                };
-            }
-        };
-        properties.setProperty("default.abtest.space.key", "FOOBAR");
+        properties = bootstrap.getProperties();
+        chooseExperiment = bootstrap.getChooseExperiment();
+        featureBattleRoute = bootstrap.getFeatureBattleRoute();
+        featureBattles = bootstrap.getFeatureBattles();
+        displayFeatureBattle = bootstrap.getDisplayBattle();
 
     }
 
     @Test
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created(){
-        properties.setProperty("default.abtest.space.key", "FOOBAR");
+        properties.setProperty("default.abtest.space.key", "TEST");
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 
         CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
@@ -132,32 +100,6 @@ public class Acc_ChooseExperiment {
         Experiment experiment = chooseExperiment.forFeatureBattle( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ));
 
         assertThat( experiment.type(), equalTo(Experiment.Type.GOOD_OLD));
-        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, "FOOBAR", "Good Old")));
+        assertThat( experiment.render(), equalTo(String.format(Experiment.INCLUDE_PAGE, "TEST", "Good Old")));
     }
-
-    @Ignore
-    @Test
-    public void cannot_create_experiment_if_page_is_not_found() throws Exception {
-        fail("ToBeDefined");
-    }
-
-    @Ignore
-    @Test
-    public void can_create_experiment_and_is_shown_in_rest_api() throws Exception {
-        fail("ToBeDefined");
-    }
-
-    @Ignore
-    @Test
-    public void can_update_experiment() throws Exception {
-        fail("ToBeDefined");
-    }
-
-    @Ignore
-    @Test
-    public void can_mark_experiment_as_done(){
-        // not Delete, mark as done, choose either experiment.
-        fail("ToBeDefined");
-    }
-
 }
