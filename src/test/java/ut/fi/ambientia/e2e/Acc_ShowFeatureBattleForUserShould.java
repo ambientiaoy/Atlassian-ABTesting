@@ -10,6 +10,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBat
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
 import fi.ambientia.atlassian.routes.arguments.FeatureBattleWinCommand;
@@ -45,6 +46,7 @@ public class Acc_ShowFeatureBattleForUserShould {
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
     private static final int SMALL_ENOUGH_FOR_GOOD_OLD = -1;
+    public static final UserIdentifier USERIDENTIFIER = TestData.USERIDENTIFIER;
     private final Bootstrap bootstrap = new Bootstrap();
     private EntityManager entityManager;
     private ActiveObjects ao;
@@ -91,7 +93,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
 
-        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY));
+        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY, USERIDENTIFIER.getIdentifier()));
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 

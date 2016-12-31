@@ -2,6 +2,7 @@ package ut.fi.ambientia.e2e.bootstrap;
 
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
+import fi.ambientia.abtesting.action.ChooseAWinnerOfAFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
@@ -63,7 +64,8 @@ public class Bootstrap {
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
 
-        featureBattleWins = new FeatureBattleWins();
+        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle();
+        featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
 
         UserManager userManager = mock(UserManager.class);
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
