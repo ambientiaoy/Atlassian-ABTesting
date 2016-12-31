@@ -12,12 +12,11 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperi
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
@@ -35,7 +34,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)

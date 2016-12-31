@@ -1,7 +1,6 @@
-package fi.ambientia.atlassian.routes.experiments;
+package fi.ambientia.atlassian.routes.feature_battles;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
@@ -14,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;

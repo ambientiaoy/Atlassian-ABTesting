@@ -1,4 +1,4 @@
-package fi.ambientia.atlassian.routes.experiments;
+package fi.ambientia.atlassian.routes.feature_battles;
 
 import com.atlassian.annotations.PublicApi;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;

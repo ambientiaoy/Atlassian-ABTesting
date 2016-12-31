@@ -1,6 +1,5 @@
 package ut.fi.ambientia.e2e.bootstrap;
 
-import com.atlassian.activeobjects.test.TestActiveObjects;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
@@ -9,21 +8,15 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperimen
 import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ExecuteFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.feature_battles.RandomizeFeatureBattle;
-import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
-import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
-import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
-import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
-import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
-import net.java.ao.EntityManager;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import ut.fi.ambientia.helpers.TestPluginProperties;
 
 import javax.servlet.http.HttpServletRequest;

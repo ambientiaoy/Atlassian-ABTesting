@@ -14,7 +14,7 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperi
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;

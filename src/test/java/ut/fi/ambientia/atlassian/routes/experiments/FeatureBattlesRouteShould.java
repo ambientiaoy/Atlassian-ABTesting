@@ -5,8 +5,8 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute;
-import fi.ambientia.atlassian.routes.experiments.FeatureBattles;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +18,6 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,7 +28,7 @@ public class FeatureBattlesRouteShould {
     private CreateExperiment createNewHypothesis;
     private FeatureBattles featureBattles;
     private CreateNewFeatureBattleCommand newAbTest;
-    private fi.ambientia.atlassian.routes.experiments.FeatureBattleRoute featureBattle;
+    private fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute featureBattle;
     private HttpServletRequest context = mock(HttpServletRequest.class);
     private final FeatureBattleRepository featureBattleRepository = mock(FeatureBattleRepository.class);
 
