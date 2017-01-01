@@ -14,7 +14,7 @@ public class ExperimentIdentifierMatcher extends TypeSafeMatcher<FeatureBattleId
 
     @Override
     protected boolean matchesSafely(FeatureBattleIdentifier featureBattleIdentifier) {
-        return featureBattleIdentifier.getIdentifier().equals(expected.getIdentifier());
+        return featureBattleIdentifier.getFeatureBattleId().equals(expected.getFeatureBattleId());
     }
 
     @Override

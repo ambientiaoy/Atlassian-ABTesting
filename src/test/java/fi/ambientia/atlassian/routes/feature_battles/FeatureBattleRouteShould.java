@@ -41,7 +41,7 @@ public class FeatureBattleRouteShould {
     public void return_404_if_not_found() throws Exception {
         when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.empty());
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
         assertThat( head.getStatus(), equalTo(404));
     }
@@ -53,7 +53,7 @@ public class FeatureBattleRouteShould {
         FeatureBattle fb = mock(FeatureBattle.class);
         when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.of( fb ));
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
         assertThat( head.getStatus(), equalTo(200));
     }
@@ -63,7 +63,7 @@ public class FeatureBattleRouteShould {
         FeatureBattle fb = new FeatureBattle(TestData.FEATURE_BATTLE_IDENTIFIER, new ArrayList<>());
         when(featureBattleRepository.getFeatureBattle( any(FeatureBattleIdentifier.class))).thenReturn(Optional.of( fb ));
 
-        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        Response head = featureBattle.head(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
         assertThat( head.getEntity(), is(equalTo(null)));
     }

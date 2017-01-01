@@ -3,7 +3,6 @@ package ut.fi.ambientia.e2e;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import com.atlassian.confluence.macro.MacroExecutionException;
-import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
@@ -87,13 +86,13 @@ public class Acc_ShowFeatureBattleForUserShould {
     @Test
     public void user_should_be_able_to_choose_a_feature_battle() throws MacroExecutionException {
         CreateNewFeatureBattleCommand featureBattleCommand =
-                new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+                new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), featureBattleCommand);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
-        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY, USERIDENTIFIER.getIdentifier()));
+        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY, USERIDENTIFIER.getIdentifier()));
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 

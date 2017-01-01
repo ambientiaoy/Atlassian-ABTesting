@@ -76,11 +76,11 @@ public class Acc_UserShouldBeAbleToChooseAWinner {
     public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created_as_shown_on_macro() throws MacroExecutionException {
         properties.setProperty("default.abtest.space.key", "TEST");
 
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
@@ -92,14 +92,14 @@ public class Acc_UserShouldBeAbleToChooseAWinner {
         //arrange - create a featurebattle that would always  return GoodOld
         properties.setProperty("default.abtest.space.key", "TEST");
 
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
         // fake the parameter.
         when(bootstrap.httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn("new_and_shiny");
         // act - call for the featurebattle
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );

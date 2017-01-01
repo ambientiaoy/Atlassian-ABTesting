@@ -18,7 +18,7 @@ public class FeatureBattle {
 
     @JsonValue
     public String getId() {
-        return featureBattleIdentifier.getIdentifier();
+        return featureBattleIdentifier.getFeatureBattleId();
     }
 
     @JsonValue

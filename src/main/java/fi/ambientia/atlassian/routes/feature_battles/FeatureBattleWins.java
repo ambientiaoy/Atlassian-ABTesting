@@ -34,9 +34,8 @@ public class FeatureBattleWins {
 
         UserIdentifier userIdentifier = featureBattleWinCommand.getUserIdentifier();
         FeatureBattleIdentifier featureBattleIdentifier = new FeatureBattleIdentifier( featureBattleId );
-        chooseAWinnerOfAFeatureBattle.forFeatureBattle(userIdentifier, featureBattleIdentifier).accept( featureBattleWinCommand.getType() );
+        chooseAWinnerOfAFeatureBattle.forFeatureBattle(userIdentifier, featureBattleIdentifier, featureBattleWinCommand.getType() );
 
         return Response.ok().build();
-
     }
 }

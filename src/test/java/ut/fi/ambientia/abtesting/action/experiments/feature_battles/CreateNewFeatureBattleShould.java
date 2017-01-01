@@ -1,7 +1,6 @@
 package ut.fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.action.experiments.feature_battles.CreateNewFeatureBattle;
-import fi.ambientia.abtesting.model.IdResolver;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.experiments.ExperimentRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
@@ -27,7 +26,7 @@ public class CreateNewFeatureBattleShould {
         ExperimentRepository experimentRepository = mock(ExperimentRepository.class);
         CreateNewFeatureBattle createNewFeatureBattle = new CreateNewFeatureBattle(featureBattleRepository, experimentRepository);
 
-        String identifier = TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier();
+        String identifier = TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId();
         int threshold = 16;
 
         when(featureBattleRepository.createFeatureBattle( TestData.FEATURE_BATTLE_IDENTIFIER )).thenReturn(() -> 10);

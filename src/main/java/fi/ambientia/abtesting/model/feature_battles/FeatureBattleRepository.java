@@ -8,6 +8,7 @@ import fi.ambientia.abtesting.model.user.UserIdentifier;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface FeatureBattleRepository {
     IdResolver createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
@@ -25,6 +26,8 @@ public interface FeatureBattleRepository {
     Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 
     List<FeatureBattle> getAll();
+
+    Optional<FeatureBattleEntity>  ensureExistsOnlyOne(FeatureBattleIdentifier identifier);
 
     @FunctionalInterface
     interface NewFeatureBattleForOldPage{

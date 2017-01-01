@@ -38,7 +38,7 @@ public class FeatureBattleWinsShould {
         chooseAWinnerOfAFeatureBattle = mock(ChooseAWinnerOfAFeatureBattle.class);
 
         httpServletRequest = dummy(HttpServletRequest.class);
-        when(featureBattleRoute.head(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getIdentifier())).thenReturn( Response.status(200).build() );
+        when(featureBattleRoute.head(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId())).thenReturn( Response.status(200).build() );
 
         featureBattleWinCommand = new FeatureBattleWinCommand(Experiment.Type.GOOD_OLD, USER_KEY);
         featureBattleWins = new FeatureBattleWins( featureBattleRoute, chooseAWinnerOfAFeatureBattle);
@@ -46,9 +46,9 @@ public class FeatureBattleWinsShould {
 
     @Test
     public void return_404_if_feature_battle_not_found() throws Exception {
-        when(featureBattleRoute.head(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getIdentifier())).thenReturn( Response.status(404).build() );
+        when(featureBattleRoute.head(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId())).thenReturn( Response.status(404).build() );
 
-        Response response = featureBattleWins.createNew(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getIdentifier(), featureBattleWinCommand);
+        Response response = featureBattleWins.createNew(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), featureBattleWinCommand);
 
         assertThat( response.getStatus(), equalTo(404));
     }
@@ -57,11 +57,10 @@ public class FeatureBattleWinsShould {
     public void call_action_to_create_feature_battle_win() throws Exception {
 
         Consumer<Experiment.Type> mockConsumer = mock(Consumer.class);
-        when(chooseAWinnerOfAFeatureBattle.forFeatureBattle( USER_IDENTIFIER, FEATURE_BATTLE_IDENTIFIER)).thenReturn( mockConsumer );
 
-        Response response = featureBattleWins.createNew(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getIdentifier(), featureBattleWinCommand);
+        Response response = featureBattleWins.createNew(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), featureBattleWinCommand);
 
         assertThat(response.getStatus(), equalTo(200));
-        verify( mockConsumer).accept( Experiment.Type.GOOD_OLD );
+        verify(chooseAWinnerOfAFeatureBattle).forFeatureBattle( USER_IDENTIFIER, FEATURE_BATTLE_IDENTIFIER, featureBattleWinCommand.getType());
     }
 }

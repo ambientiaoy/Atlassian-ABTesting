@@ -64,7 +64,7 @@ public class Bootstrap {
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
 
-        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle();
+        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository);
         featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
 
         UserManager userManager = mock(UserManager.class);

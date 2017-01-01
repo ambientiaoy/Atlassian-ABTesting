@@ -3,7 +3,7 @@ package fi.ambientia.abtesting.model.feature_battles;
 import fi.ambientia.abtesting.model.Identifier;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class FeatureBattleIdentifier implements Identifier {
+public class FeatureBattleIdentifier implements FeatureBattleEntity {
     public static final String DEFAULT_IDENTIFIER = "DEFAULT IDENTIFIER FOR EXPERIMENTS";
     @JsonProperty
     private final String experiment_id;
@@ -29,7 +29,8 @@ public class FeatureBattleIdentifier implements Identifier {
     }
 
     @Override
-    public String getIdentifier() {
+    public String getFeatureBattleId() {
         return experiment_id;
     }
+
 }

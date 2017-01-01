@@ -116,7 +116,7 @@ public class FeatureBattleAORepositoryTest {
     protected void createNewExperiment(FeatureBattleAO featureBattleAO, Experiment.Type type) {
         ExperimentAO experimentAO = ao.create(ExperimentAO.class);
         experimentAO.setFeatureBattle( featureBattleAO );
-        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         experimentAO.setExperimentType(type);
         experimentAO.setPage("PAGE");
         experimentAO.save();
@@ -157,7 +157,7 @@ public class FeatureBattleAORepositoryTest {
 
     protected void assertOnlyOneAOWithIdentifierAndThreshold(FeatureBattleAO[] experimentAOs, FeatureBattleIdentifier identifier, int threshold) {
         Assert.assertThat( experimentAOs.length, equalTo(1));
-        Assert.assertThat( experimentAOs[0].getFeatureBattleId(), equalTo(identifier.getIdentifier() ) );
+        Assert.assertThat( experimentAOs[0].getFeatureBattleId(), equalTo(identifier.getFeatureBattleId() ) );
         Assert.assertThat( experimentAOs[0].getThreshold(), equalTo(threshold) );
     }
 
@@ -185,7 +185,7 @@ public class FeatureBattleAORepositoryTest {
     }
     protected FeatureBattleAO createFeatureBattleAO() {
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
-        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         featureBattleAO.save();
         return featureBattleAO;
     }
@@ -193,7 +193,7 @@ public class FeatureBattleAORepositoryTest {
     protected void createExperiment(FeatureBattleAO featureBattleAO, Experiment.Type type) {
         ExperimentAO experimentAO = ao.create(ExperimentAO.class);
         experimentAO.setFeatureBattle( featureBattleAO );
-        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         experimentAO.setPage("PAGE");
         experimentAO.setExperimentType(type);
         experimentAO.save();

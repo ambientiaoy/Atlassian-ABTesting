@@ -10,8 +10,6 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.Experiment
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.GoodOldWay;
-import fi.ambientia.abtesting.model.experiments.NewAndShiny;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.atlassian.properties.PluginProperties;
 import net.java.ao.EntityManager;
@@ -65,7 +63,7 @@ public class ExperimentRepositoryTest {
     @Test
     public void should_create_new_experiments() throws Exception {
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
-        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         featureBattleAO.save();
 
         Integer page = experimentRepository.create(featureBattleAO.getID(), Experiment.Type.GOOD_OLD).forPage("page").andGetId();
@@ -73,7 +71,7 @@ public class ExperimentRepositoryTest {
         ExperimentAO[] experimentAOs = ao.find(ExperimentAO.class);
 
         assertThat( experimentAOs.length, equalTo(1));
-        assertThat( experimentAOs[0].getFeatureBattle().getFeatureBattleId(), equalTo(FEATURE_BATTLE_IDENTIFIER.getIdentifier() ) );
+        assertThat( experimentAOs[0].getFeatureBattle().getFeatureBattleId(), equalTo(FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId() ) );
         assertThat( experimentAOs[0].getExperimentType(), equalTo(Experiment.Type.GOOD_OLD));
         assertThat( experimentAOs[0].getPage(), equalTo("page"));
 
@@ -84,7 +82,7 @@ public class ExperimentRepositoryTest {
         Experiment experiment = TestData.getNewAndShiny();
 
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
-        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         featureBattleAO.save();
 
         Integer page = experimentRepository.create(featureBattleAO.getID(), Experiment.Type.NEW_AND_SHINY).forPage("page").andGetId();

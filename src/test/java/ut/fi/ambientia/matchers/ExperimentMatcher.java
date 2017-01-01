@@ -22,7 +22,7 @@ public class ExperimentMatcher extends TypeSafeMatcher<Experiment> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText( "expected: " + expected.type() + " with identifier " + identifier.getIdentifier() );
+        description.appendText( "expected: " + expected.type() + " with identifier " + identifier.getFeatureBattleId() );
     }
 
 

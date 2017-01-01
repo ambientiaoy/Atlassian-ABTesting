@@ -79,7 +79,7 @@ public class Acc_ChooseExperiment {
         properties.setProperty("default.abtest.space.key", "TEST");
         properties.setProperty("feature.battle.default.win", CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
 
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
 
         Experiment experiment = chooseExperiment.forFeatureBattle( TestData.USERIDENTIFIER, TestData.FEATURE_BATTLE_IDENTIFIER).matching( ChooseExperiment.forUser( TestData.USERIDENTIFIER ));

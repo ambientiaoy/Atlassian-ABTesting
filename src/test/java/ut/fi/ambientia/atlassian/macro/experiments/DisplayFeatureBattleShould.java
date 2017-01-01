@@ -32,7 +32,7 @@ public class DisplayFeatureBattleShould {
 
     public static final String USER_KEY = TestData.USERIDENTIFIER.getIdentifier();
     public static final UserIdentifier USER_IDENTIFIER = TestData.USERIDENTIFIER;
-    public static final String EXPERIMENT_ID = TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier();
+    public static final String EXPERIMENT_ID = TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId();
     private static final FeatureBattleIdentifier EXPERIMENT_IDENTIFIER = new FeatureBattleIdentifier(EXPERIMENT_ID) ;
     private Map<String, String> map = new HashMap<>();
     private String string;

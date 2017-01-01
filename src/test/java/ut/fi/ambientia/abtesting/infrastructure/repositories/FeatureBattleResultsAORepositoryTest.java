@@ -4,8 +4,6 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import fi.ambientia.abtesting.infrastructure.WrappingActiveObjects;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
-import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
-import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
@@ -57,7 +55,7 @@ public class FeatureBattleResultsAORepositoryTest {
     @Test
     public void should_create_a_list_of_two_with_null_users() throws Exception {
         FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
-        featureBattleAO.setFeatureBattleId( TestData.FEATURE_BATTLE_IDENTIFIER.getIdentifier() );
+        featureBattleAO.setFeatureBattleId( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId() );
         featureBattleAO.save();
         createExperiment(featureBattleAO, Experiment.Type.GOOD_OLD);
         createExperiment(featureBattleAO, Experiment.Type.NEW_AND_SHINY);
@@ -68,10 +66,17 @@ public class FeatureBattleResultsAORepositoryTest {
 
     }
 
+
+    @Test
+    public void should_store_winning_feature_battle_for_user() throws Exception {
+
+
+    }
+
     protected void createExperiment(FeatureBattleAO featureBattleAO, Experiment.Type type) {
         ExperimentAO experimentAO = ao.create(ExperimentAO.class);
         experimentAO.setFeatureBattle( featureBattleAO );
-        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getIdentifier());
+        experimentAO.setExperimentId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
         experimentAO.setPage("PAGE");
         experimentAO.setExperimentType(type);
         experimentAO.save();
