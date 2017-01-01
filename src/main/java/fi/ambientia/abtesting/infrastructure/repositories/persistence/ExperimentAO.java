@@ -20,6 +20,9 @@ public interface ExperimentAO extends Entity {
     @OneToMany
     UserExperimentAO[] getUserExperiments();
 
+    @OneToMany
+    FeatureBattleResultAO[] getFeatureBattleResults();
+
     void setFeatureBattle(FeatureBattleAO featureBattleAO);
     FeatureBattleAO getFeatureBattle();
 }

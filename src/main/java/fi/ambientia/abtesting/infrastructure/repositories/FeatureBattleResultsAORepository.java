@@ -3,6 +3,9 @@ package fi.ambientia.abtesting.infrastructure.repositories;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
+import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleEntity;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
@@ -21,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class FeatureBattleResultsAORepository implements FeatureBattleResults {
+public class FeatureBattleResultsAORepository implements FeatureBattleResults<FeatureBattleAO> {
 
     private final SimpleActiveObjects ao;
     private final PluginProperties properties;
@@ -53,8 +56,22 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults {
     }
 
     @Override
-    public AddNewFeatureBattleResult newWinnerFor(FeatureBattleEntity featureBattleIdentifier) {
-        return null;
+    public AddNewFeatureBattleResult newWinnerFor(FeatureBattleAO featureBattleIdentifier) {
+        return ( userIdentifier -> {
+            return ( type ) ->{
+                ExperimentAO ofType = Arrays.asList( featureBattleIdentifier.getExperiments() ).stream().filter( (experimentAO -> experimentAO.getExperimentType().equals( type ) )).findFirst().get();
+                ao.withinTransaction(() -> {
+                    FeatureBattleResultAO featureBattleResultAO =  ao.create(FeatureBattleResultAO.class);
+                    featureBattleResultAO.setFeatureBattle( featureBattleIdentifier );
+                    featureBattleResultAO.setUserIdentifier( userIdentifier.getIdentifier() );
+                    featureBattleResultAO.setExperiment( ofType );
+                    featureBattleResultAO.save();
+                    return  null;
+                });
+            };
+        });
+
+
     }
 
 }

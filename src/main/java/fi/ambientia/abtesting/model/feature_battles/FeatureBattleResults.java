@@ -6,10 +6,10 @@ import fi.ambientia.abtesting.model.user.UserIdentifier;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface  FeatureBattleResults {
+public interface  FeatureBattleResults<T extends FeatureBattleEntity> {
     public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment)  ;
 
-    AddNewFeatureBattleResult newWinnerFor(FeatureBattleEntity featureBattleIdentifier);
+    AddNewFeatureBattleResult newWinnerFor(T featureBattleIdentifier);
 
 
 

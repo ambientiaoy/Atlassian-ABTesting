@@ -10,8 +10,10 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBat
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperimentAO;
 import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
@@ -24,19 +26,20 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
-import static ut.fi.ambientia.abtesting.model.TestData.FEATURE_BATTLE_IDENTIFIER;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
 public class FeatureBattleResultsAORepositoryTest {
 
     public static final int CONSTANT_SMALL_ENOUGH_SO_THAT_ALWAYS_TAKES_THE_OLD = 0;
     public static final int CONSTANT_BIG_ENOUGH_TO_ALWAYS_TRY_THE_NEW = 200;
+    private static final FeatureBattleIdentifier FEATURE_BATTLE_IDENTIFIER = TestData.FEATURE_BATTLE_IDENTIFIER;
+    private static final UserIdentifier USER_IDENTIFIER = TestData.USERIDENTIFIER;
     private EntityManager entityManager;
 
     private ActiveObjects ao; // (1)
 
     TestPluginProperties properties;
-    private FeatureBattleResults featureBattles;
+    private FeatureBattleResults featureBattleResults;
 
     @Before
     public void setUp() throws Exception
@@ -49,28 +52,49 @@ public class FeatureBattleResultsAORepositoryTest {
         ao.migrate(UserExperimentAO.class);
         SimpleActiveObjects sao = new WrappingActiveObjects(ao);
         properties = new TestPluginProperties();
-        featureBattles = new FeatureBattleResultsAORepository(sao, properties);
+        featureBattleResults = new FeatureBattleResultsAORepository(sao, properties);
     }
 
     @Test
     public void should_create_a_list_of_two_with_null_users() throws Exception {
-        FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
-        featureBattleAO.setFeatureBattleId( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId() );
-        featureBattleAO.save();
-        createExperiment(featureBattleAO, Experiment.Type.GOOD_OLD);
-        createExperiment(featureBattleAO, Experiment.Type.NEW_AND_SHINY);
+        initializeDBWithAFeatureBattle();
 
-        List<FeatureBattleResult> featureBattleResults = featureBattles.featureBattleResultsFor(TestData.FEATURE_BATTLE_IDENTIFIER);
+        List<FeatureBattleResult> featureBattleResults = this.featureBattleResults.featureBattleResultsFor(FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( featureBattleResults.size(), equalTo(2));
 
     }
 
-
     @Test
     public void should_store_winning_feature_battle_for_user() throws Exception {
+        FeatureBattleAO featureBattleAO = initializeDBWithAFeatureBattle();
+
+        featureBattleResults.newWinnerFor(featureBattleAO).forUser(USER_IDENTIFIER).resultBeing(Experiment.Type.GOOD_OLD);
+
+        FeatureBattleResultAO[] featureBattleResultAOs = ao.find(FeatureBattleResultAO.class);
+        assertThat(featureBattleResultAOs.length, equalTo(1));
+
+        FeatureBattleResultAO result = featureBattleResultAOs[0];
+        assertThat( result.getFeatureBattle().getFeatureBattleId(),  equalTo(FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId()));
+        assertThat( result.getUserIdentifier(),  equalTo(USER_IDENTIFIER.getIdentifier()));
+        assertThat( result.getExperiment().getExperimentType(),  equalTo(Experiment.Type.GOOD_OLD));
 
 
+    }
+
+
+    protected FeatureBattleAO initializeDBWithAFeatureBattle() {
+        FeatureBattleAO featureBattleAO =  createFeatureBattle();
+        createExperiment(featureBattleAO, Experiment.Type.GOOD_OLD);
+        createExperiment(featureBattleAO, Experiment.Type.NEW_AND_SHINY);
+        return featureBattleAO;
+    }
+
+    protected FeatureBattleAO createFeatureBattle() {
+        FeatureBattleAO featureBattleAO = ao.create(FeatureBattleAO.class);
+        featureBattleAO.setFeatureBattleId( FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId() );
+        featureBattleAO.save();
+        return featureBattleAO;
     }
 
     protected void createExperiment(FeatureBattleAO featureBattleAO, Experiment.Type type) {

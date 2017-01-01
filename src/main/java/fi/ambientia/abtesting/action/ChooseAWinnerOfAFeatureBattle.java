@@ -27,7 +27,6 @@ public class ChooseAWinnerOfAFeatureBattle {
     public void forFeatureBattle(ChooseAWinnerEvent chooseAWinnerEvent) {
         Optional<FeatureBattleEntity> featureBattleEntity = featureBattleRepository.ensureExistsOnlyOne(chooseAWinnerEvent.getFeatureBattleIdentifier());
 
-
         featureBattleEntity.ifPresent( (entity) -> featureBattleResults.newWinnerFor(entity).forUser(chooseAWinnerEvent.getUserIdentifier()).resultBeing(chooseAWinnerEvent.getType()));
         EventLogger.staticLogSuccesIfPresent( eventLogger, featureBattleEntity ).on( chooseAWinnerEvent );
 

@@ -1,6 +1,5 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
-import com.atlassian.activeobjects.external.ActiveObjects;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import net.java.ao.Entity;
 import net.java.ao.Query;
@@ -20,4 +19,6 @@ public class EnsureOnlyOneAOEntityExists {
         }
         return Optional.empty();
     }
+
+
 }

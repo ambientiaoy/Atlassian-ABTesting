@@ -2,6 +2,7 @@ package fi.ambientia.abtesting.infrastructure.repositories.persistence;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleEntity;
+import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import net.java.ao.Entity;
 import net.java.ao.OneToMany;
 import net.java.ao.schema.Table;
@@ -15,4 +16,7 @@ public interface FeatureBattleAO extends Entity, FeatureBattleEntity{
 
     @OneToMany
     ExperimentAO[] getExperiments();
+
+    @OneToMany
+    FeatureBattleResultAO[] getFeatureBattleResults();
 }
