@@ -13,6 +13,7 @@ import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
+import fi.ambientia.abtesting.model.EventLogger;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
@@ -64,7 +65,8 @@ public class Bootstrap {
 
         featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
 
-        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository);
+        EventLogger eventLogger = new DummyEventLogger();
+        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository, eventLogger);
         featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
 
         UserManager userManager = mock(UserManager.class);

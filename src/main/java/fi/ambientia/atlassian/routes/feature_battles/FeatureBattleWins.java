@@ -1,6 +1,7 @@
 package fi.ambientia.atlassian.routes.feature_battles;
 
 import fi.ambientia.abtesting.action.ChooseAWinnerOfAFeatureBattle;
+import fi.ambientia.abtesting.events.ChooseAWinnerEvent;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.routes.arguments.FeatureBattleWinCommand;
@@ -34,7 +35,7 @@ public class FeatureBattleWins {
 
         UserIdentifier userIdentifier = featureBattleWinCommand.getUserIdentifier();
         FeatureBattleIdentifier featureBattleIdentifier = new FeatureBattleIdentifier( featureBattleId );
-        chooseAWinnerOfAFeatureBattle.forFeatureBattle(userIdentifier, featureBattleIdentifier, featureBattleWinCommand.getType() );
+        chooseAWinnerOfAFeatureBattle.forFeatureBattle(new ChooseAWinnerEvent( userIdentifier, featureBattleIdentifier, featureBattleWinCommand.getType()) );
 
         return Response.ok().build();
     }

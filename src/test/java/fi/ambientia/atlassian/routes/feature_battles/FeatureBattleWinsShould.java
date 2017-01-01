@@ -1,6 +1,7 @@
 package fi.ambientia.atlassian.routes.feature_battles;
 
 import fi.ambientia.abtesting.action.ChooseAWinnerOfAFeatureBattle;
+import fi.ambientia.abtesting.events.ChooseAWinnerEvent;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
@@ -61,6 +62,6 @@ public class FeatureBattleWinsShould {
         Response response = featureBattleWins.createNew(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), featureBattleWinCommand);
 
         assertThat(response.getStatus(), equalTo(200));
-        verify(chooseAWinnerOfAFeatureBattle).forFeatureBattle( USER_IDENTIFIER, FEATURE_BATTLE_IDENTIFIER, featureBattleWinCommand.getType());
+        verify(chooseAWinnerOfAFeatureBattle).forFeatureBattle(new ChooseAWinnerEvent(USER_IDENTIFIER, FEATURE_BATTLE_IDENTIFIER, featureBattleWinCommand.getType()));
     }
 }

@@ -1,11 +1,10 @@
 package fi.ambientia.abtesting.action;
 
-import fi.ambientia.abtesting.model.experiments.Experiment;
+import fi.ambientia.abtesting.events.ChooseAWinnerEvent;
+import fi.ambientia.abtesting.model.EventLogger;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleEntity;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
-import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +15,21 @@ public class ChooseAWinnerOfAFeatureBattle {
 
     private final FeatureBattleResults featureBattleResults;
     private final FeatureBattleRepository featureBattleRepository;
+    private final EventLogger eventLogger;
 
     @Autowired
-    public ChooseAWinnerOfAFeatureBattle(FeatureBattleResults featureBattleResults, FeatureBattleRepository featureBattleRepository) {
+    public ChooseAWinnerOfAFeatureBattle(FeatureBattleResults featureBattleResults, FeatureBattleRepository featureBattleRepository, EventLogger eventLogger) {
         this.featureBattleResults = featureBattleResults;
         this.featureBattleRepository = featureBattleRepository;
+        this.eventLogger = eventLogger;
     }
 
-    public void forFeatureBattle(UserIdentifier userIdentifier, FeatureBattleIdentifier featureBattleIdentifier, Experiment.Type type) {
-        Optional<FeatureBattleEntity> featureBattleEntity = featureBattleRepository.ensureExistsOnlyOne(featureBattleIdentifier);
-        featureBattleEntity.ifPresent( (entity) -> featureBattleResults.newWinnerFor(entity).forUser(userIdentifier).resultBeing(type));
+    public void forFeatureBattle(ChooseAWinnerEvent chooseAWinnerEvent) {
+        Optional<FeatureBattleEntity> featureBattleEntity = featureBattleRepository.ensureExistsOnlyOne(chooseAWinnerEvent.getFeatureBattleIdentifier());
+
+
+        featureBattleEntity.ifPresent( (entity) -> featureBattleResults.newWinnerFor(entity).forUser(chooseAWinnerEvent.getUserIdentifier()).resultBeing(chooseAWinnerEvent.getType()));
+        EventLogger.staticLogSuccesIfPresent( eventLogger, featureBattleEntity ).on( chooseAWinnerEvent );
+
     }
 }
