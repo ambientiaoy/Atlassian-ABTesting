@@ -62,7 +62,16 @@ public class FeatureBattleResultsAORepositoryTest {
         List<FeatureBattleResult> featureBattleResults = this.featureBattleResults.featureBattleResultsFor(FEATURE_BATTLE_IDENTIFIER);
 
         assertThat( featureBattleResults.size(), equalTo(2));
+    }
 
+    @Test
+    public void should_create_a_list_of_two_with_null_users_and_results_of_the_actual_user() throws Exception {
+        FeatureBattleAO featureBattleAO = initializeDBWithAFeatureBattle();
+        featureBattleResults.newWinnerFor(featureBattleAO).forUser(USER_IDENTIFIER).resultBeing(Experiment.Type.GOOD_OLD);
+
+        List<FeatureBattleResult> featureBattleResults = this.featureBattleResults.featureBattleResultsFor(FEATURE_BATTLE_IDENTIFIER);
+
+        assertThat( featureBattleResults.size(), equalTo(3));
     }
 
     @Test
@@ -78,10 +87,7 @@ public class FeatureBattleResultsAORepositoryTest {
         assertThat( result.getFeatureBattle().getFeatureBattleId(),  equalTo(FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId()));
         assertThat( result.getUserIdentifier(),  equalTo(USER_IDENTIFIER.getIdentifier()));
         assertThat( result.getExperiment().getExperimentType(),  equalTo(Experiment.Type.GOOD_OLD));
-
-
     }
-
 
     protected FeatureBattleAO initializeDBWithAFeatureBattle() {
         FeatureBattleAO featureBattleAO =  createFeatureBattle();

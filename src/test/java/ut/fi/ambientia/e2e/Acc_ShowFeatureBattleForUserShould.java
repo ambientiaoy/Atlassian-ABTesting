@@ -3,6 +3,7 @@ package ut.fi.ambientia.e2e;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.test.TestActiveObjects;
 import com.atlassian.confluence.macro.MacroExecutionException;
+import com.atlassian.sal.api.user.UserKey;
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
@@ -37,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
@@ -89,6 +91,7 @@ public class Acc_ShowFeatureBattleForUserShould {
                 new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), featureBattleCommand);
 
+        when(bootstrap.getUserManager().getRemoteUserKey()).thenReturn(new UserKey( USERIDENTIFIER.getIdentifier()) );
         Map<String, String> parameters = new HashMap<>();
         parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface FeatureBattleRepository {
+public interface FeatureBattleRepository<T extends FeatureBattleEntity> {
     IdResolver createFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);
 
     void setThreshold(Integer featureBattleIdentifier, int threshold);
@@ -27,7 +27,7 @@ public interface FeatureBattleRepository {
 
     List<FeatureBattle> getAll();
 
-    Optional<FeatureBattleEntity>  ensureExistsOnlyOne(FeatureBattleIdentifier identifier);
+    Optional<T>  ensureExistsOnlyOne(FeatureBattleIdentifier identifier);
 
     @FunctionalInterface
     interface NewFeatureBattleForOldPage{

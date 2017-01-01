@@ -41,6 +41,7 @@ public class Bootstrap {
     public HttpServletRequest httpServletRequestMock;
     private Supplier<HttpServletRequest> supplier = () -> httpServletRequestMock;
     private FeatureBattleWins featureBattleWins;
+    private final UserManager userManager = mock(UserManager.class);
 
     public void bootstrap(SimpleActiveObjects sao) {
 
@@ -69,7 +70,6 @@ public class Bootstrap {
         ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository, eventLogger);
         featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
 
-        UserManager userManager = mock(UserManager.class);
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
 
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseExperiment, properties){
@@ -115,5 +115,9 @@ public class Bootstrap {
 
     public FeatureBattleWins getFeatureBattleWins() {
         return featureBattleWins;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
     }
 }

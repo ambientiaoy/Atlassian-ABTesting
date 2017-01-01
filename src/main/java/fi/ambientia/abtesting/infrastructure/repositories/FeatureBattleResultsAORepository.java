@@ -43,8 +43,8 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults<Fe
         Optional<FeatureBattleAO> fb = Arrays.asList(featureBattleAOs).stream().findFirst();
         Optional<Integer> first = fb.map(_fb -> _fb.getID());
 
+        Integer feature_battle_id = first.orElse(-1);
         if( fb.isPresent() ) {
-            Integer feature_battle_id = first.orElse(-1);
             List<ExperimentAO> experimentAOs = Arrays.asList(fb.get().getExperiments());
             featureBattleResults = experimentAOs.stream().
                     map(
@@ -52,6 +52,12 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults<Fe
                     ).collect(Collectors.toList());
 
         }
+        FeatureBattleResultAO[] featureBattleResultAOs = ao.find(FeatureBattleResultAO.class, Query.select().where("FEATURE_BATTLE_ID = ?", feature_battle_id));
+        List<FeatureBattleResult> collect = Arrays.asList(featureBattleResultAOs).stream().
+                map((featureBattleResultAO -> new FeatureBattleResult(new UserIdentifier(featureBattleResultAO.getUserIdentifier()), ExperimentAORepository.buildExperiment(properties, featureBattleResultAO.getExperiment()))))
+                .collect(Collectors.toList());
+
+        featureBattleResults.addAll( collect );
         return featureBattleResults;
     }
 

@@ -13,6 +13,7 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.atlassian.PluginConstants;
 import fi.ambientia.atlassian.properties.PluginProperties;
+import net.java.ao.Query;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -142,9 +143,9 @@ public class FeatureBattleAORepository implements FeatureBattleRepository{
     }
 
     @Override
-    public Optional<FeatureBattleEntity> ensureExistsOnlyOne(FeatureBattleIdentifier identifier) {
-        // TODO AkS: test me
-        return Optional.empty();
+    public Optional<FeatureBattleAO> ensureExistsOnlyOne(FeatureBattleIdentifier identifier) {
+        Optional<FeatureBattleAO> execute = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "FEATURE_BATTLE_Id = ?", identifier.getFeatureBattleId());
+        return execute;
     }
 
     protected String describeFeatureBattle(FeatureBattleAO featureBattleAO) {
