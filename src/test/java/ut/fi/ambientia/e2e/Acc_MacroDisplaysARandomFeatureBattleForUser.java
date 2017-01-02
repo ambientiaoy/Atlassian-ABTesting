@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
-public class Acc_create_feature_battle_and_display_results {
+public class Acc_MacroDisplaysARandomFeatureBattleForUser {
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
     private static final int SMALL_ENOUGH_FOR_GOOD_OLD = -1;
@@ -73,7 +73,7 @@ public class Acc_create_feature_battle_and_display_results {
     }
 
     @Test
-    public void by_default_user_will_get_a_feature_battle_result_that_is_defined_when_feature_battle_is_created_as_shown_on_macro() throws MacroExecutionException {
+    public void which_is_GOOD_OLD_given_very_low_threshold() throws MacroExecutionException {
         properties.setProperty("default.abtest.space.key", "TEST");
 
         CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
@@ -87,26 +87,9 @@ public class Acc_create_feature_battle_and_display_results {
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Good Old") ) );
     }
 
-    @Test
-    public void in_macro_user_can_choose_winner_by_defining_action_parameter_to() throws Exception {
-        //arrange - create a featurebattle that would always  return GoodOld
-        properties.setProperty("default.abtest.space.key", "TEST");
-
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
-
-        // fake the parameter.
-        when(bootstrap.httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn("new_and_shiny");
-        // act - call for the featurebattle
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
-        String execute = displayFeatureBattle.execute(parameters, "", null);
-
-        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );
-    }
 
     @Test
-    public void should_display_the_same_macro_always_for_same_user() throws Exception {
+    public void displays_always_the_same_random_after_the_first_time_a_featureBattle_is_randomized() throws Exception {
         //arrange - create a featurebattle that would always  return GoodOld
         properties.setProperty("default.abtest.space.key", "TEST");
 

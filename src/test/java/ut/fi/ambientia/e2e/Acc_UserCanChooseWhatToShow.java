@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
-public class Acc_ShowFeatureBattleForUserShould {
+public class Acc_UserCanChooseWhatToShow {
 
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
@@ -86,7 +86,7 @@ public class Acc_ShowFeatureBattleForUserShould {
     }
 
     @Test
-    public void user_should_be_able_to_choose_a_feature_battle() throws MacroExecutionException {
+    public void by_choosing_winner_theirself() throws MacroExecutionException {
         CreateNewFeatureBattleCommand featureBattleCommand =
                 new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
         featureBattles.createNew(dummy( HttpServletRequest.class), featureBattleCommand);
@@ -102,4 +102,23 @@ public class Acc_ShowFeatureBattleForUserShould {
         assertThat( response.getStatus(), equalTo(200));
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "FOOBAR", "Shiny new") ) );
     }
+
+    @Test
+    public void by_defining_a_page_query_parameter_to_NEW_AND_SHINY() throws Exception {
+        //arrange - create a featurebattle that would always  return GoodOld
+        properties.setProperty("default.abtest.space.key", "TEST");
+
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
+        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
+
+        // fake the parameter.
+        when(bootstrap.httpServletRequestMock.getParameter("featureBattleWinner")).thenReturn("new_and_shiny");
+        // act - call for the featurebattle
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
+        String execute = displayFeatureBattle.execute(parameters, "", null);
+
+        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );
+    }
+
 }
