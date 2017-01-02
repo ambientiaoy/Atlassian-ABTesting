@@ -3,6 +3,7 @@ package ut.fi.ambientia.e2e.bootstrap;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import fi.ambientia.abtesting.action.ChooseAWinnerOfAFeatureBattle;
+import fi.ambientia.abtesting.action.UpdateFeatureBattle;
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedBattles;
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
@@ -20,6 +21,7 @@ import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.abtesting.model.feature_battles.UserExperimentRepository;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleThresholdRoute;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleWins;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import ut.fi.ambientia.helpers.TestPluginProperties;
@@ -45,6 +47,7 @@ public class Bootstrap {
     private FeatureBattleWins featureBattleWins;
     private final UserManager userManager = mock(UserManager.class);
     private UserExperimentRepository userExperimentRepository;
+    private FeatureBattleThresholdRoute featureBattleThresholdRoute;
 
     public void bootstrap(SimpleActiveObjects sao) {
 
@@ -54,28 +57,34 @@ public class Bootstrap {
         properties = new TestPluginProperties();
         properties.setProperty("default.abtest.space.key", "FOOBAR");
 
+        // Repositories
         ExperimentAORepository experimentRepository = new ExperimentAORepository(sao, properties);
         FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
         FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(sao, properties);
         userExperimentRepository = new UserExperimentAORepository(sao, properties, featureBattleRepository);
 
+        // Services
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
         AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleResults, userExperimentRepository);
-
-        chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
-
-        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository, experimentRepository);
-        featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
-
-        featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
-
         EventLogger eventLogger = new DummyEventLogger();
-        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository, eventLogger);
-        featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
 
+        // Actions
+        chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
+        CreateExperiment createExperiment = new CreateNewFeatureBattle( featureBattleRepository, experimentRepository);
+        ChooseAWinnerOfAFeatureBattle chooseAWinnerOfAFeatureBattle = new ChooseAWinnerOfAFeatureBattle( featureBattleResults, featureBattleRepository, eventLogger);
+        UpdateFeatureBattle updateFeatureBattle = new UpdateFeatureBattle();
+
+        // Routes
+        featureBattleRoute = new FeatureBattleRoute(createExperiment, featureBattleRepository);
+        featureBattles = new FeatureBattles(createExperiment, featureBattleRoute, featureBattleRepository);
+        featureBattleWins = new FeatureBattleWins(featureBattleRoute, chooseAWinnerOfAFeatureBattle);
+        featureBattleThresholdRoute = new FeatureBattleThresholdRoute( updateFeatureBattle );
+
+        // Confluence Mocks
         when(userManager.getRemoteUserKey()).thenReturn( new UserKey("ANY USER"));
 
+        // Macros
         displayFeatureBattle = new DisplayFeatureBattle(userManager, chooseExperiment, properties){
             @Override
             protected Supplier<Map<String, Object>> getVelocityContextSupplier() {
@@ -123,5 +132,9 @@ public class Bootstrap {
 
     public UserManager getUserManager() {
         return userManager;
+    }
+
+    public FeatureBattleThresholdRoute getFeatureBattleThresholdRoute() {
+        return featureBattleThresholdRoute;
     }
 }

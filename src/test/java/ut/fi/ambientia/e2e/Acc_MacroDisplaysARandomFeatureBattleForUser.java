@@ -14,6 +14,8 @@ import fi.ambientia.abtesting.infrastructure.repositories.persistence.UserExperi
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.arguments.CreateNewFeatureBattleCommand;
+import fi.ambientia.atlassian.routes.arguments.UpdateFeatureBattleThresholdCommand;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleThresholdRoute;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattles;
 import net.java.ao.EntityManager;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
@@ -48,6 +50,7 @@ public class Acc_MacroDisplaysARandomFeatureBattleForUser {
     private FeatureBattles featureBattles;
     private DisplayFeatureBattle displayFeatureBattle;
     private Bootstrap bootstrap;
+    private Map<String, String> parameters;
 
     @Before
     public void setUp() throws Exception
@@ -69,6 +72,11 @@ public class Acc_MacroDisplaysARandomFeatureBattleForUser {
         properties = bootstrap.getProperties();
         featureBattles = bootstrap.getFeatureBattles();
         displayFeatureBattle = bootstrap.getDisplayBattle();
+        FeatureBattleThresholdRoute updateFeatureBattleThreshold = bootstrap.getFeatureBattleThresholdRoute();
+
+        // act - call for the featurebattle
+        parameters = new HashMap<>();
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
     }
 
@@ -76,11 +84,7 @@ public class Acc_MacroDisplaysARandomFeatureBattleForUser {
     public void which_is_GOOD_OLD_given_very_low_threshold() throws MacroExecutionException {
         properties.setProperty("default.abtest.space.key", "TEST");
 
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), SMALL_ENOUGH_FOR_GOOD_OLD, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
+        createNewFeatureBattleWithThresholdOf(SMALL_ENOUGH_FOR_GOOD_OLD);
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
@@ -93,12 +97,7 @@ public class Acc_MacroDisplaysARandomFeatureBattleForUser {
         //arrange - create a featurebattle that would always  return GoodOld
         properties.setProperty("default.abtest.space.key", "TEST");
 
-        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), 50, "Good Old", "Shiny new");
-        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
-
-        // act - call for the featurebattle
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
+        createNewFeatureBattleWithThresholdOf(50);
 
         String one_created_for_user = displayFeatureBattle.execute(parameters, "", null);
 
@@ -108,6 +107,46 @@ public class Acc_MacroDisplaysARandomFeatureBattleForUser {
             assertThat("on " + i + "th iteration" , execute, equalTo( one_created_for_user ) );
         }
     }
+
+    @Test
+    public void which_is_reRandomized_for_users_with_GOOD_OLD_once_the_FeatureBattle_threshold_is_updated() throws MacroExecutionException {
+        properties.setProperty("default.abtest.space.key", "TEST");
+
+        createNewFeatureBattleWithThresholdOf(SMALL_ENOUGH_FOR_GOOD_OLD);
+
+        String execute = displayFeatureBattle.execute(parameters, "", null);
+        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Good Old") ) );
+
+        updateFeatureBattleWithThresholdOf(CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
+        String should_be_new_and_shiny = displayFeatureBattle.execute(parameters, "", null);
+        assertThat( should_be_new_and_shiny, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "New and shiny") ) );
+
+    }
+    @Test
+    public void results_with_NEW_AND_SHINY_are_not_nulled_on_update() throws MacroExecutionException {
+        properties.setProperty("default.abtest.space.key", "TEST");
+
+        createNewFeatureBattleWithThresholdOf(CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY);
+
+        String execute = displayFeatureBattle.execute(parameters, "", null);
+        assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Good Old") ) );
+
+        updateFeatureBattleWithThresholdOf(SMALL_ENOUGH_FOR_GOOD_OLD);
+        String should_be_new_and_shiny = displayFeatureBattle.execute(parameters, "", null);
+        assertThat( should_be_new_and_shiny, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "New and shiny") ) );
+
+    }
+
+    protected void createNewFeatureBattleWithThresholdOf(int threshold) {
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), threshold, "Good Old", "Shiny new");
+        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
+    }
+
+    private void updateFeatureBattleWithThresholdOf(int threshold) {
+        UpdateFeatureBattleThresholdCommand newAbTest = new UpdateFeatureBattleThresholdCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), threshold);
+        bootstrap.getFeatureBattleThresholdRoute().update(dummy( HttpServletRequest.class), newAbTest);
+    }
+
 
     @Ignore
     @Test
