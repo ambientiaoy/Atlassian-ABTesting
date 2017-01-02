@@ -29,6 +29,5 @@ public class ChooseAWinnerOfAFeatureBattle {
 
         featureBattleEntity.ifPresent( (entity) -> featureBattleResults.newWinnerFor(entity).forUser(chooseAWinnerEvent.getUserIdentifier()).resultBeing(chooseAWinnerEvent.getType()));
         EventLogger.staticLogSuccesIfPresent( eventLogger, featureBattleEntity ).on( chooseAWinnerEvent );
-
     }
 }

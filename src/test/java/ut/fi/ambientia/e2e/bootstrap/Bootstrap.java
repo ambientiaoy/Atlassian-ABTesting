@@ -13,9 +13,11 @@ import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.ExperimentAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleAORepository;
 import fi.ambientia.abtesting.infrastructure.repositories.FeatureBattleResultsAORepository;
+import fi.ambientia.abtesting.infrastructure.repositories.UserExperimentAORepository;
 import fi.ambientia.abtesting.model.EventLogger;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
+import fi.ambientia.abtesting.model.feature_battles.UserExperimentRepository;
 import fi.ambientia.atlassian.macro.experiments.DisplayFeatureBattle;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
 import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleWins;
@@ -42,6 +44,7 @@ public class Bootstrap {
     private Supplier<HttpServletRequest> supplier = () -> httpServletRequestMock;
     private FeatureBattleWins featureBattleWins;
     private final UserManager userManager = mock(UserManager.class);
+    private UserExperimentRepository userExperimentRepository;
 
     public void bootstrap(SimpleActiveObjects sao) {
 
@@ -54,10 +57,11 @@ public class Bootstrap {
         ExperimentAORepository experimentRepository = new ExperimentAORepository(sao, properties);
         FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
         FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(sao, properties);
+        userExperimentRepository = new UserExperimentAORepository(sao, properties);
 
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);
-        AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleResults);
+        AlreadyDecidedBattles alreadyDecidedBattles = new AlreadyDecidedBattles(featureBattleResults, userExperimentRepository);
 
         chooseExperiment = new ChooseExperiment( alreadyDecidedBattles, executeFeatureBattle, randomizeFeatureBattle);
 

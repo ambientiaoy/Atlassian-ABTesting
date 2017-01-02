@@ -20,7 +20,6 @@ public interface FeatureBattleRepository<T extends FeatureBattleEntity> {
     }
     Experiment randomBattleResultFor(FeatureBattleIdentifier featureBattleIdentifier);
 
-
     CreateNewFeatureBattleFor newFeatureBattleFor(FeatureBattleIdentifier experiment);
 
     Optional<FeatureBattle> getFeatureBattle(FeatureBattleIdentifier featureBattleIdentifier);

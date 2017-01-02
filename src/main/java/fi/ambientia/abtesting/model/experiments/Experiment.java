@@ -1,6 +1,7 @@
 package fi.ambientia.abtesting.model.experiments;
 
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
+import org.codehaus.jackson.annotate.JsonCreator;
 
 import java.util.Random;
 import java.util.function.BiFunction;
@@ -31,9 +32,16 @@ public interface Experiment {
 
     String page();
 
+
+
     enum Type {
         NEW_AND_SHINY,
-        GOOD_OLD
+        GOOD_OLD;
+
+        @JsonCreator
+        public static Type forValue(String value) {
+            return Type.valueOf(value);
+        }
     }
 
     @FunctionalInterface

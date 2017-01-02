@@ -1,9 +1,10 @@
-package fi.ambientia.atlassian.routes.feature_battles;
+package ut.fi.ambientia.atlassian.routes.feature_battles;
 
 import fi.ambientia.abtesting.action.experiments.CreateExperiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
 import org.junit.Before;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;

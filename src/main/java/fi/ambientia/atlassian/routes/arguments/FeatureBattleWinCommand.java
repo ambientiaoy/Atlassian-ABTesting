@@ -3,23 +3,26 @@ package fi.ambientia.atlassian.routes.arguments;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class FeatureBattleWinCommand {
 
-    private final Experiment.Type experimentType;
-    private final UserIdentifier userIdentifier;
+    private final String experimentType;
+    private final String userIdentifier;
 
     @JsonCreator
-    public FeatureBattleWinCommand(Experiment.Type experimentType, String userKey) {
-        this.experimentType = experimentType;
-        this.userIdentifier = new UserIdentifier(userKey);
+    public FeatureBattleWinCommand(
+            @JsonProperty("type") String experimentType,
+            @JsonProperty("user") String userKey) {
+        this.experimentType =  experimentType;
+        this.userIdentifier = userKey;
     }
 
     public UserIdentifier getUserIdentifier() {
-        return userIdentifier;
+        return new UserIdentifier(userIdentifier);
     }
 
     public Experiment.Type getType() {
-        return experimentType;
+        return Experiment.Type.valueOf( experimentType.toUpperCase() );
     }
 }

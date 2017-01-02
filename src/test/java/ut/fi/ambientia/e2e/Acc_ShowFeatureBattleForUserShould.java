@@ -95,7 +95,7 @@ public class Acc_ShowFeatureBattleForUserShould {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
 
-        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY, USERIDENTIFIER.getIdentifier()));
+        Response response = winFeatureBattle.createNew(dummy(HttpServletRequest.class), TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), new FeatureBattleWinCommand(Experiment.Type.NEW_AND_SHINY.name(), USERIDENTIFIER.getIdentifier()));
 
         String execute = displayFeatureBattle.execute(parameters, "", null);
 

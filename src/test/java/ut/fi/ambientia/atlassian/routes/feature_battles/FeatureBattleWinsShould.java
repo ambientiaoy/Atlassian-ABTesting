@@ -1,4 +1,4 @@
-package fi.ambientia.atlassian.routes.feature_battles;
+package ut.fi.ambientia.atlassian.routes.feature_battles;
 
 import fi.ambientia.abtesting.action.ChooseAWinnerOfAFeatureBattle;
 import fi.ambientia.abtesting.events.ChooseAWinnerEvent;
@@ -6,6 +6,8 @@ import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import fi.ambientia.atlassian.routes.arguments.FeatureBattleWinCommand;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleRoute;
+import fi.ambientia.atlassian.routes.feature_battles.FeatureBattleWins;
 import org.junit.Before;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;
@@ -41,7 +43,7 @@ public class FeatureBattleWinsShould {
         httpServletRequest = dummy(HttpServletRequest.class);
         when(featureBattleRoute.head(httpServletRequest, FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId())).thenReturn( Response.status(200).build() );
 
-        featureBattleWinCommand = new FeatureBattleWinCommand(Experiment.Type.GOOD_OLD, USER_KEY);
+        featureBattleWinCommand = new FeatureBattleWinCommand("GOOD_OLD", USER_KEY);
         featureBattleWins = new FeatureBattleWins( featureBattleRoute, chooseAWinnerOfAFeatureBattle);
     }
 

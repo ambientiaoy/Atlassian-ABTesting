@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 import static ut.fi.ambientia.mocks.Dummy.dummy;
 
 @RunWith(ActiveObjectsJUnitRunner.class)
-public class Acc_UserShouldBeAbleToChooseAWinner {
+public class Acc_create_feature_battle_and_display_results {
 
     public static final int CONSTANT_BIG_ENOUGH_TO_HAVE_NEW_AND_SHINY = 200;
     private static final int SMALL_ENOUGH_FOR_GOOD_OLD = -1;
@@ -103,6 +103,27 @@ public class Acc_UserShouldBeAbleToChooseAWinner {
         String execute = displayFeatureBattle.execute(parameters, "", null);
 
         assertThat( execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );
+    }
+
+    @Test
+    public void should_display_the_same_macro_always_for_same_user() throws Exception {
+        //arrange - create a featurebattle that would always  return GoodOld
+        properties.setProperty("default.abtest.space.key", "TEST");
+
+        CreateNewFeatureBattleCommand newAbTest = new CreateNewFeatureBattleCommand( TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId(), 50, "Good Old", "Shiny new");
+        featureBattles.createNew(dummy( HttpServletRequest.class), newAbTest);
+
+        // act - call for the featurebattle
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("feature_battle", TestData.FEATURE_BATTLE_IDENTIFIER.getFeatureBattleId());
+
+        String one_created_for_user = displayFeatureBattle.execute(parameters, "", null);
+
+        int iterations = 10;
+        for (int i = 1; i <= iterations; i++) {
+            String execute = displayFeatureBattle.execute(parameters, "", null);
+            assertThat("on " + i + "th iteration" , execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );
+        }
     }
 
     @Ignore

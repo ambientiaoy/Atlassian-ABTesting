@@ -1,29 +1,26 @@
-package fi.ambientia.abtesting.model.feature_battles;
+package fi.ambientia.abtesting.model.experiments.user_experiment;
 
 import fi.ambientia.abtesting.model.Identifier;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.user.TargetedForUserPredicate;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 
-public class FeatureBattleResult implements TargetedForUserPredicate {
+public class UserExperimentResult implements TargetedForUserPredicate{
+
     private final UserIdentifier userIdentifier;
     private final Experiment experiment;
 
-    public FeatureBattleResult(UserIdentifier userIdentifier, Experiment experiment) {
+    public UserExperimentResult(UserIdentifier userIdentifier, Experiment experiment) {
         this.userIdentifier = userIdentifier;
         this.experiment = experiment;
     }
 
     @Override
     public boolean forUser(Identifier user) {
-        return user.equals( userIdentifier );
-    }
-
-    public boolean forExperimentType( Experiment.Type type){
-        return experiment.type().equals( type );
+        return userIdentifier.getIdentifier().equals(user.getIdentifier());
     }
 
     public Experiment getExperiment() {
-        return experiment ;
+        return experiment;
     }
 }
