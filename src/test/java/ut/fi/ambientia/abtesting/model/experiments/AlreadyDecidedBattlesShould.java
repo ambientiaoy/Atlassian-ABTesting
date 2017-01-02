@@ -70,6 +70,17 @@ public class AlreadyDecidedBattlesShould {
         verify(userExperimentRepository).featureBattleResultsFor( EXPERIMENT_IDENTIFIER );
     }
 
+    @Test
+    public void search_for_return_userExperiments_for_user_that_is_set() throws Exception {
+        // user has not set a clear winner
+        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn(new ArrayList() );
+        // when user has experiments set
+        when(userExperimentRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn( Arrays.asList(createTestFeatureBattleResult(goodOldWay)  ) ) ;
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( ChooseExperiment.forUser( USER_IDENTIFIER ) );
+
+        assertThat(optional.get(), equalTo( goodOldWay ));
+    }
+
     private FeatureBattleResult createTestFeatureBattleResult(GoodOldWay goodOldWay) {
         return new FeatureBattleResult( USER_IDENTIFIER, goodOldWay );
     }
