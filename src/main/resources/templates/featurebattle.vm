@@ -1,7 +1,19 @@
-<div class="feature-battle #if( $experimentType == 'NEW_AND_SHINY' )new-and-shiny #end">
+#requireResource("fi.ambientia.atlassian.abtesting:admin-resources")
+#requireResource("fi.ambientia.atlassian.abtesting:abtesting-resources")
+
+<body>
+<div class="feature-battle #if( $experimentType == 'NEW_AND_SHINY' )new-and-shiny #else good-old #end">
+
+    #if( $experimentType == 'NEW_AND_SHINY' )
     <div class="push-right">
-        <button id="featureBattle/${featureBattle}" data-experiment="${experimentType}" data-featureBattle="${featureBattle}">
-            I like this most
-        </button></div>
+        <p><em>BETA:</em> You have been selected to review the beta version of this page. See changes. What do you think?
+         <button class="featurebattle-decision" data-user="$userIdentifier" data-feature-battle="$featureBattle" data-experiment="NEW_AND_SHINY">Yes, this is pretty good.</button> |
+            <button class="featurebattle-decision" data-user="$userIdentifier" data-feature-battle="$featureBattle" data-experiment="GOOD_OLD">No, return to the old version, Please!</button>
+        </p>
+
+    </div>
+    #end
+
     $action.getHelper().renderConfluenceMacro( $experiment.render() )
 </div>
+</body>

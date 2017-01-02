@@ -1,10 +1,10 @@
 
+#requireResource("fi.ambientia.atlassian.abtesting:admin-resources")
 <head>
     <meta name="decorator" content="atl.admin">
     <title>
         Configure Confluence AB tests
     </title>
-    $webResourceManager.requireResource("fi.ambientia.atlassian.abtesting:admin-resources")
 
 </head>
 

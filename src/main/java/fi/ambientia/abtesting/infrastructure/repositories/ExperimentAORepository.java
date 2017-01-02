@@ -52,18 +52,18 @@ public class ExperimentAORepository implements ExperimentRepository {
     public List<Experiment> experimentsForUser(UserIdentifier userientifier) {
         logger.debug("experimentsForUser" + userientifier.getIdentifier() );
 //        return ao.withinTransaction( () -> {
-            Query query = Query.select().from(UserExperimentAO.class).where("USER_ID = ?", userientifier.getIdentifier());
-            UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
+        Query query = Query.select().from(UserExperimentAO.class).where("USER_ID = ?", userientifier.getIdentifier());
+        UserExperimentAO[] userExperimentAOs = ao.find(UserExperimentAO.class, query);
 
-            List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
-                    // TODO AkS: This should basically be fixed by something else. Now the DB is wrong, somewhere
-                    filter( userExperimentAO1 -> null != userExperimentAO1.getExperiment() ).
-                    map(userExperimentAO -> buildExperiment(properties, userExperimentAO.getExperiment())).
-                    collect(Collectors.toList());
+        List<Experiment> experiments = Arrays.asList(userExperimentAOs).stream().
+                // TODO AkS: This should basically be fixed by something else. Now the DB is wrong, somewhere
+                        filter( userExperimentAO1 -> null != userExperimentAO1.getExperiment() ).
+                        map(userExperimentAO -> buildExperiment(properties, userExperimentAO.getExperiment())).
+                        collect(Collectors.toList());
 
-            logger.debug("Experiments for user: " + experiments.stream().map(experiment -> "Exp: " + experiment.type() + " for page: " + experiment.page()).collect(Collectors.joining(", ")));
+        logger.debug("Experiments for user: " + experiments.stream().map(experiment -> "Exp: " + experiment.type() + " for page: " + experiment.page()).collect(Collectors.joining(", ")));
 
-            return experiments;
+        return experiments;
 
 //        });
     }
@@ -74,10 +74,8 @@ public class ExperimentAORepository implements ExperimentRepository {
         Optional<FeatureBattleAO> featureBattleAO = EnsureOnlyOneAOEntityExists.execute(ao, FeatureBattleAO.class, "ID = ?", featureBattleId);
 
         return ( page ) -> {
-            Optional<ExperimentAO> optional = EnsureOnlyOneAOEntityExists.execute(ao, ExperimentAO.class, "EXPERIMENT_TYPE = ? and PAGE = ? and FEATURE_BATTLE_ID = ?", experimentType, page, featureBattleId);
             Integer id = ao.withinTransaction( () -> {
-                        ExperimentAO experimentAO = optional.orElse(ao.create(ExperimentAO.class));
-
+                        ExperimentAO experimentAO = EnsureOnlyOneAOEntityExists.andCreate(ao, ExperimentAO.class, "EXPERIMENT_TYPE = ? and PAGE = ? and FEATURE_BATTLE_ID = ?", experimentType, page, featureBattleId);
                         //FIXME AkS: I see null here!
                         experimentAO.setFeatureBattle( featureBattleAO.orElse( null ) );
                         experimentAO.setExperimentType( experimentType );

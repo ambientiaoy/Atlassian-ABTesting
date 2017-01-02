@@ -1,6 +1,8 @@
 package fi.ambientia.abtesting.infrastructure.repositories;
 
 import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
+import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
 import net.java.ao.Entity;
 import net.java.ao.Query;
 
@@ -21,4 +23,11 @@ public class EnsureOnlyOneAOEntityExists {
     }
 
 
+    public static <T extends Entity> T andCreate(SimpleActiveObjects ao, Class<T> klazz, String clause, Object... params) {
+        Optional<T> entity = execute(ao, klazz, clause, params);
+        if( entity.isPresent() ){
+            return entity.get();
+        }
+        return ao.create(klazz);
+    }
 }

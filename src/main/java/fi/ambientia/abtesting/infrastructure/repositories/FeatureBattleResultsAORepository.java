@@ -64,7 +64,7 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults<Fe
             return ( type ) ->{
                 ExperimentAO ofType = Arrays.asList( featureBattleIdentifier.getExperiments() ).stream().filter( (experimentAO -> experimentAO.getExperimentType().equals( type ) )).findFirst().get();
                 ao.withinTransaction(() -> {
-                    FeatureBattleResultAO featureBattleResultAO =  ao.create(FeatureBattleResultAO.class);
+                    FeatureBattleResultAO featureBattleResultAO = EnsureOnlyOneAOEntityExists.andCreate(ao, FeatureBattleResultAO.class, "FEATURE_BATTLE_ID = ? AND USER_IDENTIFIER = ? ", featureBattleIdentifier.getID(), userIdentifier.getIdentifier());
                     featureBattleResultAO.setFeatureBattle( featureBattleIdentifier );
                     featureBattleResultAO.setUserIdentifier( userIdentifier.getIdentifier() );
                     featureBattleResultAO.setExperiment( ofType );

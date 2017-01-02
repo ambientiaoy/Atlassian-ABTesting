@@ -14,32 +14,26 @@
     <!-- add our web resources -->
     <web-resource key="abtesting-resources" name="abtesting Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
-
-        <transformation extension="soy">
-            <transformer key="soyTransformer">
-                <functions>com.atlassian.confluence.plugins.soy:soy-core-functions</functions>
-            </transformer>
-        </transformation>
-
-        <resource type="soy" name="featurebattle.soy" location="/templates/featurebattle.soy"/>
 
         <resource type="download" name="abtesting.css" location="/css/abtesting.css"/>
         <resource type="download" name="abtesting.js" location="/js/abtesting.js"/>
         <resource type="download" name="images/" location="/images"/>
 
-    </web-resource>
-
-    <web-resource key="admin-resources" name="Admin resources for configuring ABtests">
-        <dependency>fi.ambientia.atlassian.abtesting:abtesting-restful</dependency>
-        <resource type="download" name="admin_abtesting.js" location="/js/admin/abtesting.js"/>
-
+        <context>abtesting</context>
     </web-resource>
 
     <web-resource key="abtesting-restful" name="abtesting restful resources">
         <dependency>fi.ambientia.atlassian.abtesting:abtesting-resources</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-restfultable</dependency>
+        <context>abtesting</context>
     </web-resource>
+
+    <web-resource key="admin-resources" name="Admin resources for configuring ABtests">
+        <dependency>fi.ambientia.atlassian.abtesting:abtesting-restful</dependency>
+        <resource type="download" name="admin_abtesting.js" location="/js/admin/abtesting.js"/>
+        <context>abtesting</context>
+    </web-resource>
+
 
     <xwork name="configure-ab-testing" key="configure-abtesting-xwork">
         <package name="ab-testing" extends="default" namespace="/admin/abtesting">

@@ -64,6 +64,8 @@ public class DisplayFeatureBattle implements Macro {
 
         // create context and render
         Map<String, Object> contextMap = getVelocityContextSupplier().get();
+
+        contextMap.put("userIdentifier", currentUserIdentifier);
         contextMap.put("featureBattle", feature_battle_identifier);
         contextMap.put("experimentType", experiment.type());
         contextMap.put("experiment", experiment);
