@@ -57,7 +57,7 @@ public class Bootstrap {
         ExperimentAORepository experimentRepository = new ExperimentAORepository(sao, properties);
         FeatureBattleAORepository featureBattleRepository = new FeatureBattleAORepository(sao, properties, experimentRepository);
         FeatureBattleResults featureBattleResults= new FeatureBattleResultsAORepository(sao, properties);
-        userExperimentRepository = new UserExperimentAORepository(sao, properties);
+        userExperimentRepository = new UserExperimentAORepository(sao, properties, featureBattleRepository);
 
         RandomizeFeatureBattle randomizeFeatureBattle = new RandomizeFeatureBattle( featureBattleRepository, experimentRepository );
         ExecuteFeatureBattle executeFeatureBattle = new ExecuteFeatureBattle(featureBattleRepository, experimentRepository);

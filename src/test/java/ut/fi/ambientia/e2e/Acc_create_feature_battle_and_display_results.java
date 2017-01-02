@@ -122,7 +122,7 @@ public class Acc_create_feature_battle_and_display_results {
         int iterations = 10;
         for (int i = 1; i <= iterations; i++) {
             String execute = displayFeatureBattle.execute(parameters, "", null);
-            assertThat("on " + i + "th iteration" , execute, equalTo( String.format( Experiment.INCLUDE_PAGE, "TEST", "Shiny new") ) );
+            assertThat("on " + i + "th iteration" , execute, equalTo( one_created_for_user ) );
         }
     }
 
