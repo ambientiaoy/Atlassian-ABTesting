@@ -4,9 +4,6 @@ import fi.ambientia.abtesting.infrastructure.activeobjects.SimpleActiveObjects;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.ExperimentAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleAO;
 import fi.ambientia.abtesting.infrastructure.repositories.persistence.FeatureBattleResultAO;
-import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattle;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleEntity;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
@@ -36,7 +33,7 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults<Fe
     }
 
     @Override
-    public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier featureBattleIdentifier) {
+    public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier featureBattleIdentifier, UserIdentifier user) {
         List<FeatureBattleResult> featureBattleResults = new ArrayList<>();
 
         FeatureBattleAO[] featureBattleAOs = ao.find(FeatureBattleAO.class, Query.select().where("FEATURE_BATTLE_ID = ? ", featureBattleIdentifier.getFeatureBattleId()));
@@ -52,7 +49,7 @@ public class FeatureBattleResultsAORepository implements FeatureBattleResults<Fe
                     ).collect(Collectors.toList());
 
         }
-        FeatureBattleResultAO[] featureBattleResultAOs = ao.find(FeatureBattleResultAO.class, Query.select().where("FEATURE_BATTLE_ID = ?", feature_battle_id));
+        FeatureBattleResultAO[] featureBattleResultAOs = ao.find(FeatureBattleResultAO.class, Query.select().where("FEATURE_BATTLE_ID = ? AND USER_IDENTIFIER = ?", feature_battle_id, user.getIdentifier()));
         List<FeatureBattleResult> collect = Arrays.asList(featureBattleResultAOs).stream().
                 map((featureBattleResultAO -> new FeatureBattleResult(new UserIdentifier(featureBattleResultAO.getUserIdentifier()), ExperimentAORepository.buildExperiment(properties, featureBattleResultAO.getExperiment()))))
                 .collect(Collectors.toList());

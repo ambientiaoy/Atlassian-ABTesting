@@ -4,14 +4,12 @@ import fi.ambientia.abtesting.action.experiments.feature_battles.AlreadyDecidedB
 import fi.ambientia.abtesting.action.experiments.feature_battles.ChooseExperiment;
 import fi.ambientia.abtesting.model.experiments.Experiment;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
-import fi.ambientia.abtesting.model.feature_battles.FeatureBattleRepository;
 import fi.ambientia.abtesting.model.experiments.GoodOldWay;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.abtesting.model.feature_battles.UserExperimentRepository;
 import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import ut.fi.ambientia.abtesting.model.TestData;
 
@@ -38,7 +36,7 @@ public class AlreadyDecidedBattlesShould {
         featureBattleRepository = mock(FeatureBattleResults.class);
         userExperimentRepository = mock(UserExperimentRepository.class);
         alreadyDecidedBattles = new AlreadyDecidedBattles( featureBattleRepository, userExperimentRepository );
-        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).
+        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER)).
                 thenReturn(
                         Arrays.asList(createTestFeatureBattleResult(goodOldWay)
                         ) );
@@ -46,14 +44,14 @@ public class AlreadyDecidedBattlesShould {
 
     @Test
     public void get_list_of_all_feature_battles_for_given_experiment() throws Exception {
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor(ChooseExperiment.forUser( USER_IDENTIFIER ));
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER).targetedFor(ChooseExperiment.forUser( USER_IDENTIFIER ));
 
         assertThat(optional.get(), equalTo( goodOldWay ));
     }
 
     @Test
     public void not_receive_any_if_filter_is_set_to_return_false() throws Exception {
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( (any) -> false );
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER).targetedFor( (any) -> false );
         optional.ifPresent( experiment -> fail("Should not have any, should be empty optional"));
     }
 
@@ -61,22 +59,22 @@ public class AlreadyDecidedBattlesShould {
     @Test
     public void search_for_UserExperiments_for_user_if_user_experiment_has_been_set() throws Exception {
         // user has not set a clear winner
-        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn(new ArrayList() );
+        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER)).thenReturn(new ArrayList() );
         // when user has experiments set
-        when(userExperimentRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn( new ArrayList<>() ) ;
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( ChooseExperiment.forUser( USER_IDENTIFIER ) );
+        when(userExperimentRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER)).thenReturn( new ArrayList<>() ) ;
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER).targetedFor( ChooseExperiment.forUser( USER_IDENTIFIER ) );
 
         optional.ifPresent( experiment -> fail("Should not have any, should be empty optional"));
-        verify(userExperimentRepository).featureBattleResultsFor( EXPERIMENT_IDENTIFIER );
+        verify(userExperimentRepository).featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER);
     }
 
     @Test
     public void search_for_return_userExperiments_for_user_that_is_set() throws Exception {
         // user has not set a clear winner
-        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn(new ArrayList() );
+        when(featureBattleRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER)).thenReturn(new ArrayList() );
         // when user has experiments set
-        when(userExperimentRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER )).thenReturn( Arrays.asList(createTestFeatureBattleResult(goodOldWay)  ) ) ;
-        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER ).targetedFor( ChooseExperiment.forUser( USER_IDENTIFIER ) );
+        when(userExperimentRepository.featureBattleResultsFor( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER)).thenReturn( Arrays.asList(createTestFeatureBattleResult(goodOldWay)  ) ) ;
+        Optional<Experiment> optional = alreadyDecidedBattles.experimentOf( EXPERIMENT_IDENTIFIER, USER_IDENTIFIER).targetedFor( ChooseExperiment.forUser( USER_IDENTIFIER ) );
 
         assertThat(optional.get(), equalTo( goodOldWay ));
     }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface  FeatureBattleResults<T extends FeatureBattleEntity> {
-    public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment)  ;
+    public List<FeatureBattleResult> featureBattleResultsFor(FeatureBattleIdentifier experiment, UserIdentifier user)  ;
 
     AddNewFeatureBattleResult newWinnerFor(T featureBattleIdentifier);
 

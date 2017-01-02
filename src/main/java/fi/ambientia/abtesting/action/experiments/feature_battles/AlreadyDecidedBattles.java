@@ -1,11 +1,11 @@
 package fi.ambientia.abtesting.action.experiments.feature_battles;
 
 import fi.ambientia.abtesting.model.experiments.Experiment;
-import fi.ambientia.abtesting.model.experiments.user_experiment.UserExperimentResult;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleIdentifier;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResult;
 import fi.ambientia.abtesting.model.feature_battles.FeatureBattleResults;
 import fi.ambientia.abtesting.model.feature_battles.UserExperimentRepository;
+import fi.ambientia.abtesting.model.user.UserIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +23,9 @@ public class AlreadyDecidedBattles {
         this.userExperimentRepository = userExperimentRepository;
     }
 
-    public ExperimentSupplier experimentOf(FeatureBattleIdentifier experiment) {
-        List<FeatureBattleResult> featureBattleResults = featureBattleRepository.featureBattleResultsFor(experiment);
-        List<FeatureBattleResult> userExperimentResults= userExperimentRepository.featureBattleResultsFor(experiment);
+    public ExperimentSupplier experimentOf(FeatureBattleIdentifier experiment, UserIdentifier user) {
+        List<FeatureBattleResult> featureBattleResults = featureBattleRepository.featureBattleResultsFor(experiment, user);
+        List<FeatureBattleResult> userExperimentResults= userExperimentRepository.featureBattleResultsFor(experiment, user);
 
         ExperimentSupplier experimentSupplier = (predicate) -> {
             featureBattleResults.addAll(userExperimentResults);

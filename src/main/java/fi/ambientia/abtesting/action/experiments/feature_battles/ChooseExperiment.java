@@ -29,7 +29,7 @@ public class ChooseExperiment {
     public MathingFeatureBattleResult forFeatureBattle(UserIdentifier user, FeatureBattleIdentifier experiment) {
         return ( predicate ) ->
         {
-            Optional<Experiment> experimentOptional = alreadyDecided.experimentOf(experiment).targetedFor(predicate);
+            Optional<Experiment> experimentOptional = alreadyDecided.experimentOf(experiment, user).targetedFor(predicate);
 
             return experimentOptional.orElseGet(() -> executeFeatureBattleAndGetResult(user, experiment));
         };
